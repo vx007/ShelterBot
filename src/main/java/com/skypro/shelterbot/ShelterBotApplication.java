@@ -9,5 +9,4 @@ public class ShelterBotApplication {
     public static void main(String[] args) {
         SpringApplication.run(ShelterBotApplication.class, args);
     }
-
 }
