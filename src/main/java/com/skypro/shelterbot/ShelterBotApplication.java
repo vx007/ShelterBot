@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class  ShelterBotApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ShelterBotApplication.class, args);
+        SpringApplication.run (ShelterBotApplication.class,  args);
     }
+
 }
