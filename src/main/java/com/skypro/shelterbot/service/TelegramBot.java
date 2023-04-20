@@ -1,7 +1,6 @@
 package com.skypro.shelterbot.service;
 
 import com.skypro.shelterbot.config.BotConfig;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -14,7 +13,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
 @Component
 public class TelegramBot extends TelegramLongPollingBot {
 
@@ -36,7 +34,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         try {
             this.execute(new SetMyCommands(listOfCommands, new BotCommandScopeDefault(), null));
         } catch (TelegramApiException e) {
-            log.error("Error setting bot's command list: " + e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
@@ -71,14 +69,12 @@ public class TelegramBot extends TelegramLongPollingBot {
      * {@value  #HELP_TEXT}
      *
      * @param chatId идентификатор приветственого сообщения, can't be <u>{@code null}<u/>
-     * @throws TelegramApiException <u>example</u> there is no it exception
      * @return <u>example</u> этот метод не возвращает
-     *
+     * @throws TelegramApiException <u>example</u> there is no it exception
      * @see <u>example</u> SendMessage#setChatId(Long)
      */
     private void startCommandReceived(long chatId, String name) {
         String answer = "Hi, " + name + ", nice to meet you!";
-        log.info("Replied to user " + name);
         sendMessage(chatId, answer);
     }
 
@@ -90,7 +86,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         try {
             execute(message);
         } catch (TelegramApiException e) {
-            log.error("Error occurred: " + e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
