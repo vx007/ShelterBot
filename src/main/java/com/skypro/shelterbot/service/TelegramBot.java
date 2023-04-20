@@ -60,8 +60,23 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    /**
+     * <u>текст ниже написан для примера некоторых возможностей</u>
+     * <b>получаем</b> <i>приветственое</i> <u>сообщение</u>  <b>жирный</b> <i>курсив</i> <u>подчеркнутный</u>
+     * <br>
+     * Используется метод {@link SendMessage#setChatId(Long)}
+     * botConfig.getBotName(); <br>
+     * {@code botConfig.getBotName();}
+     * {@link #HELP_TEXT}
+     * {@value  #HELP_TEXT}
+     *
+     * @param chatId идентификатор приветственого сообщения, can't be <u>{@code null}<u/>
+     * @throws TelegramApiException <u>example</u> there is no it exception
+     * @return <u>example</u> этот метод не возвращает
+     *
+     * @see <u>example</u> SendMessage#setChatId(Long)
+     */
     private void startCommandReceived(long chatId, String name) {
-
         String answer = "Hi, " + name + ", nice to meet you!";
         log.info("Replied to user " + name);
         sendMessage(chatId, answer);
