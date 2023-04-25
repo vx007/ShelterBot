@@ -3,6 +3,8 @@ package com.skypro.shelterbot.service;
 import com.skypro.shelterbot.config.BotConfig;
 import com.skypro.shelterbot.model.AppUser;
 import com.skypro.shelterbot.model.UserRepository;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -18,6 +20,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+@Log4j
 @Component
 public class TelegramBot extends TelegramLongPollingBot {
 
@@ -80,25 +83,10 @@ public class TelegramBot extends TelegramLongPollingBot {
             user.setRegisteredAt(new Timestamp(System.currentTimeMillis()));
 
             userRepository.save(user);
-            //log.info("user saved: " + user);
+            log.info("user saved: " + user);
         }
     }
 
-    /**
-     * <u>текст ниже написан для примера некоторых возможностей</u>
-     * <b>получаем</b> <i>приветственое</i> <u>сообщение</u>  <b>жирный</b> <i>курсив</i> <u>подчеркнутный</u>
-     * <br>
-     * Используется метод {@link SendMessage#setChatId(Long)}
-     * botConfig.getBotName(); <br>
-     * {@code botConfig.getBotName();}
-     * {@link #HELP_TEXT}
-     * {@value  #HELP_TEXT}
-     *
-     * @param chatId идентификатор приветственого сообщения, can't be <u>{@code null}<u/>
-     * @return <u>example</u> этот метод не возвращает
-     * @throws TelegramApiException <u>example</u> there is no it exception
-     * @see <u>example</u> SendMessage#setChatId(Long)
-     */
     private void startCommandReceived(long chatId, String name) {
         String answer = "Hi, " + name + ", nice to meet you!";
         sendMessage(chatId, answer);
