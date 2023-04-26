@@ -2,9 +2,9 @@ package com.skypro.shelterbot.service;
 
 import com.skypro.shelterbot.config.BotConfig;
 import com.skypro.shelterbot.model.AppUser;
-import com.skypro.shelterbot.model.UserRepository;
+import com.skypro.shelterbot.model.AppUserRepository;
+import com.vdurmont.emoji.EmojiParser;
 import lombok.extern.log4j.Log4j;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -25,9 +25,9 @@ import java.util.List;
 public class TelegramBot extends TelegramLongPollingBot {
 
     @Autowired
-    private UserRepository userRepository;
+    private AppUserRepository appUserRepository;
 
-    final BotConfig botConfig;
+    final BotConfig config;
     static final String HELP_TEXT = "Этот бот создан для реализации возможностей.\n\n" +
             "Можно реализовать команды из основного меню или типы команд.\n\n" +
             "Type /start чтобы увидеть приветсятвеное сообщение.\n\n" +
@@ -35,7 +35,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             "Type /help увидеть это сообщение снова.";
 
     public TelegramBot(BotConfig config) {
-        this.botConfig = config;
+        this.config = config;
         List<BotCommand> listOfCommands = new ArrayList<>();
         listOfCommands.add(new BotCommand("/start", "получаем приветственое сообщение"));
         listOfCommands.add(new BotCommand("/mydata", "get your data stored"));
@@ -45,7 +45,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         try {
             this.execute(new SetMyCommands(listOfCommands, new BotCommandScopeDefault(), null));
         } catch (TelegramApiException e) {
-            System.out.println(e.getMessage());
+            log.error("Error setting bot's command list: " + e.getMessage());
         }
     }
 
@@ -71,24 +71,26 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     private void registeredUser(Message msg) {
-        if(userRepository.findById(msg.getChatId()).isEmpty()) {
+        if(appUserRepository.findById(msg.getChatId()).isEmpty()) {
             var chatId = msg.getChatId();
             var chat = msg.getChat();
 
-            AppUser user = new AppUser();
-            user.setChatId(chatId);
-            user.setFirstName(chat.getFirstName());
-            user.setLastName(chat.getLastName());
-            user.setUserName(chat.getUserName());
-            user.setRegisteredAt(new Timestamp(System.currentTimeMillis()));
+            AppUser appUser = new AppUser();
+            appUser.setChatId(chatId);
+            appUser.setFirstName(chat.getFirstName());
+            appUser.setLastName(chat.getLastName());
+            appUser.setUserName(chat.getUserName());
+            appUser.setRegisteredAt(new Timestamp(System.currentTimeMillis()));
 
-            userRepository.save(user);
-            log.info("user saved: " + user);
+            appUserRepository.save(appUser);
+            log.info("user saved: " + appUser);
         }
     }
 
     private void startCommandReceived(long chatId, String name) {
-        String answer = "Hi, " + name + ", nice to meet you!";
+        String answer = EmojiParser.parseToUnicode("Hi, " + name + ", nice to meet you!"+ " :blush:");
+//        String answer = "Hi, " + name + ", nice to meet you!";
+        log.info("Replied to user: " + name);
         sendMessage(chatId, answer);
     }
 
@@ -106,10 +108,10 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return botConfig.getBotName();
+        return config.getBotName();
     }
 
     public String getBotToken() {
-        return botConfig.getBotToken();
+        return config.getBotToken();
     }
 }

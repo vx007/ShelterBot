@@ -1,2 +1,7 @@
 2023-04-25 17:13:09 INFO  TelegramBot:92 - received
 2023-04-25 20:43:34 INFO  TelegramBot:93 - user saved: АлександрHi, Александр, nice to meet you!
+2023-04-26 13:39:05 INFO  TelegramBot:85 - user saved: AppUser{chatId=1880942606, firstName='Александр', lastName='Лыткин', userName='null', registeredAt=2023-04-26 13:39:05.737}
+2023-04-26 14:17:45 INFO  TelegramBot:86 - user saved: AppUser{chatId=1880942606, firstName='Александр', lastName='Лыткин', userName='null', registeredAt=2023-04-26 14:17:45.769}
+2023-04-26 14:17:45 INFO  TelegramBot:93 - Replied to user: Александр
+2023-04-26 14:20:46 INFO  TelegramBot:86 - user saved: AppUser{chatId=1880942606, firstName='Александр', lastName='Лыткин', userName='null', registeredAt=2023-04-26 14:20:46.759}
+2023-04-26 14:20:46 INFO  TelegramBot:93 - Replied to user: Александр

@@ -21,6 +21,8 @@
         <java.version>17</java.version>
         <pengrad.version>6.6.1</pengrad.version>
         <telegram.version>6.5.0</telegram.version>
+        <postgres.version>42.2.18</postgres.version>
+        <emoji-java.version>5.1.1</emoji-java.version>
     </properties>
 
     <dependencies>
@@ -29,11 +31,6 @@
             <artifactId>java-telegram-bot-api</artifactId>
             <version>${pengrad.version}</version>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>com.h2database</groupId>-->
-<!--            <artifactId>h2</artifactId>-->
-<!--        </dependency>-->
 
         <dependency>
             <groupId>org.telegram</groupId>
@@ -44,7 +41,18 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
+            <version>${postgres.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.vdurmont</groupId>
+            <artifactId>emoji-java</artifactId>
+            <version>${emoji-java.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.vladmihalcea</groupId>
+            <artifactId>hibernate-types-52</artifactId>
+            <version>2.2.2</version>
         </dependency>
 
 <!--        <dependency>-->

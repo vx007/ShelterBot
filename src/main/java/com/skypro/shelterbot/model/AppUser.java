@@ -1,13 +1,14 @@
 package com.skypro.shelterbot.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Timestamp;
 
-@Entity(name = "userDataTable")
+@Entity
+@Table(name = "usersDataTable")
 public class AppUser {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chatId;
     private String firstName;
     private String lastName;
