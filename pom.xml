@@ -26,11 +26,11 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.github.pengrad</groupId>
-            <artifactId>java-telegram-bot-api</artifactId>
-            <version>${pengrad.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.github.pengrad</groupId>-->
+<!--            <artifactId>java-telegram-bot-api</artifactId>-->
+<!--            <version>${pengrad.version}</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.telegram</groupId>

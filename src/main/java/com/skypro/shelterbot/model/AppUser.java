@@ -3,12 +3,12 @@ package com.skypro.shelterbot.model;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
-@Entity
-@Table(name = "usersDataTable")
+@Entity(name = "usersDataTable")
+//@Table
 public class AppUser {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chatId;
     private String firstName;
     private String lastName;
