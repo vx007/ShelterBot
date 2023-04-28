@@ -1,10 +1,10 @@
 package com.skypro.shelterbot.exeption;
 
-public class ShelterBotSendTextException extends Exception {
+public class SendTextException extends Exception {
 
     private final int errorCode;
 
-    public ShelterBotSendTextException(String message, int errorCode) {
+    public SendTextException(String message, int errorCode) {
         super(message);
         this.errorCode = errorCode;
     }
