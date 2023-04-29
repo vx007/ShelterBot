@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - include:
+      file: liquibase/scripts/createAllTables.sql
+
+      databaseChangeLog:
+        - includeAll:
+            path: classpath*:db/changelog/changes/
+        - include:
+            file: db/changelog/changes/a.yaml

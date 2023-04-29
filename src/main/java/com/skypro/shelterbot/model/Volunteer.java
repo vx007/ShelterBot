@@ -3,18 +3,21 @@ package com.skypro.shelterbot.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.HashMap;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
+@Entity(name = "volunteers")
 public class Volunteer {
 
-    private Long idVolunteer;
-    private String firstName;
-    private String lastName;
-    private String phone;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private long chatId;
+    private String name;
 
-    private HashMap<Long, Pet> petsOfOneVolunteer = new HashMap<>();
 }
