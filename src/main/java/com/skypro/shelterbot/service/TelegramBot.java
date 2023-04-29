@@ -1,12 +1,11 @@
 package com.skypro.shelterbot.service;
 
 import com.skypro.shelterbot.config.BotConfig;
-import com.skypro.shelterbot.model.Ads;
-import com.skypro.shelterbot.model.repository.AdsRepository;
-import com.skypro.shelterbot.model.AppUser;
-import com.skypro.shelterbot.model.repository.AppUserRepository;
+import com.skypro.shelterbot.model.User;
+import com.skypro.shelterbot.repositories.UserRepository;
 import com.vdurmont.emoji.EmojiParser;
 import lombok.extern.log4j.Log4j;
+import org.glassfish.grizzly.http.util.TimeStamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -29,14 +28,16 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.System.currentTimeMillis;
+
 @Log4j
 @Component
 public class TelegramBot extends TelegramLongPollingBot {
 
     @Autowired
-    private AppUserRepository appUserRepository;
-    @Autowired
-    private AdsRepository adsRepository;
+    private UserRepository userRepository;
+//    @Autowired
+//    private AdsRepository adsRepository;
 
     final BotConfig config;
     static final String YES_BUTTON = "YES_BUTTON";
@@ -84,9 +85,9 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             if (messageText.contains("/send") && config.getOwnerId() == chatId) { //отправка всем пользователям сообщения от проверенного пользователя
                 var textToSend = EmojiParser.parseToUnicode(messageText.substring(messageText.indexOf(" ")));// метод substring позволяет получить текст после /send
-                var users = appUserRepository.findAll();
-                for (AppUser appUser : users) {
-                    prepareAndSendMessage(appUser.getChatId(), textToSend);
+                var users = userRepository.findAll();
+                for (User user : users) {
+                    prepareAndSendMessage(user.getChatId(), textToSend);
                 }
             } else {
 
@@ -243,19 +244,17 @@ public class TelegramBot extends TelegramLongPollingBot {
 //    }
 
     private void registeredUser(Message msg) {
-        if (appUserRepository.findById(msg.getChatId()).isEmpty()) {
+        if (userRepository.findById(msg.getChatId()).isEmpty()) {
             var chatId = msg.getChatId();
             var chat = msg.getChat();
 
-            AppUser appUser = new AppUser();
-            appUser.setChatId(chatId);
-            appUser.setFirstName(chat.getFirstName());
-            appUser.setLastName(chat.getLastName());
-            appUser.setUserName(chat.getUserName());
-            appUser.setRegisteredAt(new Timestamp(System.currentTimeMillis()));
+            User user = new User();
+            user.setChatId(chatId);
+            user.setName(user.getName());
+            //user.setRegisteredAt(new TimeStamp(currentTimeMillis()));
 
-            appUserRepository.save(appUser);
-            log.info("user saved: " + appUser);
+            userRepository.save(user);
+            log.info("user saved: " + user);
         }
     }
 
@@ -289,18 +288,18 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     //метод вызывает сам себя
-    @Scheduled(cron = "${cron.scheduler}") //6 параметров слева направо: сек,мин,час,день,месяц,день недели(пн-вс)
-    private void sendAds() {
-        var ads = adsRepository.findAll();
-        var users = appUserRepository.findAll();
-
-        for (Ads ad : ads) {
-            for (AppUser appUser : users) {
-                prepareAndSendMessage(appUser.getChatId(), ad.getAd());
-            }
-        }
-
-    }
+//    @Scheduled(cron = "${cron.scheduler}") //6 параметров слева направо: сек,мин,час,день,месяц,день недели(пн-вс)
+//    private void sendAds() {
+//        var ads = adsRepository.findAll();
+//        var users = userRepository.findAll();
+//
+//        for (Ads ad : ads) {
+//            for (User user : users) {
+//                prepareAndSendMessage(user.getChatId(), ad.getAd());
+//            }
+//        }
+//
+//    }
 
     private void executeMessage(SendMessage message) {
         try {
