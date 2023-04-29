@@ -5,9 +5,7 @@ import com.skypro.shelterbot.model.User;
 import com.skypro.shelterbot.repositories.UserRepository;
 import com.vdurmont.emoji.EmojiParser;
 import lombok.extern.log4j.Log4j;
-import org.glassfish.grizzly.http.util.TimeStamp;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -25,10 +23,13 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.lang.System.currentTimeMillis;
+import java.util.concurrent.TimeUnit;
 
 @Log4j
 @Component
@@ -93,7 +94,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     case "/start":
                         startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
                         registeredUser(update.getMessage());
-                        offerChoise(chatId);
+                        offerChoice(chatId);
                         break;
 
                     case "/cat":
@@ -171,7 +172,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         return markupButtons;
     }
 
-    private void offerChoise(long chatId) {
+    private void offerChoice(long chatId) {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
         message.setText("выберите приют");
@@ -216,6 +217,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             user.setChatId(chatId);
             user.setName(user.getName());
             //user.setRegisteredAt(new TimeStamp(currentTimeMillis()));
+            user.setRegisteredAt(Timestamp.valueOf(LocalDateTime.now()));
 
             userRepository.save(user);
             log.info("user saved: " + user);

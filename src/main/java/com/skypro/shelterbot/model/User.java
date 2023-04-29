@@ -3,16 +3,16 @@ package com.skypro.shelterbot.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.glassfish.grizzly.http.util.TimeStamp;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.sql.Timestamp;
 
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
 @Entity(name = "users")
-public class User{
+public class User {
 
     @Id
     private Long chatId;
@@ -20,6 +20,5 @@ public class User{
     private String name;
     private String phone;
     private String mail;
-    private TimeStamp registeredAt;
-
+    private Timestamp registeredAt;
 }

@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @Configuration
 @Data
-@PropertySource("application.properties")
+@PropertySource("application.properties") // Не работает. Возможно удалить?
 public class BotConfig {
     @Value("${bot.name}")
     String botName;
