@@ -3,7 +3,7 @@ package com.skypro.shelterbot.repositories;
 import com.skypro.shelterbot.model.ShelterDogUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ShelterDogUserRepository extends JpaRepository<ShelterDogUserRepository,Long> {
+public interface ShelterDogUserRepository extends JpaRepository<ShelterDogUser,Long> {
 
     ShelterDogUser findShelterDogUserByChatId(Long chatId);
 

@@ -36,8 +36,6 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Autowired
     private UserRepository userRepository;
-//    @Autowired
-//    private AdsRepository adsRepository;
 
     final BotConfig config;
     static final String YES_BUTTON = "YES_BUTTON";
@@ -87,7 +85,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 var textToSend = EmojiParser.parseToUnicode(messageText.substring(messageText.indexOf(" ")));// метод substring позволяет получить текст после /send
                 var users = userRepository.findAll();
                 for (User user : users) {
-                    prepareAndSendMessage(user.getChatId(), textToSend);
+                    sendMessage(user.getChatId(), textToSend);
                 }
             } else {
 
@@ -108,11 +106,11 @@ public class TelegramBot extends TelegramLongPollingBot {
                         break;
 
                     case "/help":
-                        prepareAndSendMessage(chatId, HELP_TEXT);
+                        sendMessage(chatId, HELP_TEXT);
                         break;
 
                     default:
-                        prepareAndSendMessage(chatId, "Sorry, command was't recognized  ");
+                       sendMessage(chatId, "Sorry, command was't recognized  ");
                 }
             }
 
@@ -203,45 +201,11 @@ public class TelegramBot extends TelegramLongPollingBot {
         executeMessage(message);
     }
 
-
-    private void register(long chatId) {
-        SendMessage message = new SendMessage();
-        message.setChatId(String.valueOf(chatId));
-        message.setText("Do you really want to register");
-
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> listOfButtons = new ArrayList<>();
-        List<InlineKeyboardButton> listButton = new ArrayList<>();
-
-        var yesButton = new InlineKeyboardButton();
-        yesButton.setText("Yes");
-        yesButton.setCallbackData(YES_BUTTON);
-
-        var noButton = new InlineKeyboardButton();
-        noButton.setText("No");
-        noButton.setCallbackData(NO_BUTTON);
-
-        listButton.add(yesButton);
-        listButton.add(noButton);
-
-        listOfButtons.add(listButton);
-        inlineKeyboardMarkup.setKeyboard(listOfButtons);
-        message.setReplyMarkup(inlineKeyboardMarkup);
-
-        executeMessage(message);
-    }
-
     private void startCommandReceived(long chatId, String name) {
         String answer = EmojiParser.parseToUnicode("Hi, welcome to the Shelter Bot!" + " :blush:");
         log.info("Заходил пользователь: " + name);
         sendMessage(chatId, answer);
     }
-
-    //    private void startCommandReceived(long chatId, String name) {
-//        String answer = EmojiParser.parseToUnicode("Hi, " + name + ", nice to meet you!" + " :blush:");
-//        log.info("Replied to user: " + name);
-//        sendMessage(chatId, answer);
-//    }
 
     private void registeredUser(Message msg) {
         if (userRepository.findById(msg.getChatId()).isEmpty()) {
@@ -263,18 +227,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
         message.setText(textToSend);
-
-        //добавил вызов кнопок отдельным меню
-//        methodCallButtons(message);
-        executeMessage(message);
-    }
-
-
-
-    private void prepareAndSendMessage(long chatId, String textToSend) {
-        SendMessage message = new SendMessage();
-        message.setChatId(String.valueOf(chatId));
-        message.setText(textToSend);
         executeMessage(message);
     }
 
@@ -287,20 +239,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         return config.getBotToken();
     }
 
-    //метод вызывает сам себя
-//    @Scheduled(cron = "${cron.scheduler}") //6 параметров слева направо: сек,мин,час,день,месяц,день недели(пн-вс)
-//    private void sendAds() {
-//        var ads = adsRepository.findAll();
-//        var users = userRepository.findAll();
-//
-//        for (Ads ad : ads) {
-//            for (User user : users) {
-//                prepareAndSendMessage(user.getChatId(), ad.getAd());
-//            }
-//        }
-//
-//    }
-
     private void executeMessage(SendMessage message) {
         try {
             execute(message);
@@ -309,6 +247,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    // метод для вызова доп клавиатуры с кнопками
     private void methodCallButtons(SendMessage message) {
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRows = new ArrayList<>();
