@@ -24,6 +24,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,11 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    /**
+     * Update класс получает сообщение от пользователя боту,
+     * также хвранит всю всю инфо о нем
+     * @param update
+     */
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
@@ -134,6 +140,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         message.setText(text);
         message.setMessageId((int) messageId);
 
+
         try {
             execute(message);
         } catch (TelegramApiException e) {
@@ -186,9 +193,11 @@ public class TelegramBot extends TelegramLongPollingBot {
         listButton.add(catButton);
         listButton.add(dogButton);
 
+
         listOfButtons.add(listButton);
         inlineKeyboardMarkup.setKeyboard(listOfButtons);
         message.setReplyMarkup(inlineKeyboardMarkup);
+
 
         executeMessage(message);
     }
@@ -249,6 +258,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             log.info("user saved: " + appUser);
         }
     }
+
 
     private void sendMessage(long chatId, String textToSend) {
         SendMessage message = new SendMessage();
