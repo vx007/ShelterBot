@@ -1,0 +1,81 @@
+2023-04-25 17:13:09 INFO  TelegramBot:92 - received
+2023-04-25 20:43:34 INFO  TelegramBot:93 - user saved: АлександрHi, Александр, nice to meet you!
+2023-04-26 13:39:05 INFO  TelegramBot:85 - user saved: AppUser{chatId=1880942606, firstName='Александр', lastName='Лыткин', userName='null', registeredAt=2023-04-26 13:39:05.737}
+2023-04-26 14:17:45 INFO  TelegramBot:86 - user saved: AppUser{chatId=1880942606, firstName='Александр', lastName='Лыткин', userName='null', registeredAt=2023-04-26 14:17:45.769}
+2023-04-26 14:17:45 INFO  TelegramBot:93 - Replied to user: Александр
+2023-04-26 14:20:46 INFO  TelegramBot:86 - user saved: AppUser{chatId=1880942606, firstName='Александр', lastName='Лыткин', userName='null', registeredAt=2023-04-26 14:20:46.759}
+2023-04-26 14:20:46 INFO  TelegramBot:93 - Replied to user: Александр
+2023-04-26 15:13:39 INFO  TelegramBot:88 - user saved: AppUser{chatId=1880942606, firstName='Александр', lastName='Лыткин', userName='null', registeredAt=2023-04-26 15:13:39.815}
+2023-04-26 15:13:39 INFO  TelegramBot:95 - Replied to user: Александр
+2023-04-26 15:17:42 INFO  TelegramBot:88 - user saved: AppUser{chatId=1880942606, firstName='Александр', lastName='Лыткин', userName='null', registeredAt=2023-04-26 15:17:42.156}
+2023-04-26 15:17:42 INFO  TelegramBot:95 - Replied to user: Александр
+2023-04-27 09:07:04 INFO  TelegramBot:88 - user saved: AppUser{chatId=1880942606, firstName='Александр', lastName='Лыткин', userName='null', registeredAt=2023-04-27 09:07:04.187}
+2023-04-27 09:07:04 INFO  TelegramBot:95 - Replied to user: Александр
+2023-04-27 09:55:16 INFO  TelegramBot:129 - user saved: AppUser{chatId=1880942606, firstName='Александр', lastName='Лыткин', userName='null', registeredAt=2023-04-27 09:55:16.393}
+2023-04-27 09:55:16 INFO  TelegramBot:136 - Replied to user: Александр
+2023-04-27 09:56:55 INFO  TelegramBot:130 - user saved: AppUser{chatId=1880942606, firstName='Александр', lastName='Лыткин', userName='null', registeredAt=2023-04-27 09:56:55.605}
+2023-04-27 09:56:55 INFO  TelegramBot:137 - Replied to user: Александр
+2023-04-27 11:56:09 INFO  TelegramBot:169 - user saved: AppUser{chatId=1880942606, firstName='Александр', lastName='Лыткин', userName='null', registeredAt=2023-04-27 11:56:09.069}
+2023-04-27 11:56:09 INFO  TelegramBot:176 - Replied to user: Александр
+2023-04-27 11:56:27 ERROR TelegramBot:204 - Error occurred: Error executing org.telegram.telegrambots.meta.api.methods.send.SendMessage query: [400] Bad Request: chat not found
+2023-04-27 11:56:27 ERROR TelegramBot:204 - Error occurred: Error executing org.telegram.telegrambots.meta.api.methods.send.SendMessage query: [400] Bad Request: chat not found
+2023-04-27 11:56:27 ERROR TelegramBot:204 - Error occurred: Error executing org.telegram.telegrambots.meta.api.methods.send.SendMessage query: [400] Bad Request: chat not found
+2023-04-27 11:56:27 ERROR TelegramBot:204 - Error occurred: Error executing org.telegram.telegrambots.meta.api.methods.send.SendMessage query: [400] Bad Request: chat not found
+2023-04-27 12:08:50 INFO  TelegramBot:170 - user saved: AppUser{chatId=1880942606, firstName='Александр', lastName='Лыткин', userName='null', registeredAt=2023-04-27 12:08:50.826}
+2023-04-27 12:08:50 INFO  TelegramBot:177 - Replied to user: Александр
+2023-04-27 12:09:21 INFO  TelegramBot:170 - user saved: AppUser{chatId=1880942606, firstName='Александр', lastName='Лыткин', userName='null', registeredAt=2023-04-27 12:09:21.671}
+2023-04-27 12:09:21 INFO  TelegramBot:177 - Replied to user: Александр
+2023-04-27 12:09:29 INFO  TelegramBot:177 - Replied to user: Александр
+2023-04-27 13:50:20 INFO  TelegramBot:160 - Replied to user: Александр
+2023-04-27 13:50:38 INFO  TelegramBot:160 - Replied to user: Александр
+2023-04-27 20:55:46 INFO  TelegramBot:165 - Replied to user: Александр
+2023-04-27 20:57:20 INFO  TelegramBot:165 - Replied to user: Александр
+2023-04-28 08:36:50 INFO  TelegramBot:165 - Replied to user: Александр
+2023-04-28 08:50:12 INFO  TelegramBot:159 - user saved: AppUser(chatId=1880942606, firstName=Александр, lastName=Лыткин, userName=null, registeredAt=2023-04-28 08:50:12.256, petName=null)
+2023-04-28 08:50:12 INFO  TelegramBot:165 - Replied to user: Александр
+2023-04-28 09:02:49 INFO  TelegramBot:170 - Заходил пользователь: Александр
+2023-04-28 09:41:48 INFO  TelegramBot:171 - Заходил пользователь: Александр
+2023-04-28 09:50:18 INFO  TelegramBot:172 - Заходил пользователь: Александр
+2023-04-28 09:50:18 INFO  TelegramBot:172 - Заходил пользователь: Александр
+2023-04-28 09:50:43 INFO  TelegramBot:172 - Заходил пользователь: Александр
+2023-04-28 10:29:28 INFO  TelegramBot:150 - Заходил пользователь: Александр
+2023-04-28 10:37:43 INFO  TelegramBot:154 - Заходил пользователь: Александр
+2023-04-28 10:41:49 INFO  TelegramBot:154 - Заходил пользователь: Александр
+2023-04-28 10:50:56 INFO  TelegramBot:188 - Заходил пользователь: Александр
+2023-04-28 10:54:23 INFO  TelegramBot:188 - Заходил пользователь: Александр
+2023-04-28 10:55:59 INFO  TelegramBot:188 - Заходил пользователь: Александр
+2023-04-28 11:10:50 INFO  TelegramBot:183 - Заходил пользователь: Александр
+2023-04-28 11:11:02 INFO  TelegramBot:183 - Заходил пользователь: Александр
+2023-04-28 11:14:40 INFO  TelegramBot:183 - Заходил пользователь: Александр
+2023-04-28 11:14:58 INFO  TelegramBot:183 - Заходил пользователь: Александр
+2023-04-28 11:16:27 INFO  TelegramBot:184 - Заходил пользователь: Александр
+2023-04-28 11:24:59 INFO  TelegramBot:182 - Заходил пользователь: Александр
+2023-04-28 11:25:31 INFO  TelegramBot:182 - Заходил пользователь: Александр
+2023-04-28 11:46:54 INFO  TelegramBot:184 - Заходил пользователь: Александр
+2023-04-28 12:11:03 INFO  TelegramBot:200 - Заходил пользователь: Александр
+2023-04-28 12:11:10 INFO  TelegramBot:200 - Заходил пользователь: Александр
+2023-04-28 12:47:43 INFO  TelegramBot:219 - Заходил пользователь: Александр
+2023-04-28 12:50:16 INFO  TelegramBot:219 - Заходил пользователь: Александр
+2023-04-28 12:58:12 INFO  TelegramBot:221 - Заходил пользователь: Александр
+2023-04-28 12:58:25 INFO  TelegramBot:221 - Заходил пользователь: Александр
+2023-04-28 12:59:54 INFO  TelegramBot:219 - Заходил пользователь: Александр
+2023-04-28 13:00:08 INFO  TelegramBot:219 - Заходил пользователь: Александр
+2023-04-28 13:07:06 INFO  TelegramBot:219 - Заходил пользователь: Александр
+2023-04-28 13:07:11 INFO  TelegramBot:219 - Заходил пользователь: Александр
+2023-04-28 13:12:30 INFO  TelegramBot:221 - Заходил пользователь: Александр
+2023-04-28 13:21:32 INFO  TelegramBot:220 - Заходил пользователь: Александр
+2023-04-28 14:07:09 INFO  TelegramBot:230 - Заходил пользователь: Александр
+2023-04-28 14:13:18 INFO  TelegramBot:226 - Заходил пользователь: Александр
+2023-04-28 14:13:34 INFO  TelegramBot:226 - Заходил пользователь: Александр
+2023-04-28 15:37:40 INFO  TelegramBot:232 - Заходил пользователь: Александр
+2023-04-28 15:40:29 INFO  TelegramBot:235 - Заходил пользователь: Александр
+2023-04-28 15:45:39 INFO  TelegramBot:229 - Заходил пользователь: Александр
+2023-04-28 15:58:38 INFO  TelegramBot:228 - Заходил пользователь: Александр
+2023-04-28 15:59:49 INFO  TelegramBot:227 - Заходил пользователь: Александр
+2023-04-28 16:05:18 INFO  TelegramBot:233 - Заходил пользователь: Александр
+2023-04-28 16:34:54 INFO  TelegramBot:238 - Заходил пользователь: Александр
+2023-04-28 17:31:15 INFO  TelegramBot:226 - Заходил пользователь: Александр
+2023-04-29 12:46:42 INFO  TelegramBot:224 - Заходил пользователь: Александр
+2023-04-29 12:52:47 INFO  TelegramBot:224 - Заходил пользователь: Александр
+2023-04-29 12:53:29 INFO  TelegramBot:224 - Заходил пользователь: Александр
+2023-04-29 13:13:30 INFO  TelegramBot:226 - Заходил пользователь: Александр
