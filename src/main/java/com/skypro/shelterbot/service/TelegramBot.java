@@ -29,6 +29,9 @@ import java.util.List;
 
 import static java.lang.System.currentTimeMillis;
 
+/**
+ * @extends {@link TelegramLongPollingBot} идет проверка не написали ли что то
+ */
 @Log4j
 @Component
 public class TelegramBot extends TelegramLongPollingBot {
@@ -88,7 +91,6 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     @Override
     public void onUpdateReceived(Update update) {
-        Message message = update.getMessage();
         if (update.hasMessage() && update.getMessage().hasText()) {
 
             String messageText = update.getMessage().getText();
@@ -115,7 +117,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 //                       1.
 
                     case INFO_ABOUT_SHELTER_CAT:
-                        menuInfoAboutShelterCat("Привет!" + update.getMessage().getChat().getFirstName(), chatId);
+                        menuFindInformationAboutShelterCat("Привет!" + update.getMessage().getChat().getFirstName(), chatId);
                         break;
 
                     case HOW_TAKE_ANIMAL_FROM_SHELTER:
@@ -132,6 +134,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 //                        2.
 
                     case TELL_ABOUT_SHELTER_CAT:
+
                         break;
 
                     case SCHEDULE_ADDRESS_DIRECTION_ABOUT_SHELTER_CAT:
@@ -190,7 +193,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             if (callBackData.equals(CAT_BUTTON)) {
                 String text = EmojiParser.parseToUnicode("Вы выбрали приют кошек! " + " :cat:");
-                menuShelterForCat(text, chatId, messageId);
+                mainMenuShelterForCat(text, chatId, messageId);
 
             } else if (callBackData.equals(DOG_BUTTON)) {
                 String text = EmojiParser.parseToUnicode("Вы выбрали приют собак! " + " :dog:" + "\n\nУпс эта функция в разработке!  ");
@@ -199,8 +202,6 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
         }
     }
-
-
 
     private void offerCatOrDog(long chatId) {
         SendMessage message = new SendMessage();
@@ -230,7 +231,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         executeMessage(message);
     }
 
-
     private void executeEditMessageText(String text, long chatId, long messageId) { // меотод показывает что нажал
         EditMessageText message = new EditMessageText();
         message.setChatId(String.valueOf(chatId));
@@ -244,13 +244,21 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-
+    /**
+     * welcome message to new user
+     * @param chatId can't be <b>null</b>
+     * @param name can't be <b>null</b>
+     */
     private void startCommandReceived(long chatId, String name) {
         String answer = EmojiParser.parseToUnicode("Hi, welcome to the Shelter Bot!" + " :blush:");
         log.info("Заходил пользователь: " + name);
         sendMessage(chatId, answer);
     }
 
+    /**
+     * method for registration user
+     * @param msg can't be <b>null</b>
+     */
     private void registeredUser(Message msg) {
         if (userRepository.findById(msg.getChatId()).isEmpty()) {
             var chatId = msg.getChatId();
@@ -258,8 +266,8 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             User user = new User();
             user.setChatId(chatId);
-            user.setName(user.getName());
-            user.setRegisteredAt(new Timestamp(currentTimeMillis()));
+            user.setName(chat.getFirstName()); //так мы сразу получаем имя
+//            user.setName(user.getName());
             user.setRegisteredAt(Timestamp.valueOf(LocalDateTime.now()));
 
             userRepository.save(user);
@@ -267,14 +275,20 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-
+    /**
+     * method receives chatId and any text
+     * and executing it
+     * <br>
+     * use method telegram's library {@link SendMessage message = new SendMessage();}
+     * @param chatId can't be <b>null</b>
+     *  @throws TelegramApiException can throw
+     */
     private void sendMessage(long chatId, String textToSend) {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
         message.setText(textToSend);
         executeMessage(message);
     }
-
     @Override
     public String getBotUsername() {
         return config.getBotName();
@@ -284,6 +298,10 @@ public class TelegramBot extends TelegramLongPollingBot {
         return config.getBotToken();
     }
 
+    /**
+     * method execute message
+     * @param message
+     */
     private void executeMessage(SendMessage message) {
         try {
             execute(message);
@@ -300,7 +318,48 @@ public class TelegramBot extends TelegramLongPollingBot {
         executeMessage(message);
     }
 
-    private void menuInfoAboutShelterCat(String text, long chatId) {
+    /**
+     * main method branches of cat
+     * @param text
+     * @param chatId
+     * @param messageId
+     */
+    private void mainMenuShelterForCat(String text, long chatId, long messageId) {
+        SendMessage message = new SendMessage();
+        message.setChatId(String.valueOf(chatId));
+        message.setText(text);
+        message.enableMarkdown(true);
+
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        message.setReplyMarkup(keyboardMarkup);
+        keyboardMarkup.setSelective(true);
+        keyboardMarkup.setResizeKeyboard(true);
+        keyboardMarkup.setOneTimeKeyboard(true);
+        List<KeyboardRow> keyboardRows = new ArrayList<>();
+
+        KeyboardRow row = new KeyboardRow();
+        row.add(INFO_ABOUT_SHELTER_CAT);
+        keyboardRows.add(row);
+
+        row = new KeyboardRow();
+        row.add(HOW_TAKE_ANIMAL_FROM_SHELTER);
+        keyboardRows.add(row);
+
+        row = new KeyboardRow();
+        row.add(SEND_REPORT_ABOUT_PET);
+        keyboardRows.add(row);
+
+        row = new KeyboardRow();
+        row.add(CALL_VOLUNTEER);
+        keyboardRows.add(row);
+
+        keyboardMarkup.setKeyboard(keyboardRows);
+        message.setReplyMarkup(keyboardMarkup);
+
+        executeMessage(message);
+    }
+
+    private void menuFindInformationAboutShelterCat(String text, long chatId) {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
         message.setText(text);
@@ -413,41 +472,6 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         KeyboardRow row = new KeyboardRow();
         row.add(GET_DAILY_REPORT_FROM);
-        keyboardRows.add(row);
-
-        row = new KeyboardRow();
-        row.add(CALL_VOLUNTEER);
-        keyboardRows.add(row);
-
-        keyboardMarkup.setKeyboard(keyboardRows);
-        message.setReplyMarkup(keyboardMarkup);
-
-        executeMessage(message);
-    }
-
-    private void menuShelterForCat(String text, long chatId, long messageId) {
-        SendMessage message = new SendMessage();
-        message.setChatId(String.valueOf(chatId));
-        message.setText(text);
-        message.enableMarkdown(true);
-
-        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
-        message.setReplyMarkup(keyboardMarkup);
-        keyboardMarkup.setSelective(true);
-        keyboardMarkup.setResizeKeyboard(true);
-        keyboardMarkup.setOneTimeKeyboard(true);
-        List<KeyboardRow> keyboardRows = new ArrayList<>();
-
-        KeyboardRow row = new KeyboardRow();
-        row.add(INFO_ABOUT_SHELTER_CAT);
-        keyboardRows.add(row);
-
-        row = new KeyboardRow();
-        row.add(HOW_TAKE_ANIMAL_FROM_SHELTER);
-        keyboardRows.add(row);
-
-        row = new KeyboardRow();
-        row.add(SEND_REPORT_ABOUT_PET);
         keyboardRows.add(row);
 
         row = new KeyboardRow();

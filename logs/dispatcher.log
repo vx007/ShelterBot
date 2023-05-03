@@ -324,3 +324,24 @@
 2023-05-03 13:47:18 INFO  TelegramBot:252 - Заходил пользователь: Александр
 2023-05-03 13:47:31 INFO  TelegramBot:252 - Заходил пользователь: Александр
 2023-05-03 13:47:51 INFO  TelegramBot:252 - Заходил пользователь: Александр
+2023-05-03 14:24:34 INFO  TelegramBot:254 - Заходил пользователь: Александр
+2023-05-03 14:33:05 INFO  TelegramBot:254 - Заходил пользователь: Александр
+2023-05-03 14:33:05 INFO  TelegramBot:275 - user saved: User(chatId=1880942606, shelter=null, name=Александр, phone=null, mail=null, registeredAt=2023-05-03 14:33:05.392929)
+2023-05-03 14:35:21 INFO  TelegramBot:254 - Заходил пользователь: Александр
+2023-05-03 14:35:22 INFO  TelegramBot:275 - user saved: User(chatId=1880942606, shelter=null, name=Александр, phone=null, mail=null, registeredAt=2023-05-03 14:35:22.063101)
+2023-05-03 20:10:29 INFO  TelegramBot:254 - Заходил пользователь: Павел
+2023-05-03 20:10:29 INFO  TelegramBot:275 - user saved: User(chatId=1734389283, shelter=null, name=Павел, phone=null, mail=null, registeredAt=2023-05-03 20:10:29.382581)
+2023-05-03 20:10:31 INFO  TelegramBot:254 - Заходил пользователь: Диана
+2023-05-03 20:10:31 INFO  TelegramBot:275 - user saved: User(chatId=868882769, shelter=null, name=Диана, phone=null, mail=null, registeredAt=2023-05-03 20:10:31.548292)
+2023-05-03 20:10:35 INFO  TelegramBot:254 - Заходил пользователь: Александр
+2023-05-03 20:10:56 INFO  TelegramBot:254 - Заходил пользователь: Диана
+2023-05-03 20:14:12 INFO  TelegramBot:254 - Заходил пользователь: Александр
+2023-05-03 20:16:07 INFO  TelegramBot:254 - Заходил пользователь: Лилия
+2023-05-03 20:16:07 INFO  TelegramBot:275 - user saved: User(chatId=2133654232, shelter=null, name=Лилия, phone=null, mail=null, registeredAt=2023-05-03 20:16:07.780481)
+2023-05-03 20:16:40 INFO  TelegramBot:254 - Заходил пользователь: Лилия
+2023-05-03 20:16:44 INFO  TelegramBot:254 - Заходил пользователь: Диана
+2023-05-03 20:17:00 INFO  TelegramBot:254 - Заходил пользователь: Лилия
+2023-05-03 20:22:52 INFO  TelegramBot:254 - Заходил пользователь: Павел
+2023-05-03 20:32:42 INFO  TelegramBot:254 - Заходил пользователь: Александр
+2023-05-03 20:40:40 INFO  TelegramBot:254 - Заходил пользователь: Александр
+2023-05-03 20:41:01 INFO  TelegramBot:254 - Заходил пользователь: Александр
