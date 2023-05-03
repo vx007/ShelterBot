@@ -104,6 +104,11 @@
 2023-04-29 17:20:10 INFO  TelegramBot:236 - Заходил пользователь: Диана
 2023-04-29 17:20:11 INFO  TelegramBot:236 - Заходил пользователь: Диана
 2023-04-29 17:25:25 INFO  TelegramBot:206 - Заходил пользователь: Диана
+2023-04-29 18:29:46 INFO  TelegramBot:206 - Заходил пользователь: Александр
+2023-04-29 18:29:46 INFO  TelegramBot:221 - user saved: User(chatId=1880942606, shelter=null, name=null, phone=null, mail=null, registeredAt=2023-04-29 18:29:46.877)
+2023-04-29 18:30:28 INFO  TelegramBot:206 - Заходил пользователь: Александр
+2023-04-29 18:30:51 INFO  TelegramBot:206 - Заходил пользователь: Александр
+2023-04-29 18:30:51 INFO  TelegramBot:221 - user saved: User(chatId=1880942606, shelter=null, name=null, phone=null, mail=null, registeredAt=2023-04-29 18:30:51.748)
 2023-04-29 20:09:26 INFO  TelegramBot:201 - Заходил пользователь: Павел
 2023-04-29 20:09:57 INFO  TelegramBot:201 - Заходил пользователь: Павел
 2023-04-29 20:10:05 INFO  TelegramBot:201 - Заходил пользователь: Павел
@@ -116,3 +121,227 @@
 2023-04-29 20:49:16 INFO  TelegramBot:207 - Заходил пользователь: Павел
 2023-04-29 20:49:24 INFO  TelegramBot:207 - Заходил пользователь: Павел
 2023-04-29 20:49:54 INFO  TelegramBot:207 - Заходил пользователь: Павел
+2023-05-01 10:46:24 INFO  TelegramBot:209 - Заходил пользователь: Александр
+2023-05-01 10:46:24 INFO  TelegramBot:225 - user saved: User(chatId=1880942606, shelter=null, name=null, phone=null, mail=null, registeredAt=2023-05-01 10:46:24.772289)
+2023-05-02 11:14:42 INFO  TelegramBot:209 - Заходил пользователь: Александр
+2023-05-02 11:19:57 INFO  TelegramBot:207 - Заходил пользователь: Александр
+2023-05-02 11:22:45 INFO  TelegramBot:206 - Заходил пользователь: Александр
+2023-05-02 11:22:55 INFO  TelegramBot:206 - Заходил пользователь: Александр
+2023-05-02 11:24:11 INFO  TelegramBot:206 - Заходил пользователь: Александр
+2023-05-02 11:24:25 INFO  TelegramBot:206 - Заходил пользователь: Александр
+2023-05-02 11:26:31 INFO  TelegramBot:206 - Заходил пользователь: Александр
+2023-05-02 11:26:40 INFO  TelegramBot:206 - Заходил пользователь: Александр
+2023-05-02 11:27:40 INFO  TelegramBot:206 - Заходил пользователь: Александр
+2023-05-02 11:27:45 INFO  TelegramBot:206 - Заходил пользователь: Александр
+2023-05-02 11:39:08 INFO  TelegramBot:207 - Заходил пользователь: Александр
+2023-05-02 11:50:40 INFO  TelegramBot:243 - Заходил пользователь: Александр
+2023-05-02 11:51:02 INFO  TelegramBot:243 - Заходил пользователь: Александр
+2023-05-02 11:51:43 INFO  TelegramBot:243 - Заходил пользователь: Александр
+2023-05-02 11:52:33 INFO  TelegramBot:243 - Заходил пользователь: Александр
+2023-05-02 11:54:23 INFO  TelegramBot:243 - Заходил пользователь: Александр
+2023-05-02 11:56:02 INFO  TelegramBot:243 - Заходил пользователь: Александр
+2023-05-02 11:56:05 ERROR TelegramBot:284 - Error occurred: Error executing org.telegram.telegrambots.meta.api.methods.send.SendMessage query: [400] Bad Request: can't parse inline keyboard button: Text buttons are unallowed in the inline keyboard
+2023-05-02 11:56:30 INFO  TelegramBot:243 - Заходил пользователь: Александр
+2023-05-02 11:56:37 ERROR TelegramBot:284 - Error occurred: Error executing org.telegram.telegrambots.meta.api.methods.send.SendMessage query: [400] Bad Request: can't parse inline keyboard button: Text buttons are unallowed in the inline keyboard
+2023-05-02 11:56:42 INFO  TelegramBot:243 - Заходил пользователь: Александр
+2023-05-02 11:56:44 ERROR TelegramBot:284 - Error occurred: Error executing org.telegram.telegrambots.meta.api.methods.send.SendMessage query: [400] Bad Request: can't parse inline keyboard button: Text buttons are unallowed in the inline keyboard
+2023-05-02 11:57:10 INFO  TelegramBot:243 - Заходил пользователь: Александр
+2023-05-02 11:57:15 INFO  TelegramBot:243 - Заходил пользователь: Александр
+2023-05-02 11:57:17 ERROR TelegramBot:284 - Error occurred: Error executing org.telegram.telegrambots.meta.api.methods.send.SendMessage query: [400] Bad Request: can't parse inline keyboard button: Text buttons are unallowed in the inline keyboard
+2023-05-02 11:58:30 INFO  TelegramBot:243 - Заходил пользователь: Александр
+2023-05-02 12:00:45 INFO  TelegramBot:243 - Заходил пользователь: Александр
+2023-05-02 12:01:01 INFO  TelegramBot:243 - Заходил пользователь: Александр
+2023-05-02 12:01:08 INFO  TelegramBot:243 - Заходил пользователь: Александр
+2023-05-02 12:01:22 INFO  TelegramBot:243 - Заходил пользователь: Александр
+2023-05-02 12:02:09 INFO  TelegramBot:243 - Заходил пользователь: Александр
+2023-05-02 12:03:00 INFO  TelegramBot:243 - Заходил пользователь: Александр
+2023-05-02 12:03:24 INFO  TelegramBot:243 - Заходил пользователь: Александр
+2023-05-02 12:03:29 INFO  TelegramBot:243 - Заходил пользователь: Александр
+2023-05-02 12:05:16 INFO  TelegramBot:244 - Заходил пользователь: Александр
+2023-05-02 12:12:32 INFO  TelegramBot:248 - Заходил пользователь: Александр
+2023-05-02 12:17:29 INFO  TelegramBot:249 - Заходил пользователь: Александр
+2023-05-02 12:25:05 INFO  TelegramBot:252 - Заходил пользователь: Александр
+2023-05-02 12:26:14 INFO  TelegramBot:247 - Заходил пользователь: Александр
+2023-05-02 12:26:41 INFO  TelegramBot:247 - Заходил пользователь: Александр
+2023-05-02 12:27:15 INFO  TelegramBot:247 - Заходил пользователь: Александр
+2023-05-02 12:29:18 INFO  TelegramBot:247 - Заходил пользователь: Александр
+2023-05-02 12:30:52 INFO  TelegramBot:247 - Заходил пользователь: Александр
+2023-05-02 12:31:00 INFO  TelegramBot:247 - Заходил пользователь: Александр
+2023-05-02 12:31:16 INFO  TelegramBot:247 - Заходил пользователь: Александр
+2023-05-02 12:31:52 INFO  TelegramBot:247 - Заходил пользователь: Александр
+2023-05-02 12:33:10 INFO  TelegramBot:245 - Заходил пользователь: Александр
+2023-05-02 13:08:39 INFO  TelegramBot:242 - Заходил пользователь: Александр
+2023-05-02 13:20:55 INFO  TelegramBot:242 - Заходил пользователь: Александр
+2023-05-02 13:22:27 INFO  TelegramBot:241 - Заходил пользователь: Александр
+2023-05-02 13:22:50 INFO  TelegramBot:241 - Заходил пользователь: Александр
+2023-05-02 13:25:36 INFO  TelegramBot:241 - Заходил пользователь: Александр
+2023-05-02 13:29:11 INFO  TelegramBot:237 - Заходил пользователь: Александр
+2023-05-02 13:29:21 INFO  TelegramBot:237 - Заходил пользователь: Александр
+2023-05-02 13:29:27 INFO  TelegramBot:237 - Заходил пользователь: Александр
+2023-05-02 13:29:43 INFO  TelegramBot:237 - Заходил пользователь: Александр
+2023-05-02 13:31:49 INFO  TelegramBot:237 - Заходил пользователь: Александр
+2023-05-02 13:31:55 INFO  TelegramBot:237 - Заходил пользователь: Александр
+2023-05-02 13:44:15 INFO  TelegramBot:238 - Заходил пользователь: Александр
+2023-05-02 13:48:40 INFO  TelegramBot:241 - Заходил пользователь: Александр
+2023-05-02 13:53:58 INFO  TelegramBot:241 - Заходил пользователь: Александр
+2023-05-02 13:54:43 INFO  TelegramBot:241 - Заходил пользователь: Александр
+2023-05-02 14:11:04 INFO  TelegramBot:226 - Заходил пользователь: Александр
+2023-05-02 14:11:23 INFO  TelegramBot:226 - Заходил пользователь: Александр
+2023-05-02 14:11:28 INFO  TelegramBot:226 - Заходил пользователь: Александр
+2023-05-02 14:11:44 INFO  TelegramBot:226 - Заходил пользователь: Александр
+2023-05-02 14:12:46 INFO  TelegramBot:229 - Заходил пользователь: Александр
+2023-05-02 14:15:09 INFO  TelegramBot:229 - Заходил пользователь: Александр
+2023-05-02 14:37:52 ERROR TelegramBot:64 - Error setting bot's command list: Error executing org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands query: [400] Bad Request: BOT_COMMAND_INVALID
+2023-05-02 14:38:04 INFO  TelegramBot:225 - Заходил пользователь: Александр
+2023-05-02 14:40:11 INFO  TelegramBot:225 - Заходил пользователь: Александр
+2023-05-02 14:41:20 ERROR TelegramBot:64 - Error setting bot's command list: Error executing org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands query: [400] Bad Request: BOT_COMMAND_INVALID
+2023-05-02 14:41:33 INFO  TelegramBot:225 - Заходил пользователь: Александр
+2023-05-02 14:41:58 INFO  TelegramBot:225 - Заходил пользователь: Александр
+2023-05-02 14:42:00 INFO  TelegramBot:225 - Заходил пользователь: Александр
+2023-05-02 14:42:06 INFO  TelegramBot:225 - Заходил пользователь: Александр
+2023-05-02 14:43:35 ERROR TelegramBot:64 - Error setting bot's command list: Error executing org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands query: [400] Bad Request: BOT_COMMAND_INVALID
+2023-05-02 14:43:48 INFO  TelegramBot:225 - Заходил пользователь: Александр
+2023-05-02 14:47:35 INFO  TelegramBot:224 - Заходил пользователь: Александр
+2023-05-02 14:47:40 INFO  TelegramBot:224 - Заходил пользователь: Александр
+2023-05-02 14:48:36 ERROR TelegramBot:64 - Error setting bot's command list: Error executing org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands query: [400] Bad Request: BOT_COMMAND_INVALID
+2023-05-02 14:48:45 INFO  TelegramBot:224 - Заходил пользователь: Александр
+2023-05-02 14:49:04 INFO  TelegramBot:224 - Заходил пользователь: Александр
+2023-05-02 14:50:04 INFO  TelegramBot:224 - Заходил пользователь: Александр
+2023-05-02 14:51:26 ERROR TelegramBot:64 - Error setting bot's command list: Error executing org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands query: [400] Bad Request: BOT_COMMAND_INVALID
+2023-05-02 14:51:51 INFO  TelegramBot:224 - Заходил пользователь: Александр
+2023-05-02 15:11:12 ERROR TelegramBot:64 - Error setting bot's command list: Error executing org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands query: [400] Bad Request: BOT_COMMAND_INVALID
+2023-05-02 15:11:21 INFO  TelegramBot:227 - Заходил пользователь: Александр
+2023-05-02 15:13:25 ERROR TelegramBot:65 - Error setting bot's command list: Error executing org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands query: [400] Bad Request: BOT_COMMAND_INVALID
+2023-05-02 15:13:32 INFO  TelegramBot:228 - Заходил пользователь: Александр
+2023-05-02 15:14:21 ERROR TelegramBot:65 - Error setting bot's command list: Error executing org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands query: [400] Bad Request: BOT_COMMAND_INVALID
+2023-05-02 15:14:29 INFO  TelegramBot:228 - Заходил пользователь: Александр
+2023-05-02 15:16:45 ERROR TelegramBot:65 - Error setting bot's command list: Error executing org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands query: [400] Bad Request: BOT_COMMAND_INVALID
+2023-05-02 15:16:56 INFO  TelegramBot:228 - Заходил пользователь: Александр
+2023-05-02 15:18:21 ERROR TelegramBot:65 - Error setting bot's command list: Error executing org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands query: [400] Bad Request: BOT_COMMAND_INVALID
+2023-05-02 15:18:31 INFO  TelegramBot:228 - Заходил пользователь: Александр
+2023-05-02 15:30:15 ERROR TelegramBot:66 - Error setting bot's command list: Error executing org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands query: [400] Bad Request: BOT_COMMAND_INVALID
+2023-05-02 15:30:20 INFO  TelegramBot:234 - Заходил пользователь: Александр
+2023-05-02 15:30:54 INFO  TelegramBot:234 - Заходил пользователь: Александр
+2023-05-02 15:33:04 INFO  TelegramBot:234 - Заходил пользователь: Александр
+2023-05-02 15:33:10 INFO  TelegramBot:234 - Заходил пользователь: Александр
+2023-05-02 15:35:31 INFO  TelegramBot:234 - Заходил пользователь: Александр
+2023-05-02 15:35:39 INFO  TelegramBot:234 - Заходил пользователь: Александр
+2023-05-02 15:45:53 INFO  TelegramBot:236 - Заходил пользователь: Александр
+2023-05-02 15:46:16 INFO  TelegramBot:236 - Заходил пользователь: Александр
+2023-05-02 15:49:15 INFO  TelegramBot:235 - Заходил пользователь: Александр
+2023-05-02 15:53:46 INFO  TelegramBot:234 - Заходил пользователь: Александр
+2023-05-02 15:58:42 INFO  TelegramBot:236 - Заходил пользователь: Александр
+2023-05-02 16:01:36 INFO  TelegramBot:237 - Заходил пользователь: Александр
+2023-05-02 16:02:00 INFO  TelegramBot:237 - Заходил пользователь: Александр
+2023-05-02 16:10:30 INFO  TelegramBot:242 - Заходил пользователь: Александр
+2023-05-02 16:13:12 ERROR TelegramBot:237 - Error occurred: Error executing org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText query: [400] Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2023-05-02 18:54:43 INFO  TelegramBot:243 - Заходил пользователь: Александр
+2023-05-02 18:56:00 INFO  TelegramBot:243 - Заходил пользователь: Александр
+2023-05-02 19:03:56 INFO  TelegramBot:243 - Заходил пользователь: Александр
+2023-05-02 19:06:20 INFO  TelegramBot:241 - Заходил пользователь: Александр
+2023-05-02 19:08:55 INFO  TelegramBot:242 - Заходил пользователь: Александр
+2023-05-02 19:22:33 INFO  TelegramBot:245 - Заходил пользователь: Александр
+2023-05-02 19:23:46 INFO  TelegramBot:245 - Заходил пользователь: Александр
+2023-05-02 19:26:15 INFO  TelegramBot:244 - Заходил пользователь: Александр
+2023-05-02 19:29:52 INFO  TelegramBot:245 - Заходил пользователь: Александр
+2023-05-02 19:32:27 INFO  TelegramBot:245 - Заходил пользователь: Александр
+2023-05-02 20:22:10 INFO  TelegramBot:244 - Заходил пользователь: Александр
+2023-05-02 20:49:54 INFO  TelegramBot:245 - Заходил пользователь: Александр
+2023-05-02 20:51:16 INFO  TelegramBot:244 - Заходил пользователь: Александр
+2023-05-02 20:56:47 INFO  TelegramBot:245 - Заходил пользователь: Александр
+2023-05-02 21:04:32 INFO  TelegramBot:255 - Заходил пользователь: Александр
+2023-05-02 21:06:23 INFO  TelegramBot:256 - Заходил пользователь: Александр
+2023-05-02 21:08:30 INFO  TelegramBot:257 - Заходил пользователь: Александр
+2023-05-02 22:35:19 INFO  TelegramBot:252 - Заходил пользователь: Александр
+2023-05-02 23:02:30 INFO  TelegramBot:253 - Заходил пользователь: Александр
+2023-05-02 23:06:42 INFO  TelegramBot:253 - Заходил пользователь: Александр
+2023-05-02 23:08:47 INFO  TelegramBot:253 - Заходил пользователь: Александр
+2023-05-02 23:09:51 INFO  TelegramBot:253 - Заходил пользователь: Александр
+2023-05-02 23:15:22 INFO  TelegramBot:254 - Заходил пользователь: Александр
+2023-05-02 23:16:46 INFO  TelegramBot:257 - Заходил пользователь: Александр
+2023-05-02 23:18:08 INFO  TelegramBot:257 - Заходил пользователь: Александр
+2023-05-02 23:19:47 INFO  TelegramBot:257 - Заходил пользователь: Александр
+2023-05-02 23:26:00 INFO  TelegramBot:269 - Заходил пользователь: Александр
+2023-05-02 23:27:24 INFO  TelegramBot:269 - Заходил пользователь: Александр
+2023-05-02 23:30:27 INFO  TelegramBot:269 - Заходил пользователь: Александр
+2023-05-03 08:23:05 INFO  TelegramBot:269 - Заходил пользователь: Александр
+2023-05-03 08:26:43 INFO  TelegramBot:270 - Заходил пользователь: Александр
+2023-05-03 08:28:41 INFO  TelegramBot:270 - Заходил пользователь: Александр
+2023-05-03 08:37:31 INFO  TelegramBot:270 - Заходил пользователь: Александр
+2023-05-03 08:39:59 INFO  TelegramBot:270 - Заходил пользователь: Александр
+2023-05-03 08:40:08 INFO  TelegramBot:270 - Заходил пользователь: Александр
+2023-05-03 08:40:14 INFO  TelegramBot:270 - Заходил пользователь: Александр
+2023-05-03 08:40:22 INFO  TelegramBot:270 - Заходил пользователь: Александр
+2023-05-03 08:45:46 INFO  TelegramBot:283 - Заходил пользователь: Александр
+2023-05-03 08:45:55 INFO  TelegramBot:283 - Заходил пользователь: Александр
+2023-05-03 08:57:07 INFO  TelegramBot:285 - Заходил пользователь: Александр
+2023-05-03 09:01:20 INFO  TelegramBot:285 - Заходил пользователь: Александр
+2023-05-03 09:03:23 INFO  TelegramBot:283 - Заходил пользователь: Александр
+2023-05-03 09:03:34 INFO  TelegramBot:283 - Заходил пользователь: Александр
+2023-05-03 09:28:58 INFO  TelegramBot:280 - Заходил пользователь: Александр
+2023-05-03 09:29:29 INFO  TelegramBot:280 - Заходил пользователь: Александр
+2023-05-03 09:40:59 INFO  TelegramBot:280 - Заходил пользователь: Александр
+2023-05-03 09:42:52 INFO  TelegramBot:280 - Заходил пользователь: Александр
+2023-05-03 09:44:03 INFO  TelegramBot:280 - Заходил пользователь: Александр
+2023-05-03 09:53:41 INFO  TelegramBot:279 - Заходил пользователь: Александр
+2023-05-03 09:54:39 INFO  TelegramBot:279 - Заходил пользователь: Александр
+2023-05-03 10:38:14 INFO  TelegramBot:281 - Заходил пользователь: Александр
+2023-05-03 11:09:24 INFO  TelegramBot:303 - Заходил пользователь: Александр
+2023-05-03 11:20:59 INFO  TelegramBot:303 - Заходил пользователь: Александр
+2023-05-03 11:21:55 INFO  TelegramBot:303 - Заходил пользователь: Александр
+2023-05-03 11:22:01 INFO  TelegramBot:303 - Заходил пользователь: Александр
+2023-05-03 11:22:21 INFO  TelegramBot:303 - Заходил пользователь: Александр
+2023-05-03 11:22:55 INFO  TelegramBot:303 - Заходил пользователь: Александр
+2023-05-03 11:23:33 INFO  TelegramBot:303 - Заходил пользователь: Александр
+2023-05-03 11:24:12 INFO  TelegramBot:303 - Заходил пользователь: Александр
+2023-05-03 11:28:43 INFO  TelegramBot:303 - Заходил пользователь: Александр
+2023-05-03 11:35:07 INFO  TelegramBot:303 - Заходил пользователь: Александр
+2023-05-03 11:35:49 INFO  TelegramBot:303 - Заходил пользователь: Александр
+2023-05-03 11:36:02 INFO  TelegramBot:303 - Заходил пользователь: Александр
+2023-05-03 11:38:05 INFO  TelegramBot:303 - Заходил пользователь: Александр
+2023-05-03 11:40:04 INFO  TelegramBot:303 - Заходил пользователь: Александр
+2023-05-03 11:40:23 INFO  TelegramBot:303 - Заходил пользователь: Александр
+2023-05-03 12:27:12 INFO  TelegramBot:263 - Заходил пользователь: Александр
+2023-05-03 12:32:30 INFO  TelegramBot:264 - Заходил пользователь: Александр
+2023-05-03 13:00:12 INFO  TelegramBot:273 - Заходил пользователь: Александр
+2023-05-03 13:00:47 INFO  TelegramBot:273 - Заходил пользователь: Александр
+2023-05-03 13:03:54 INFO  TelegramBot:273 - Заходил пользователь: Александр
+2023-05-03 13:04:37 INFO  TelegramBot:273 - Заходил пользователь: Александр
+2023-05-03 13:05:07 INFO  TelegramBot:273 - Заходил пользователь: Александр
+2023-05-03 13:05:16 INFO  TelegramBot:273 - Заходил пользователь: Александр
+2023-05-03 13:11:26 INFO  TelegramBot:275 - Заходил пользователь: Александр
+2023-05-03 13:12:25 INFO  TelegramBot:275 - Заходил пользователь: Александр
+2023-05-03 13:14:13 INFO  TelegramBot:275 - Заходил пользователь: Александр
+2023-05-03 13:22:43 INFO  TelegramBot:275 - Заходил пользователь: Александр
+2023-05-03 13:23:55 INFO  TelegramBot:275 - Заходил пользователь: Александр
+2023-05-03 13:24:12 INFO  TelegramBot:275 - Заходил пользователь: Александр
+2023-05-03 13:24:26 INFO  TelegramBot:275 - Заходил пользователь: Александр
+2023-05-03 13:24:28 INFO  TelegramBot:275 - Заходил пользователь: Александр
+2023-05-03 13:24:44 INFO  TelegramBot:275 - Заходил пользователь: Александр
+2023-05-03 13:25:01 INFO  TelegramBot:275 - Заходил пользователь: Александр
+2023-05-03 13:44:25 INFO  TelegramBot:253 - Заходил пользователь: Александр
+2023-05-03 13:46:28 INFO  TelegramBot:252 - Заходил пользователь: Александр
+2023-05-03 13:47:18 INFO  TelegramBot:252 - Заходил пользователь: Александр
+2023-05-03 13:47:31 INFO  TelegramBot:252 - Заходил пользователь: Александр
+2023-05-03 13:47:51 INFO  TelegramBot:252 - Заходил пользователь: Александр
+2023-05-03 14:24:34 INFO  TelegramBot:254 - Заходил пользователь: Александр
+2023-05-03 14:33:05 INFO  TelegramBot:254 - Заходил пользователь: Александр
+2023-05-03 14:33:05 INFO  TelegramBot:275 - user saved: User(chatId=1880942606, shelter=null, name=Александр, phone=null, mail=null, registeredAt=2023-05-03 14:33:05.392929)
+2023-05-03 14:35:21 INFO  TelegramBot:254 - Заходил пользователь: Александр
+2023-05-03 14:35:22 INFO  TelegramBot:275 - user saved: User(chatId=1880942606, shelter=null, name=Александр, phone=null, mail=null, registeredAt=2023-05-03 14:35:22.063101)
+2023-05-03 20:10:29 INFO  TelegramBot:254 - Заходил пользователь: Павел
+2023-05-03 20:10:29 INFO  TelegramBot:275 - user saved: User(chatId=1734389283, shelter=null, name=Павел, phone=null, mail=null, registeredAt=2023-05-03 20:10:29.382581)
+2023-05-03 20:10:31 INFO  TelegramBot:254 - Заходил пользователь: Диана
+2023-05-03 20:10:31 INFO  TelegramBot:275 - user saved: User(chatId=868882769, shelter=null, name=Диана, phone=null, mail=null, registeredAt=2023-05-03 20:10:31.548292)
+2023-05-03 20:10:35 INFO  TelegramBot:254 - Заходил пользователь: Александр
+2023-05-03 20:10:56 INFO  TelegramBot:254 - Заходил пользователь: Диана
+2023-05-03 20:14:12 INFO  TelegramBot:254 - Заходил пользователь: Александр
+2023-05-03 20:16:07 INFO  TelegramBot:254 - Заходил пользователь: Лилия
+2023-05-03 20:16:07 INFO  TelegramBot:275 - user saved: User(chatId=2133654232, shelter=null, name=Лилия, phone=null, mail=null, registeredAt=2023-05-03 20:16:07.780481)
+2023-05-03 20:16:40 INFO  TelegramBot:254 - Заходил пользователь: Лилия
+2023-05-03 20:16:44 INFO  TelegramBot:254 - Заходил пользователь: Диана
+2023-05-03 20:17:00 INFO  TelegramBot:254 - Заходил пользователь: Лилия
+2023-05-03 20:22:52 INFO  TelegramBot:254 - Заходил пользователь: Павел
+2023-05-03 20:32:42 INFO  TelegramBot:254 - Заходил пользователь: Александр
+2023-05-03 20:40:40 INFO  TelegramBot:254 - Заходил пользователь: Александр
+2023-05-03 20:41:01 INFO  TelegramBot:254 - Заходил пользователь: Александр
