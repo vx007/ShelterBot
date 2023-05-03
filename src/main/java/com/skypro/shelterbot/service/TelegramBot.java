@@ -24,12 +24,10 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+
+import static java.lang.System.currentTimeMillis;
 
 @Log4j
 @Component
@@ -39,8 +37,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     private UserRepository userRepository;
 
     final BotConfig config;
-    static final String YES_BUTTON = "YES_BUTTON";
-    static final String NO_BUTTON = "NO_BUTTON";
     static final String CAT_BUTTON = "CAT_BUTTON";
     static final String DOG_BUTTON = "DOG_BUTTON";
     static final String ERROR_TEXT = "Error occurred: ";
@@ -48,19 +44,21 @@ public class TelegramBot extends TelegramLongPollingBot {
             "Можно реализовать команды из основного меню или типы команд.\n\n" +
             "Type /start чтобы увидеть приветсятвеное сообщение.\n\n" +
             "Type /mydata чтобы увидеть инфо о себе.\n\n" +
-            "Type /help увидеть это сообщение снова.";
+            "Type /help увидеть это сообщение снова. И т.д.";
+    static final String INFO_ABOUT_SHELTER_CAT = "тут должна быть инфа о приюте кошек";
+    static final String INFO_HOW_TAKE_ANIMAL = "тут должна быть инфа Как взять животное";
 
-    static final String INFO_ABOUT_SHELTER_CAT = "информация о приюте кошек";
-    static final String HOW_TO_ADOPT_AN_ANIMAL = "информация how to adopt an animal from a shelter";
+    static final String ABOUT_SHELTER_CAT = "О приюте кошек";
+    static final String HOW_TAKE_ANIMAL = "Как взять животное";
+    static final String SEND_INFO_ABOUT_PET = "Прислать отчет о питомце";
+    static final String CALL_VOLUNTEER = "Позвать волонтера";
 
     public TelegramBot(BotConfig config) {
         this.config = config;
         List<BotCommand> listOfCommands = new ArrayList<>();
-        listOfCommands.add(new BotCommand("/start", "получаем приветственое сообщение"));
-        listOfCommands.add(new BotCommand("/cat", "cat"));
-        listOfCommands.add(new BotCommand("/dog", "dog"));
-        listOfCommands.add(new BotCommand("/mydata", "get your data stored"));
-        listOfCommands.add(new BotCommand("/deletedata", "delete my data"));
+        listOfCommands.add(new BotCommand("/start", "Welcome to the Shelter Bot!"));
+        listOfCommands.add(new BotCommand("/cat", "О приюте кошек"));
+        listOfCommands.add(new BotCommand("/volunteer", "волонтер"));
         listOfCommands.add(new BotCommand("/help", "how to use this bot"));
         listOfCommands.add(new BotCommand("/settings", "set your preferences"));
         try {
@@ -77,6 +75,7 @@ public class TelegramBot extends TelegramLongPollingBot {
      */
     @Override
     public void onUpdateReceived(Update update) {
+        Message message = update.getMessage();
         if (update.hasMessage() && update.getMessage().hasText()) {
 
             String messageText = update.getMessage().getText();
@@ -94,15 +93,29 @@ public class TelegramBot extends TelegramLongPollingBot {
                     case "/start":
                         startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
                         registeredUser(update.getMessage());
-                        offerChoice(chatId);
+                        offerCatOrDog(chatId);
                         break;
 
                     case "/cat":
-                        sendMessage(chatId,INFO_ABOUT_SHELTER_CAT);
-
+                        offerChoiceMenuAboutShelterCat(chatId);
                         break;
 
-                    case "/dog":
+                    case "/volunteer":
+                        callVolunteer(chatId);
+                        break;
+                    case "Рассказать о приюте":
+
+                        break;
+                    case "Выдать расписание работы приюта и адрес, схему проезда":
+
+                        break;
+                    case "Выдать контактные данные охраны для оформления пропуска на машину":
+
+                        break;
+                    case "Выдать общие рекомендации о технике безопасности на территории приюта":
+
+                        break;
+                    case "Принять и записать контактные данные для связи":
 
                         break;
 
@@ -122,24 +135,124 @@ public class TelegramBot extends TelegramLongPollingBot {
             long chatId = update.getCallbackQuery().getMessage().getChatId();
 
             if (callBackData.equals(CAT_BUTTON)) {
-                String text = "Yue pressed CAT button";
+                String text = EmojiParser.parseToUnicode("Вы выбрали приют кошек! " + " :cat:");
                 executeEditMessageText(text, chatId, messageId);
-                sendMessage(chatId,INFO_ABOUT_SHELTER_CAT);
-                getInlineKeyboardMarkup();
+                offerChoiceMenuAboutShelterCat(chatId);
 
             } else if (callBackData.equals(DOG_BUTTON)) {
-                String text = "Yue pressed DOG button";
-                sendMessage(chatId,text);
+                String text = EmojiParser.parseToUnicode("Вы выбрали приют собак! " + ":dog:");
+                executeEditMessageText(text, chatId, messageId);
+
+            } else if (callBackData.equals(ABOUT_SHELTER_CAT)) {
+                String text = EmojiParser.parseToUnicode("Информация о приюте кошек: :cat: ");
+//                String text = EmojiParser.parseToUnicode("Информация о приюте кошек: :cat: \n\n" + INFO_ABOUT_SHELTER_CAT);
+                executeEditMessageText(text, chatId, messageId);
+                sendMessage(chatId,"Привет, "+ update.getCallbackQuery().getMessage().getChat().getFirstName() + " выбери из меню");
+                botWelcomesUser(text,chatId,messageId);
+
+
+            } else if (callBackData.equals(HOW_TAKE_ANIMAL)) {
+                String text = "Вы выбрали, как взять животное";
+                executeEditMessageText(text,chatId,messageId);
+                sendMessage(chatId,"Привет, "+ update.getCallbackQuery().getMessage().getChat().getFirstName() + " выбери из меню");
+
+
+            } else if (callBackData.equals(SEND_INFO_ABOUT_PET)) {
+                String text = "Вы выбрали, отправить информацию о петомце";
+                executeEditMessageText(text,chatId,messageId);
+                sendMessage(chatId,"Привет, "+ update.getCallbackQuery().getMessage().getChat().getFirstName() + " выбери из меню");
+
+
+            } else if (callBackData.equals(CALL_VOLUNTEER)) {
+                String text = "Вы выбрали, позвать волонтера";
+                executeEditMessageText(text,chatId,messageId);
+                callVolunteer(chatId);
+
             }
 
         }
     }
+
+
+    private void offerCatOrDog(long chatId) {
+        SendMessage message = new SendMessage();
+        message.setChatId(String.valueOf(chatId));
+        message.setText("выберите из меню");
+
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+
+        List<List<InlineKeyboardButton>> listOfButtons = new ArrayList<>();
+        List<InlineKeyboardButton> listButtonFirst = new ArrayList<>();
+        List<InlineKeyboardButton> listButtonSecond = new ArrayList<>();
+
+        var catButton = new InlineKeyboardButton();
+        catButton.setText("приют кошек");
+        catButton.setCallbackData(CAT_BUTTON);
+
+        var dogButton = new InlineKeyboardButton();
+        dogButton.setText("приют собак");
+        dogButton.setCallbackData(DOG_BUTTON);
+
+        listButtonFirst.add(catButton);
+        listButtonSecond.add(dogButton);
+
+        listOfButtons.add(listButtonFirst);
+        listOfButtons.add(listButtonSecond);
+        inlineKeyboardMarkup.setKeyboard(listOfButtons);
+        message.setReplyMarkup(inlineKeyboardMarkup);
+
+        executeMessage(message);
+    }
+
+    private void offerChoiceMenuAboutShelterCat(long chatId) {
+        SendMessage message = new SendMessage();
+        message.setChatId(String.valueOf(chatId));
+        message.setText("выберите из меню");
+
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+
+        List<List<InlineKeyboardButton>> listOfButtons = new ArrayList<>();
+        List<InlineKeyboardButton> listButtonFirst = new ArrayList<>();
+        List<InlineKeyboardButton> listButtonSecond = new ArrayList<>();
+        List<InlineKeyboardButton> listButtonThird = new ArrayList<>();
+        List<InlineKeyboardButton> listButtonFourth = new ArrayList<>();
+
+        var aboutShelterCat = new InlineKeyboardButton();
+        aboutShelterCat.setText("О приюте кошек");
+        aboutShelterCat.setCallbackData(ABOUT_SHELTER_CAT);
+
+        var howTakeAnimal = new InlineKeyboardButton();
+        howTakeAnimal.setText("Как взять животное");
+        howTakeAnimal.setCallbackData(HOW_TAKE_ANIMAL);
+
+        var sendInfoAboutAnimal = new InlineKeyboardButton();
+        sendInfoAboutAnimal.setText("Прислать отчет о питомце");
+        sendInfoAboutAnimal.setCallbackData(SEND_INFO_ABOUT_PET);
+
+        var callVolunteer = new InlineKeyboardButton();
+        callVolunteer.setText("Позвать волонтера");
+        callVolunteer.setCallbackData(CALL_VOLUNTEER);
+
+        listButtonFirst.add(aboutShelterCat);
+        listButtonSecond.add(howTakeAnimal);
+        listButtonThird.add(sendInfoAboutAnimal);
+        listButtonFourth.add(callVolunteer);
+
+        listOfButtons.add(listButtonFirst);
+        listOfButtons.add(listButtonSecond);
+        listOfButtons.add(listButtonThird);
+        listOfButtons.add(listButtonFourth);
+        inlineKeyboardMarkup.setKeyboard(listOfButtons);
+        message.setReplyMarkup(inlineKeyboardMarkup);
+
+        executeMessage(message);
+    }
+
     private void executeEditMessageText(String text, long chatId,  long messageId) { // меотод показывает что нажал
         EditMessageText message = new EditMessageText();
         message.setChatId(String.valueOf(chatId));
         message.setText(text);
         message.setMessageId((int) messageId);
-
 
         try {
             execute(message);
@@ -148,59 +261,8 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-    private  InlineKeyboardMarkup getInlineKeyboardMarkup() {
-
-        InlineKeyboardMarkup markupButtons = new InlineKeyboardMarkup();
-
-        InlineKeyboardButton infoAboutShelterCat = new InlineKeyboardButton(INFO_ABOUT_SHELTER_CAT);
-        InlineKeyboardButton howToAdoptAnAnimal = new InlineKeyboardButton(HOW_TO_ADOPT_AN_ANIMAL);
-
-        infoAboutShelterCat.setCallbackData(INFO_ABOUT_SHELTER_CAT);
-        howToAdoptAnAnimal.setCallbackData(HOW_TO_ADOPT_AN_ANIMAL);
-
-        List<InlineKeyboardButton> listButtonRow1 = new ArrayList<>();
-        listButtonRow1.add(infoAboutShelterCat);
-
-        List<InlineKeyboardButton> listButtonRow2 = new ArrayList<>();
-        listButtonRow2.add(howToAdoptAnAnimal);
-
-        List<List<InlineKeyboardButton>> listOfButtons = new ArrayList<>();
-        listOfButtons.add(listButtonRow1);
-        listOfButtons.add(listButtonRow2);
-
-        markupButtons.setKeyboard(listOfButtons);
-        return markupButtons;
-    }
-
-    private void offerChoice(long chatId) {
-        SendMessage message = new SendMessage();
-        message.setChatId(String.valueOf(chatId));
-        message.setText("выберите приют");
-
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-
-        List<List<InlineKeyboardButton>> listOfButtons = new ArrayList<>();
-        List<InlineKeyboardButton> listButton = new ArrayList<>();
-
-        var catButton = new InlineKeyboardButton();
-        catButton.setText("Cat");
-        catButton.setCallbackData(CAT_BUTTON);
-
-        var dogButton = new InlineKeyboardButton();
-        dogButton.setText("Dog");
-        dogButton.setCallbackData(DOG_BUTTON);
-
-        listButton.add(catButton);
-        listButton.add(dogButton);
 
 
-        listOfButtons.add(listButton);
-        inlineKeyboardMarkup.setKeyboard(listOfButtons);
-        message.setReplyMarkup(inlineKeyboardMarkup);
-
-
-        executeMessage(message);
-    }
 
     private void startCommandReceived(long chatId, String name) {
         String answer = EmojiParser.parseToUnicode("Hi, welcome to the Shelter Bot!" + " :blush:");
@@ -216,7 +278,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             User user = new User();
             user.setChatId(chatId);
             user.setName(user.getName());
-            //user.setRegisteredAt(new TimeStamp(currentTimeMillis()));
+            user.setRegisteredAt(new Timestamp(currentTimeMillis()));
             user.setRegisteredAt(Timestamp.valueOf(LocalDateTime.now()));
 
             userRepository.save(user);
@@ -249,22 +311,50 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    private void callVolunteer(long chatId) {
+        SendMessage message = new SendMessage();
+        message.setChatId(String.valueOf(chatId));
+        message.setText("Здравствуйте я волонтер, чё те надо?");
+        executeMessage(message);
+    }
+
     // метод для вызова доп клавиатуры с кнопками
-    private void methodCallButtons(SendMessage message) {
+    private void botWelcomesUser(String text, long chatId,  long messageId) {
+        SendMessage message = new SendMessage();
+        message.setChatId(String.valueOf(chatId));
+        message.setText(text);
+        message.enableMarkdown(true);
+
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        message.setReplyMarkup(keyboardMarkup);
+        keyboardMarkup.setSelective(true);
+        keyboardMarkup.setResizeKeyboard(true);
+        keyboardMarkup.setOneTimeKeyboard(true);
         List<KeyboardRow> keyboardRows = new ArrayList<>();
+
         KeyboardRow row = new KeyboardRow();
-        row.add("информация о приложении");
-        row.add("регистрация");
+        row.add("Рассказать о приюте");
         keyboardRows.add(row);
+
         row = new KeyboardRow();
-        row.add("проверить мои данные");
-        row.add("удалить мои данные");
-        row.add("Как взять животное из приюта");
-        row.add("Прислать отчёт о питомце");
-        row.add("Позвать волонтёра");
+        row.add("Выдать контактные данные охраны для оформления пропуска на машину");
         keyboardRows.add(row);
+
+        row = new KeyboardRow();
+        row.add("Выдать общие рекомендации о технике безопасности на территории приюта");
+        keyboardRows.add(row);
+
+        row = new KeyboardRow();
+        row.add("Принять и записать контактные данные для связи");
+        keyboardRows.add(row);
+
+        row = new KeyboardRow();
+        row.add("Выдать расписание работы приюта и адрес, схему проезда");
+        keyboardRows.add(row);
+
         keyboardMarkup.setKeyboard(keyboardRows);
         message.setReplyMarkup(keyboardMarkup);
+
+        executeMessage(message);
     }
 }
