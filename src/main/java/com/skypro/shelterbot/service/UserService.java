@@ -1,40 +1,53 @@
 package com.skypro.shelterbot.service;
 
-import com.skypro.shelterbot.exception.UserNotFoundException;
 import com.skypro.shelterbot.model.User;
-import com.skypro.shelterbot.repositories.UserRepository;
+import com.skypro.shelterbot.repository.UserRepository;
 import org.springframework.stereotype.Service;
-import java.util.Collection;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
 
-
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public User saveUser(User user) {
-        return userRepository.save(user);
+    @Transactional
+    public void add(User user) {
+        var chatId = user.getChatId();
+        if (userRepository.findByChatId(chatId).isEmpty()) {
+            userRepository.save(user);
+        }
     }
 
-    public User findUser(long id) {
-        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
+    public Optional<User> getByChatId(Long chatId) {
+        return userRepository.findByChatId(chatId);
     }
 
-    public Collection<User> getAllOrders() {
+    public Optional<User> getByPetId(Long petId) {
+        return userRepository.findByPetId(petId);
+    }
+
+    public List<User> getAll() {
         return userRepository.findAll();
     }
 
-
-    public Collection<User> findUserByShelter(String shelter) {
-        return userRepository.findUserByShelter(shelter);
+    @Transactional
+    public void remove(User user) {
+        var chatId = user.getChatId();
+        if (userRepository.findByChatId(chatId).isPresent()) {
+            userRepository.delete(user);
+        }
     }
 
-
-    public User findUserByChatId(Long chatId) {
-        return userRepository.findUserByChatId(chatId);
+    @Transactional
+    public void remove(Long chatId) {
+        if (userRepository.findByChatId(chatId).isPresent()) {
+            userRepository.deleteByChatId(chatId);
+        }
     }
 }
