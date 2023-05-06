@@ -1,6 +1,6 @@
 package com.skypro.shelterbot.config;
 
-import com.skypro.shelterbot.service.TelegramBot;
+import com.skypro.shelterbot.component.TelegramBot;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +27,4 @@ public class BotInitializer {
             log.error(e.getMessage());
         }
     }
-
 }
