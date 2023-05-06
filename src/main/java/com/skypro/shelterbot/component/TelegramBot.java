@@ -100,7 +100,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             var name = update.getMessage().getChat().getFirstName();
             User u = userRepository.findByChatId(chatId).orElse(null);
 
-            if ("Отправить отчёт".equals(u.getLastCommand())){
+            if ("Отправить отчёт".equals("")){
                 if (handleReport(update.getMessage())) {
                     updateLastCommand(chatId, "");
                 }
