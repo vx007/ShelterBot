@@ -5,6 +5,7 @@ import com.skypro.shelterbot.repository.ReportRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,23 +18,16 @@ public class ReportService {
     }
 
     @Transactional
-    public void add(Report report) {
-        var id = report.getId();
-        if (reportRepository.findById(id).isEmpty()) {
-            reportRepository.save(report);
-        }
+    public void add(@NotNull Report report) {
+        reportRepository.save(report);
     }
 
     public Optional<Report> getById(Long id) {
         return reportRepository.findById(id);
     }
 
-    public Optional<Report> getByChatId(Long chatId) {
+    public List<Report> getByChatId(Long chatId) {
         return reportRepository.findByUserChatId(chatId);
-    }
-
-    public Optional<Report> getByPhotoId(Long photoId) {
-        return reportRepository.findByPhotoId(photoId);
     }
 
     public List<Report> getAll() {
@@ -41,17 +35,12 @@ public class ReportService {
     }
 
     @Transactional
-    public void remove(Report report) {
-        var id = report.getId();
-        if (reportRepository.findById(id).isPresent()) {
-            reportRepository.delete(report);
-        }
+    public void remove(@NotNull Report report) {
+        reportRepository.delete(report);
     }
 
     @Transactional
-    public void remove(Long id) {
-        if (reportRepository.findById(id).isPresent()) {
-            reportRepository.deleteById(id);
-        }
+    public void remove(@NotNull Long id) {
+        reportRepository.deleteById(id);
     }
 }

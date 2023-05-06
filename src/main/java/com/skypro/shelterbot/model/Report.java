@@ -20,7 +20,7 @@ public class Report {
     @ManyToOne
     @JoinColumn(name = "chat_id")
     private User user;
-    private Long photoId;
+    private String photoId;
     private String text;
     private LocalDateTime dateTime;
     private Boolean isApproved;

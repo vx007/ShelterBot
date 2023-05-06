@@ -22,7 +22,7 @@ create table if not exists reports
 (
     id            bigint primary key,
     chat_id       bigint not null references users (chat_id),
-    photo_id      bigint,
+    photo_id      varchar,
     text          varchar,
     date_time     timestamp not null,
     is_approved   boolean

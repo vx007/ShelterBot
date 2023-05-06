@@ -1,9 +1,11 @@
 package com.skypro.shelterbot.component;
 
 import com.skypro.shelterbot.config.BotConfig;
+import com.skypro.shelterbot.model.Report;
 import com.skypro.shelterbot.model.User;
 import com.skypro.shelterbot.repository.UserRepository;
 import com.skypro.shelterbot.resource.StringConstants;
+import com.skypro.shelterbot.service.ReportService;
 import com.vdurmont.emoji.EmojiParser;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Component;
@@ -35,6 +37,7 @@ import java.util.List;
 public class TelegramBot extends TelegramLongPollingBot {
     private final BotConfig botConfig;
     private final UserRepository userRepository;
+    private final ReportService reportService;
 
     static final String ERROR_TEXT = "Error occurred: ";
     static final String HELP_TEXT = "Этот бот создан, что бы вы смогли найти себе подходящего питомца \n\n" +
@@ -63,9 +66,10 @@ public class TelegramBot extends TelegramLongPollingBot {
     static final String GET_DAILY_REPORT_FROM = "Получить форму ежедневного отчета";
     static final String TEXT_OF_VOLUNTEER = "Привет я волонтер, чем могу помочь?";
 
-    public TelegramBot(BotConfig botConfig, UserRepository userRepository) {
+    public TelegramBot(BotConfig botConfig, UserRepository userRepository, ReportService reportService) {
         this.botConfig = botConfig;
         this.userRepository = userRepository;
+        this.reportService = reportService;
     }
 
     @PostConstruct
@@ -94,8 +98,13 @@ public class TelegramBot extends TelegramLongPollingBot {
             var messageText = update.getMessage().getText();
             var chatId = update.getMessage().getChatId();
             var name = update.getMessage().getChat().getFirstName();
+            User u = userRepository.findByChatId(chatId).orElse(null);
 
-            if (messageText.contains("/send") && botConfig.getOwnerId().equals(chatId)) { //отправка всем пользователям сообщения от проверенного пользователя
+            if ("Отправить отчёт".equals(u.getLastCommand())){
+                if (handleReport(update.getMessage())) {
+                    updateLastCommand(chatId, "");
+                }
+            } else if (messageText.contains("/send") && botConfig.getOwnerId().equals(chatId)) { //отправка всем пользователям сообщения от проверенного пользователя
                 var textToSend = EmojiParser.parseToUnicode(messageText.substring(messageText.indexOf(" ")));// метод substring позволяет получить текст после /send
                 var users = userRepository.findAll();
                 for (var user : users) {
@@ -182,6 +191,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     case "Отправить отчёт":
                         sendText(chatId, "Присылайте отчёт!");
 //                        receiveReport(update.getMessage());
+                        updateLastCommand(chatId, "Отправить отчёт");
                         break;
                     default:
                         sendText(chatId, "Извините, команда не распознана!\n\n" + HELP_TEXT);
@@ -203,6 +213,14 @@ public class TelegramBot extends TelegramLongPollingBot {
                 sendText(chatId, text);
 
             }
+        }
+    }
+
+    private void updateLastCommand(Long chatId, String command) {
+        if (userRepository.findByChatId(chatId).isPresent()) {
+            var user = userRepository.findByChatId(chatId).get();
+            user.setLastCommand(command);
+            userRepository.save(user);
         }
     }
 
@@ -547,50 +565,35 @@ public class TelegramBot extends TelegramLongPollingBot {
         executeSendMessage(message);
     }
 
-//    private void handleReport(Message message, String lastUserCommand) {
-//        var chatId = message.getChat().getId();
-//        var text = message.getText();
-//        var photoSizes = message.getPhoto();
-//
-//        if (!lastUserCommand.equals("Отправить отчёт")) {
-//            log.error("Неверный запуск обработчика!");
-//            return;
-//        }
-//
-//        if (!message.hasPhoto()) {
-//            sendText(chatId, "Вы не добавили фото к отчёту!");
-//            handleReportText(chatId, text);
-//            return;
-//        }
-//
-//        if (!message.hasText()) {
-//            sendText(chatId, "Вы не добавили текст к отчёту!");
-//            handleReportPhoto(chatId, photoSizes);
-//            return;
-//        }
-//
-//        handleReportPhoto(chatId, photoSizes);
-//        handleReportText(chatId, text);
-//    }
-//
-//    private void handleReportPhoto(Long chatId, List<PhotoSize> photoSizes) {
-//        var user = shelterCatUserRepository.findShelterCatUserByChatId(chatId);
-//        if (petRepository.findById(user.getPet().getId()).isPresent()) {
-//            Pet pet = petRepository.findById(user.getPet().getId()).get();
-//        }
-//        for (var photo : photoSizes) {
-//
-//        }
-//
-//    }
-//
-//    private void handleReportText(Long chatId, String text) {
-//        var user = shelterCatUserRepository.findShelterCatUserByChatId(chatId);
-//        var report = new ReportPet();
-//        report.setChatId(chatId);
-//        report.setInfoPet(text);
-//        report.setDateTime(LocalDateTime.now());
-//        report.setShelterCatUser(user);
-//        reportPetRepository.save(report);
-//    }
+    private boolean handleReport(Message message) {
+        var chatId = message.getChat().getId();
+
+        var user = userRepository.findByChatId(chatId).orElseThrow();
+        var lastCommand = user.getLastCommand();
+
+        if (!lastCommand.equals("Отправить отчёт")) {
+            log.error("Неверный запуск обработчика!");
+            return false;
+        }
+
+        if (!message.hasPhoto()) {
+            sendText(chatId, "Вы не добавили фото к отчёту!");
+            return false;
+        }
+
+        if (!message.hasText()) {
+            sendText(chatId, "Вы не добавили текст к отчёту!");
+            return false;
+        }
+        var text = message.getText();
+        var photoId = message.getPhoto().get(0).getFileUniqueId();
+
+        var report = new Report();
+        report.setUser(user);
+        report.setPhotoId(photoId);
+        report.setText(text);
+        report.setDateTime(LocalDateTime.now());
+        reportService.add(report);
+        return true;
+    }
 }

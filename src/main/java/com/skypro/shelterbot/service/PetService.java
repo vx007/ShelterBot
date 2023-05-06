@@ -5,6 +5,7 @@ import com.skypro.shelterbot.repository.PetRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,11 +18,8 @@ public class PetService {
     }
 
     @Transactional
-    public void add(Pet pet) {
-        var id = pet.getId();
-        if (petRepository.findById(id).isEmpty()) {
-            petRepository.save(pet);
-        }
+    public void add(@NotNull Pet pet) {
+        petRepository.save(pet);
     }
 
     public Optional<Pet> getById(Long id) {
@@ -33,17 +31,12 @@ public class PetService {
     }
 
     @Transactional
-    public void remove(Pet pet) {
-        var id = pet.getId();
-        if (petRepository.findById(id).isPresent()) {
-            petRepository.delete(pet);
-        }
+    public void remove(@NotNull Pet pet) {
+        petRepository.delete(pet);
     }
 
     @Transactional
-    public void remove(Long id) {
-        if (petRepository.findById(id).isPresent()) {
-            petRepository.deleteById(id);
-        }
+    public void remove(@NotNull Long id) {
+        petRepository.deleteById(id);
     }
 }

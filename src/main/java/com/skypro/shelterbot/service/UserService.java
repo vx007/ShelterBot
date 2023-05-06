@@ -5,6 +5,7 @@ import com.skypro.shelterbot.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,11 +18,8 @@ public class UserService {
     }
 
     @Transactional
-    public void add(User user) {
-        var chatId = user.getChatId();
-        if (userRepository.findByChatId(chatId).isEmpty()) {
-            userRepository.save(user);
-        }
+    public void add(@NotNull User user) {
+        userRepository.save(user);
     }
 
     public Optional<User> getByChatId(Long chatId) {
@@ -37,17 +35,12 @@ public class UserService {
     }
 
     @Transactional
-    public void remove(User user) {
-        var chatId = user.getChatId();
-        if (userRepository.findByChatId(chatId).isPresent()) {
-            userRepository.delete(user);
-        }
+    public void remove(@NotNull User user) {
+        userRepository.delete(user);
     }
 
     @Transactional
-    public void remove(Long chatId) {
-        if (userRepository.findByChatId(chatId).isPresent()) {
-            userRepository.deleteByChatId(chatId);
-        }
+    public void remove(@NotNull Long chatId) {
+        userRepository.deleteByChatId(chatId);
     }
 }
