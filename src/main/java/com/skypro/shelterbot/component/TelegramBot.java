@@ -8,6 +8,7 @@ import com.skypro.shelterbot.resource.StringConstants;
 import com.skypro.shelterbot.service.ReportService;
 import com.vdurmont.emoji.EmojiParser;
 import lombok.extern.log4j.Log4j;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -39,6 +40,8 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final UserRepository userRepository;
     private final ReportService reportService;
 
+    public final CacheManager cacheManager;
+
     static final String ERROR_TEXT = "Error occurred: ";
     static final String HELP_TEXT = "Этот бот создан, что бы вы смогли найти себе подходящего питомца \n\n" +
             "Попробуйте начать с кнопки .\n\n" +
@@ -66,10 +69,16 @@ public class TelegramBot extends TelegramLongPollingBot {
     static final String GET_DAILY_REPORT_FROM = "Получить форму ежедневного отчета";
     static final String TEXT_OF_VOLUNTEER = "Привет я волонтер, чем могу помочь?";
 
-    public TelegramBot(BotConfig botConfig, UserRepository userRepository, ReportService reportService) {
+    public TelegramBot(BotConfig botConfig, UserRepository userRepository, ReportService reportService, CacheManager cacheManager) {
         this.botConfig = botConfig;
         this.userRepository = userRepository;
         this.reportService = reportService;
+        this.cacheManager = cacheManager;
+    }
+
+    public void cleanCache() {
+        cacheManager.getCache("users").clear();
+        
     }
 
     @PostConstruct
@@ -100,7 +109,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             var name = update.getMessage().getChat().getFirstName();
             User u = userRepository.findByChatId(chatId).orElse(null);
 
-            if ("Отправить отчёт".equals(u.getLastCommand())){
+            if ("Отправить отчёт".equals("")){
                 if (handleReport(update.getMessage())) {
                     updateLastCommand(chatId, "");
                 }

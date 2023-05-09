@@ -2,6 +2,9 @@ package com.skypro.shelterbot.service;
 
 import com.skypro.shelterbot.model.User;
 import com.skypro.shelterbot.repository.UserRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,10 +21,12 @@ public class UserService {
     }
 
     @Transactional
+    @CachePut(value = "users", key = "#user.chatId")
     public void add(@NotNull User user) {
         userRepository.save(user);
     }
 
+    @Cacheable("users")
     public Optional<User> getByChatId(Long chatId) {
         return userRepository.findByChatId(chatId);
     }
@@ -35,11 +40,13 @@ public class UserService {
     }
 
     @Transactional
+    @CacheEvict("users")
     public void remove(@NotNull User user) {
         userRepository.delete(user);
     }
 
     @Transactional
+    @CacheEvict("users")
     public void remove(@NotNull Long chatId) {
         userRepository.deleteByChatId(chatId);
     }
