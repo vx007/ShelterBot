@@ -3,7 +3,6 @@ package com.skypro.shelterbot.component;
 import com.skypro.shelterbot.config.BotConfig;
 import com.skypro.shelterbot.model.Report;
 import com.skypro.shelterbot.model.User;
-import com.skypro.shelterbot.repository.UserRepository;
 import com.skypro.shelterbot.resource.StringConstants;
 import com.skypro.shelterbot.service.ReportService;
 import com.skypro.shelterbot.service.UserService;
