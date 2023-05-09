@@ -1,6 +1,5 @@
 package com.skypro.shelterbot.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,7 +7,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "reports")
 public class Report {
@@ -24,4 +22,12 @@ public class Report {
     private String text;
     private LocalDateTime dateTime;
     private Boolean isApproved;
+
+    public Report(User user, String photoId, String text, LocalDateTime dateTime, Boolean isApproved) {
+        this.user = user;
+        this.photoId = photoId;
+        this.text = text;
+        this.dateTime = dateTime;
+        this.isApproved = isApproved;
+    }
 }

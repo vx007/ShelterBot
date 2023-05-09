@@ -2,32 +2,31 @@ package com.skypro.shelterbot.service;
 
 import com.skypro.shelterbot.model.User;
 import com.skypro.shelterbot.repository.UserRepository;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class UserService {
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
     @Transactional
-    public void add(@NotNull User user) {
-        userRepository.save(user);
+    public void add(@NonNull User user) {
+        if (!userRepository.existsByChatId(user.getChatId())) {
+            userRepository.save(user);
+        }
     }
 
-    public Optional<User> getByChatId(Long chatId) {
-        return userRepository.findByChatId(chatId);
+    public User getByChatId(@NonNull Long chatId) {
+        return userRepository.findByChatId(chatId).orElseThrow();
     }
 
-    public Optional<User> getByPetId(Long petId) {
-        return userRepository.findByPetId(petId);
+    public User getByPetId(@NonNull Long petId) {
+        return userRepository.findByPetId(petId).orElseThrow();
     }
 
     public List<User> getAll() {
@@ -35,12 +34,30 @@ public class UserService {
     }
 
     @Transactional
-    public void remove(@NotNull User user) {
-        userRepository.delete(user);
+    public void updateName(@NonNull Long chatId, String name) {
+        var user = userRepository.findByChatId(chatId).orElseThrow();
+        user.setName(name);
+        userRepository.save(user);
     }
 
     @Transactional
-    public void remove(@NotNull Long chatId) {
-        userRepository.deleteByChatId(chatId);
+    public void updatePhone(@NonNull Long chatId, String phone) {
+        var user = userRepository.findByChatId(chatId).orElseThrow();
+        user.setPhone(phone);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void updateLastCommand(@NonNull Long chatId, String command) {
+        var user = userRepository.findByChatId(chatId).orElseThrow();
+        user.setLastCommand(command);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void remove(@NonNull Long chatId) {
+        if (userRepository.existsByChatId(chatId)) {
+            userRepository.deleteByChatId(chatId);
+        }
     }
 }
