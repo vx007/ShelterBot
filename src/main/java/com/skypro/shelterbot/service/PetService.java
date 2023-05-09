@@ -18,8 +18,9 @@ public class PetService {
     }
 
     @Transactional
-    public void add(@NotNull Pet pet) {
+    public Optional<Pet> add(@NotNull Pet pet) {
         petRepository.save(pet);
+        return Optional.of(pet);
     }
 
     public Optional<Pet> getById(Long id) {

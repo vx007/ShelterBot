@@ -1,9 +1,11 @@
 package com.skypro.shelterbot.service;
 
+import com.skypro.shelterbot.component.TelegramBot;
 import com.skypro.shelterbot.model.Report;
 import com.skypro.shelterbot.repository.ReportRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -43,4 +45,5 @@ public class ReportService {
     public void remove(@NotNull Long id) {
         reportRepository.deleteById(id);
     }
+
 }
