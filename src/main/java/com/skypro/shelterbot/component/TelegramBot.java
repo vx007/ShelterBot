@@ -3,10 +3,11 @@ package com.skypro.shelterbot.component;
 import com.skypro.shelterbot.config.BotConfig;
 import com.skypro.shelterbot.model.Report;
 import com.skypro.shelterbot.model.User;
-import com.skypro.shelterbot.repository.UserRepository;
 import com.skypro.shelterbot.resource.StringConstants;
 import com.skypro.shelterbot.service.ReportService;
+import com.skypro.shelterbot.service.UserService;
 import com.vdurmont.emoji.EmojiParser;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -29,289 +30,25 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @extends {@link TelegramLongPollingBot} идет проверка не написали ли что то
- */
 @Log4j
+@RequiredArgsConstructor
 @Component
 public class TelegramBot extends TelegramLongPollingBot {
     private final BotConfig botConfig;
-    private final UserRepository userRepository;
     private final ReportService reportService;
-
-    static final String ERROR_TEXT = "Error occurred: ";
-    static final String HELP_TEXT = "Этот бот создан, что бы вы смогли найти себе подходящего питомца \n\n" +
-            "Попробуйте начать с кнопки .\n\n" +
-            "Type /start чтобы увидеть приветсятвеное сообщение.\n\n" +
-            "Type /mydata чтобы увидеть инфо о себе.\n\n" +
-            "Type /help увидеть это сообщение снова.";
-    static final String CAT_BUTTON = "CAT_BUTTON";
-    static final String DOG_BUTTON = "DOG_BUTTON";
-    static final String INFO_ABOUT_SHELTER_CAT = "Узнать информацию о приюте";
-    static final String HOW_TAKE_ANIMAL_FROM_SHELTER = "Как взять животное из приюта";
-    static final String SEND_REPORT_ABOUT_PET = "Прислать отчет о питомце";
-    static final String CALL_VOLUNTEER = "Позвать волонтера";
-    static final String TELL_ABOUT_SHELTER_CAT = "Рассказать о приюте кошек";
-    static final String SCHEDULE_ADDRESS_DIRECTION_ABOUT_SHELTER_CAT = "Выдать расписание работы приюта и адрес, схему проезда";
-    static final String GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR = "Выдать контактные данные охраны для оформления пропуска на машину";
-    static final String ISSUE_GENERAL_SAFETY_ADVICE_AT_THE_SHELTER = "Выдать общие рекомендации о технике безопасности на территории приюта";
-    static final String LEAVE_YOUR_CONTACT_DETAILS = "Оставить свои данные для связи";
-    static final String GIVE_THE_RULES_OF_ACQUAINTANCE_WITH_ANIMALS = "Выдать правила знакомства с животными";
-    static final String GIVE_A_LIST_OF_DOCUMENTS_tO_ADOPt_AN_ANIMAL_FrOM_A_SHELTER = "Выдать список документов, чтобы взять животное из приюта";
-    static final String PRODUCE_A_LIST_OF_TRANSPORTATION_RECOMMENDATIONS = "Выдать список рекомендаций по транспортировке";
-    static final String GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_KITTEN = "Выдать список рекомендаций по обустройству дома для котёнка";
-    static final String GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL = "Выдать список рекомендаций по обустройству дома для взрослого животного";
-    static final String GIVE_A_LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY = "Выдать список рекомендаций по обустройству дома для животного с ограниченными возможностями";
-    static final String GIVE_A_LIST_OF_REASONS_WHY_THEY_CAN_REFUSE = "Выдать список причин, почему могут отказать";
-    static final String GET_DAILY_REPORT_FROM = "Получить форму ежедневного отчета";
-    static final String TEXT_OF_VOLUNTEER = "Привет я волонтер, чем могу помочь?";
-
-    public TelegramBot(BotConfig botConfig, UserRepository userRepository, ReportService reportService) {
-        this.botConfig = botConfig;
-        this.userRepository = userRepository;
-        this.reportService = reportService;
-    }
+    private final UserService userService;
 
     @PostConstruct
     public void init() {
         List<BotCommand> listOfCommands = new ArrayList<>();
-        listOfCommands.add(new BotCommand("/start", "Начало работы с Shelter Bot!"));
-        listOfCommands.add(new BotCommand("/help", "как использовать бота"));
-        listOfCommands.add(new BotCommand("/settings", "set your preferences"));
+        listOfCommands.add(new BotCommand(StringConstants.START_CMD, StringConstants.START_CAPTION));
+        listOfCommands.add(new BotCommand(StringConstants.HELP_CMD, StringConstants.HELP_CAPTION));
+        listOfCommands.add(new BotCommand(StringConstants.SETTINGS_CMD, StringConstants.SETTINGS_CAPTION));
         try {
             this.execute(new SetMyCommands(listOfCommands, new BotCommandScopeDefault(), null));
         } catch (TelegramApiException e) {
-            log.error("Error setting bots command list: " + e.getMessage());
+            log.error(StringConstants.ERROR_TEXT + e.getMessage());
         }
-    }
-
-    /**
-     * Update класс получает сообщение от пользователя боту,
-     * также хвранит всю всю инфо о нем
-     *
-     * @param update update
-     */
-    @Override
-    public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
-
-            var messageText = update.getMessage().getText();
-            var chatId = update.getMessage().getChatId();
-            var name = update.getMessage().getChat().getFirstName();
-            User u = userRepository.findByChatId(chatId).orElse(null);
-
-            if ("Отправить отчёт".equals("")){
-                if (handleReport(update.getMessage())) {
-                    updateLastCommand(chatId, "");
-                }
-            } else if (messageText.contains("/send") && botConfig.getOwnerId().equals(chatId)) { //отправка всем пользователям сообщения от проверенного пользователя
-                var textToSend = EmojiParser.parseToUnicode(messageText.substring(messageText.indexOf(" ")));// метод substring позволяет получить текст после /send
-                var users = userRepository.findAll();
-                for (var user : users) {
-                    sendText(user.getChatId(), textToSend);
-                }
-            } else {
-
-                switch (messageText) {
-                    case "/start":
-                        startCommandReceived(chatId, name);
-                        registerUser(update.getMessage());
-                        offerCatOrDog(chatId);
-                        break;
-
-                    case "/volunteer":
-                        callVolunteer(chatId);
-                        break;
-//                       1.
-
-                    case INFO_ABOUT_SHELTER_CAT:
-                        menuFindInformationAboutShelterCat(chatId, "Привет!" + name);
-                        break;
-
-                    case HOW_TAKE_ANIMAL_FROM_SHELTER:
-                        menuHowTakeAnimal(chatId, "Привет!" + name);
-                        break;
-
-                    case SEND_REPORT_ABOUT_PET:
-                        menuSendReportAboutPet(chatId, "Привет!" + name);
-                        break;
-
-                    case CALL_VOLUNTEER:
-                        callVolunteer(chatId);
-                        break;
-//                        2.
-
-                    case TELL_ABOUT_SHELTER_CAT:
-
-                        break;
-
-                    case SCHEDULE_ADDRESS_DIRECTION_ABOUT_SHELTER_CAT:
-                        break;
-
-                    case GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR:
-                        break;
-
-                    case ISSUE_GENERAL_SAFETY_ADVICE_AT_THE_SHELTER:
-                        break;
-
-                    case LEAVE_YOUR_CONTACT_DETAILS:
-                        sendText(chatId, name + ", оставьте свои данные!");
-                        break;
-//                        3.
-
-                    case GIVE_THE_RULES_OF_ACQUAINTANCE_WITH_ANIMALS:
-                        break;
-
-                    case GIVE_A_LIST_OF_DOCUMENTS_tO_ADOPt_AN_ANIMAL_FrOM_A_SHELTER:
-                        break;
-
-                    case PRODUCE_A_LIST_OF_TRANSPORTATION_RECOMMENDATIONS:
-                        break;
-
-                    case GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_KITTEN:
-                        break;
-
-                    case GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL:
-                        break;
-
-                    case GIVE_A_LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY:
-                        break;
-
-                    case GIVE_A_LIST_OF_REASONS_WHY_THEY_CAN_REFUSE:
-                        break;
-
-//                        4.
-                    case GET_DAILY_REPORT_FROM:
-                        break;
-
-                    case StringConstants.HELP_TEXT:
-                        sendText(chatId, StringConstants.HELP_TEXT);
-                        break;
-
-                    case "Отправить отчёт":
-                        sendText(chatId, "Присылайте отчёт!");
-//                        receiveReport(update.getMessage());
-                        updateLastCommand(chatId, "Отправить отчёт");
-                        break;
-                    default:
-                        sendText(chatId, "Извините, команда не распознана!\n\n" + HELP_TEXT);
-                }
-            }
-
-        } else if (update.hasCallbackQuery()) {
-            var data = update.getCallbackQuery().getData();
-            var message = update.getCallbackQuery().getMessage();
-//            var messageId = message.getMessageId();
-            var chatId = message.getChatId();
-
-            if (data.equals(CAT_BUTTON)) {
-                var text = EmojiParser.parseToUnicode("Вы выбрали приют кошек! :cat:");
-                mainMenuShelterForCat(chatId, text);
-
-            } else if (data.equals(DOG_BUTTON)) {
-                var text = EmojiParser.parseToUnicode("Вы выбрали приют собак! :dog:\n\nУпс эта функция в разработке!");
-                sendText(chatId, text);
-
-            }
-        }
-    }
-
-    private void updateLastCommand(Long chatId, String command) {
-        if (userRepository.findByChatId(chatId).isPresent()) {
-            var user = userRepository.findByChatId(chatId).get();
-            user.setLastCommand(command);
-            userRepository.save(user);
-        }
-    }
-
-
-    private void offerCatOrDog(Long chatId) {
-        var message = new SendMessage();
-        message.setChatId(chatId);
-        message.setText("Выберите приют");
-
-        var inlineKeyboardMarkup = new InlineKeyboardMarkup();
-
-        List<List<InlineKeyboardButton>> listOfButtons = new ArrayList<>();
-        List<InlineKeyboardButton> listButtonFirst = new ArrayList<>();
-
-        var catButton = new InlineKeyboardButton();
-        catButton.setText(EmojiParser.parseToUnicode("Приют кошек :cat:"));
-        catButton.setCallbackData(CAT_BUTTON);
-
-        var dogButton = new InlineKeyboardButton();
-        dogButton.setText(EmojiParser.parseToUnicode("Приют собак :dog:"));
-        dogButton.setCallbackData(DOG_BUTTON);
-
-        listButtonFirst.add(catButton);
-        listButtonFirst.add(dogButton);
-
-        listOfButtons.add(listButtonFirst);
-        inlineKeyboardMarkup.setKeyboard(listOfButtons);
-        message.setReplyMarkup(inlineKeyboardMarkup);
-
-        executeSendMessage(message);
-    }
-
-//    private void executeEditMessageText(Long chatId, Integer messageId, String text) { // меотод показывает что нажал
-//        EditMessageText message = new EditMessageText();
-//        message.setChatId(chatId);
-//        message.setMessageId(messageId);
-//        message.setText(text);
-//
-//        try {
-//            execute(message);
-//        } catch (TelegramApiException e) {
-//            log.error(ERROR_TEXT + e.getMessage());
-//        }
-//    }
-
-    /**
-     * welcome message to new user
-     *
-     * @param chatId can't be <b>null</b>
-     * @param name   can't be <b>null</b>
-     */
-    private void startCommandReceived(Long chatId, String name) {
-        String answer = EmojiParser.parseToUnicode("Hi, welcome to the Shelter Bot!" + " :blush:");
-        log.info("Заходил пользователь: " + name);
-        sendText(chatId, answer);
-    }
-
-    /**
-     * method for registration user
-     *
-     * @param message can't be <b>null</b>
-     */
-    private void registerUser(@NotNull Message message) {
-        var chat = message.getChat();
-        var chatId = chat.getId();
-        var name = chat.getFirstName();
-
-        if (userRepository.findById(chatId).isEmpty()) {
-            var user = new User();
-            user.setChatId(chatId);
-            user.setName(name);
-            user.setRegisteredAt(Timestamp.valueOf(LocalDateTime.now()));
-
-            userRepository.save(user);
-            log.info("User saved: " + user);
-        }
-    }
-
-    /**
-     * method receives chatId and any text
-     * and executing it
-     * <br>
-     * use method telegram's library {@link SendMessage message = new SendMessage();}
-     *
-     * @param chatId can't be <b>null</b>
-     */
-    private void sendText(Long chatId, String text) {
-        var message = new SendMessage();
-        message.setChatId(chatId);
-        message.setText(text);
-        executeSendMessage(message);
     }
 
     @Override
@@ -324,222 +61,218 @@ public class TelegramBot extends TelegramLongPollingBot {
         return botConfig.getBotToken();
     }
 
-    /**
-     * method execute message
-     *
-     * @param message message
-     */
+    @Override
+    public void onUpdateReceived(Update update) {
+        if (update.hasMessage() && update.getMessage().hasPhoto()) {
+            var message = update.getMessage();
+            var chat = message.getChat();
+            var chatId = chat.getId();
+            var user = userService.getByChatId(chatId);
+
+            if (user.getLastCommand().equals(StringConstants.SEND_REPORT)) {
+                if (handleReport(message)) {
+                    userService.updateLastCommand(chatId, null);
+                }
+            }
+        }
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            var message = update.getMessage();
+            var messageText = message.getText();
+            var chat = message.getChat();
+            var chatId = chat.getId();
+            var firstName = chat.getFirstName();
+
+            if (messageText.startsWith("/send") && botConfig.getOwnerId().equals(chatId)) {
+                var text = EmojiParser.parseToUnicode(messageText.substring(messageText.indexOf(" ")));
+                for (var user : userService.getAll()) {
+                    sendText(user.getChatId(), text);
+                }
+            } else {
+                switch (messageText) {
+                    case StringConstants.START_CMD:
+                        startCommandReceived(chatId, firstName);
+                        registerUser(chatId, firstName);
+                        offerCatOrDog(chatId);
+                        break;
+                    case StringConstants.HELP_CMD:
+                        sendText(chatId, StringConstants.HELP_TEXT);
+                        break;
+                    case StringConstants.SETTINGS_CMD:
+                        sendText(chatId, "no text");
+                        break;
+
+                    // Этап 1
+                    case StringConstants.INFO_ABOUT_SHELTER_CAT:
+                        universalMenu(chatId, "Выбрано меню",
+                                StringConstants.TELL_ABOUT_SHELTER_CAT,
+                                StringConstants.SCHEDULE_ADDRESS_DIRECTION_ABOUT_SHELTER_CAT,
+                                StringConstants.GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR,
+                                StringConstants.ISSUE_GENERAL_SAFETY_ADVICE_AT_THE_SHELTER,
+                                StringConstants.LEAVE_YOUR_CONTACT_DETAILS,
+                                StringConstants.CALL_VOLUNTEER);
+                        break;
+
+                    case StringConstants.HOW_TAKE_ANIMAL_FROM_SHELTER:
+                        universalMenu(chatId, "Выбрано меню",
+                                StringConstants.GIVE_THE_RULES_OF_ACQUAINTANCE_WITH_ANIMALS,
+                                StringConstants.GIVE_A_LIST_OF_DOCUMENTS_TO_ADOPT_AN_ANIMAL_FROM_A_SHELTER,
+                                StringConstants.PRODUCE_A_LIST_OF_TRANSPORTATION_RECOMMENDATIONS,
+                                StringConstants.GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_KITTEN,
+                                StringConstants.GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL,
+                                StringConstants.GIVE_A_LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY,
+                                StringConstants.GIVE_A_LIST_OF_REASONS_WHY_THEY_CAN_REFUSE,
+                                StringConstants.LEAVE_YOUR_CONTACT_DETAILS,
+                                StringConstants.CALL_VOLUNTEER);
+                        break;
+
+                    case StringConstants.SEND_REPORT_ABOUT_PET:
+                        universalMenu(chatId, "Выбрано меню",
+                                StringConstants.GET_DAILY_REPORT_FROM,
+                                StringConstants.SEND_REPORT,
+                                StringConstants.CALL_VOLUNTEER);
+                        break;
+
+                    case StringConstants.CALL_VOLUNTEER:
+                        callVolunteer(chatId);
+                        break;
+
+                    // Этап 2
+                    case StringConstants.TELL_ABOUT_SHELTER_CAT:
+                        break;
+
+                    case StringConstants.SCHEDULE_ADDRESS_DIRECTION_ABOUT_SHELTER_CAT:
+                        break;
+
+                    case StringConstants.GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR:
+                        break;
+
+                    case StringConstants.ISSUE_GENERAL_SAFETY_ADVICE_AT_THE_SHELTER:
+                        break;
+
+                    case StringConstants.LEAVE_YOUR_CONTACT_DETAILS:
+                        sendText(chatId, firstName + ", оставьте свои данные!");
+                        break;
+
+                    // Этап 3
+                    case StringConstants.GIVE_THE_RULES_OF_ACQUAINTANCE_WITH_ANIMALS:
+                        break;
+
+                    case StringConstants.GIVE_A_LIST_OF_DOCUMENTS_TO_ADOPT_AN_ANIMAL_FROM_A_SHELTER:
+                        break;
+
+                    case StringConstants.PRODUCE_A_LIST_OF_TRANSPORTATION_RECOMMENDATIONS:
+                        break;
+
+                    case StringConstants.GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_KITTEN:
+                        break;
+
+                    case StringConstants.GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL:
+                        break;
+
+                    case StringConstants.GIVE_A_LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY:
+                        break;
+
+                    case StringConstants.GIVE_A_LIST_OF_REASONS_WHY_THEY_CAN_REFUSE:
+                        break;
+
+                    // Этап 4
+                    case StringConstants.GET_DAILY_REPORT_FROM:
+                        break;
+
+                    case StringConstants.SEND_REPORT:
+                        sendText(chatId, "Присылайте отчёт!");
+                        userService.updateLastCommand(chatId, StringConstants.SEND_REPORT);
+                        break;
+                    default:
+                        sendText(chatId, "Извините, команда не распознана!");
+                }
+            }
+
+        } else if (update.hasCallbackQuery()) {
+            var data = update.getCallbackQuery().getData();
+            var message = update.getCallbackQuery().getMessage();
+            var chatId = message.getChatId();
+
+            switch (data) {
+                case StringConstants.CAT_BUTTON:
+                    var catButtonText = EmojiParser.parseToUnicode("Вы выбрали приют кошек!:cat:");
+                    universalMenu(chatId, catButtonText,
+                            StringConstants.INFO_ABOUT_SHELTER_CAT,
+                            StringConstants.HOW_TAKE_ANIMAL_FROM_SHELTER,
+                            StringConstants.SEND_REPORT_ABOUT_PET,
+                            StringConstants.CALL_VOLUNTEER);
+                    break;
+                case StringConstants.DOG_BUTTON:
+                    var dogButtonText = EmojiParser.parseToUnicode("Вы выбрали приют собак!:dog:");
+                    sendText(chatId, dogButtonText); //TODO
+                    break;
+                default:
+                    sendText(chatId, "Извините, команда не распознана!");
+                    break;
+            }
+        }
+    }
+
+    private void offerCatOrDog(Long chatId) {
+        var message = new SendMessage();
+        message.setChatId(chatId);
+        message.setText("Выберите приют");
+
+        var inlineKeyboardMarkup = new InlineKeyboardMarkup();
+
+        List<List<InlineKeyboardButton>> listOfButtons = new ArrayList<>();
+        List<InlineKeyboardButton> listButtonFirst = new ArrayList<>();
+
+        var catButton = new InlineKeyboardButton();
+        catButton.setText(EmojiParser.parseToUnicode("Приют кошек:cat:"));
+        catButton.setCallbackData(StringConstants.CAT_BUTTON);
+
+        var dogButton = new InlineKeyboardButton();
+        dogButton.setText(EmojiParser.parseToUnicode("Приют собак:dog:"));
+        dogButton.setCallbackData(StringConstants.DOG_BUTTON);
+
+        listButtonFirst.add(catButton);
+        listButtonFirst.add(dogButton);
+
+        listOfButtons.add(listButtonFirst);
+        inlineKeyboardMarkup.setKeyboard(listOfButtons);
+        message.setReplyMarkup(inlineKeyboardMarkup);
+
+        executeSendMessage(message);
+    }
+
+    private void startCommandReceived(Long chatId, String name) {
+        String answer = EmojiParser.parseToUnicode("Hi, welcome to the Shelter Bot!" + " :blush:");
+        log.info("Заходил пользователь: " + name);
+        sendText(chatId, answer);
+    }
+
+    private void registerUser(Long chatId, String name) {
+        var user = new User();
+        user.setChatId(chatId);
+        user.setName(name);
+        user.setRegisteredAt(Timestamp.valueOf(LocalDateTime.now()));
+        userService.add(user);
+        log.info("User saved: " + user);
+    }
+
+    private void sendText(Long chatId, String text) {
+        var message = new SendMessage();
+        message.setChatId(chatId);
+        message.setText(text);
+        executeSendMessage(message);
+    }
+
     private void executeSendMessage(SendMessage message) {
         try {
             execute(message);
         } catch (TelegramApiException e) {
-            log.error(ERROR_TEXT + e.getMessage());
+            log.error(StringConstants.ERROR_TEXT + e.getMessage());
         }
     }
 
     private void callVolunteer(Long chatId) {
-//        var message = new SendMessage();
-//        message.setChatId(chatId);
-//        message.setText(TEXT_OF_VOLUNTEER);//
-//        executeSendMessage(message);
-
-        sendText(chatId, TEXT_OF_VOLUNTEER);
-    }
-
-    /**
-     * main method branches of cat
-     *
-     * @param text   text
-     * @param chatId chat id
-     */
-    private void mainMenuShelterForCat(Long chatId, String text) {
-//        SendMessage message = new SendMessage();
-//        message.setChatId(String.valueOf(chatId));
-//        message.setText(text);
-//        message.enableMarkdown(true);
-//
-//        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
-//        message.setReplyMarkup(keyboardMarkup);
-//        keyboardMarkup.setSelective(true);
-//        keyboardMarkup.setResizeKeyboard(true);
-//        keyboardMarkup.setOneTimeKeyboard(true);
-//        List<KeyboardRow> keyboardRows = new ArrayList<>();
-//
-//        KeyboardRow row = new KeyboardRow();
-//        row.add(INFO_ABOUT_SHELTER_CAT);
-//        keyboardRows.add(row);
-//
-//        row = new KeyboardRow();
-//        row.add(HOW_TAKE_ANIMAL_FROM_SHELTER);
-//        keyboardRows.add(row);
-//
-//        row = new KeyboardRow();
-//        row.add(SEND_REPORT_ABOUT_PET);
-//        keyboardRows.add(row);
-//
-//        row = new KeyboardRow();
-//        row.add(CALL_VOLUNTEER);
-//        keyboardRows.add(row);
-//
-//        keyboardMarkup.setKeyboard(keyboardRows);
-//        message.setReplyMarkup(keyboardMarkup);
-//
-//        executeMessage(message);
-
-        universalMenu(chatId, text,
-                INFO_ABOUT_SHELTER_CAT,
-                HOW_TAKE_ANIMAL_FROM_SHELTER,
-                SEND_REPORT_ABOUT_PET,
-                CALL_VOLUNTEER);
-    }
-
-    private void menuFindInformationAboutShelterCat(Long chatId, String text) {
-//        SendMessage message = new SendMessage();
-//        message.setChatId(String.valueOf(chatId));
-//        message.setText(text);
-//        message.enableMarkdown(true);
-//
-//        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
-//        message.setReplyMarkup(keyboardMarkup);
-//        keyboardMarkup.setSelective(true);
-//        keyboardMarkup.setResizeKeyboard(true);
-//        keyboardMarkup.setOneTimeKeyboard(true);
-//        List<KeyboardRow> keyboardRows = new ArrayList<>();
-//
-//        KeyboardRow row = new KeyboardRow();
-//        row.add(TELL_ABOUT_SHELTER_CAT);
-//        keyboardRows.add(row);
-//
-//        row = new KeyboardRow();
-//        row.add(SCHEDULE_ADDRESS_DIRECTION_ABOUT_SHELTER_CAT);
-//        keyboardRows.add(row);
-//
-//        row = new KeyboardRow();
-//        row.add(GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR);
-//        keyboardRows.add(row);
-//
-//        row = new KeyboardRow();
-//        row.add(ISSUE_GENERAL_SAFETY_ADVICE_AT_THE_SHELTER);
-//        keyboardRows.add(row);
-//
-//        row = new KeyboardRow();
-//        row.add(LEAVE_YOUR_CONTACT_DETAILS);
-//        keyboardRows.add(row);
-//
-//        row = new KeyboardRow();
-//        row.add(CALL_VOLUNTEER);
-//        keyboardRows.add(row);
-//
-//        keyboardMarkup.setKeyboard(keyboardRows);
-//        message.setReplyMarkup(keyboardMarkup);
-//
-//        executeMessage(message);
-
-        universalMenu(chatId, text,
-                TELL_ABOUT_SHELTER_CAT,
-                SCHEDULE_ADDRESS_DIRECTION_ABOUT_SHELTER_CAT,
-                GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR,
-                ISSUE_GENERAL_SAFETY_ADVICE_AT_THE_SHELTER,
-                LEAVE_YOUR_CONTACT_DETAILS,
-                CALL_VOLUNTEER);
-    }
-
-    private void menuHowTakeAnimal(Long chatId, String text) {
-//        SendMessage message = new SendMessage();
-//        message.setChatId(String.valueOf(chatId));
-//        message.setText(text);
-//        message.enableMarkdown(true);
-//
-//        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
-//        message.setReplyMarkup(keyboardMarkup);
-//        keyboardMarkup.setSelective(true);
-//        keyboardMarkup.setResizeKeyboard(true);
-//        keyboardMarkup.setOneTimeKeyboard(true);
-//        List<KeyboardRow> keyboardRows = new ArrayList<>();
-//
-//        KeyboardRow row = new KeyboardRow();
-//        row.add(GIVE_THE_RULES_OF_ACQUAINTANCE_WITH_ANIMALS);
-//        keyboardRows.add(row);
-//
-//        row = new KeyboardRow();
-//        row.add(GIVE_A_LIST_OF_DOCUMENTS_tO_ADOPt_AN_ANIMAL_FrOM_A_SHELTER);
-//        keyboardRows.add(row);
-//
-//        row = new KeyboardRow();
-//        row.add(PRODUCE_A_LIST_OF_TRANSPORTATION_RECOMMENDATIONS);
-//        keyboardRows.add(row);
-//
-//        row = new KeyboardRow();
-//        row.add(GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_KITTEN);
-//        keyboardRows.add(row);
-//
-//        row = new KeyboardRow();
-//        row.add(GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL);
-//        keyboardRows.add(row);
-//
-//        row = new KeyboardRow();
-//        row.add(GIVE_A_LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY);
-//        keyboardRows.add(row);
-//
-//        row = new KeyboardRow();
-//        row.add(GIVE_A_LIST_OF_REASONS_WHY_THEY_CAN_REFUSE);
-//        keyboardRows.add(row);
-//
-//        row = new KeyboardRow();
-//        row.add(LEAVE_YOUR_CONTACT_DETAILS);
-//        keyboardRows.add(row);
-//
-//        row = new KeyboardRow();
-//        row.add(CALL_VOLUNTEER);
-//        keyboardRows.add(row);
-//
-//        keyboardMarkup.setKeyboard(keyboardRows);
-//        message.setReplyMarkup(keyboardMarkup);
-//
-//        executeMessage(message);
-
-        universalMenu(chatId, text,
-                GIVE_THE_RULES_OF_ACQUAINTANCE_WITH_ANIMALS,
-                GIVE_A_LIST_OF_DOCUMENTS_tO_ADOPt_AN_ANIMAL_FrOM_A_SHELTER,
-                PRODUCE_A_LIST_OF_TRANSPORTATION_RECOMMENDATIONS,
-                GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_KITTEN,
-                GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL,
-                GIVE_A_LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY,
-                GIVE_A_LIST_OF_REASONS_WHY_THEY_CAN_REFUSE,
-                LEAVE_YOUR_CONTACT_DETAILS,
-                CALL_VOLUNTEER);
-    }
-
-    private void menuSendReportAboutPet(Long chatId, String text) {
-//        SendMessage message = new SendMessage();
-//        message.setChatId(String.valueOf(chatId));
-//        message.setText(text);
-//        message.enableMarkdown(true);
-//
-//        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
-//        keyboardMarkup.setSelective(true);
-//        keyboardMarkup.setResizeKeyboard(true);
-//        keyboardMarkup.setOneTimeKeyboard(true);
-//        message.setReplyMarkup(keyboardMarkup);
-//        List<KeyboardRow> keyboardRows = new ArrayList<>();
-//
-//        KeyboardRow row = new KeyboardRow();
-//        row.add(GET_DAILY_REPORT_FROM);
-//        keyboardRows.add(row);
-//
-//        row = new KeyboardRow();
-//        row.add(CALL_VOLUNTEER);
-//        keyboardRows.add(row);
-//
-//        keyboardMarkup.setKeyboard(keyboardRows);
-//        message.setReplyMarkup(keyboardMarkup);
-//
-//        executeMessage(message);
-
-        universalMenu(chatId, text,
-                GET_DAILY_REPORT_FROM,
-                "Отправить отчёт",
-                CALL_VOLUNTEER);
+        sendText(chatId, StringConstants.TEXT_OF_VOLUNTEER); //TODO
     }
 
     private void universalMenu(Long chatId, String text, @NotNull String... stringsForRows) {
@@ -548,11 +281,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         message.setText(text);
         message.enableMarkdown(true);
 
-        var keyboardMarkup = new ReplyKeyboardMarkup();
-        keyboardMarkup.setSelective(true);
-        keyboardMarkup.setResizeKeyboard(true);
-        keyboardMarkup.setOneTimeKeyboard(true);
-
         List<KeyboardRow> keyboardRows = new ArrayList<>();
         for (var string : stringsForRows) {
             var row = new KeyboardRow();
@@ -560,6 +288,10 @@ public class TelegramBot extends TelegramLongPollingBot {
             keyboardRows.add(row);
         }
 
+        var keyboardMarkup = new ReplyKeyboardMarkup();
+        keyboardMarkup.setSelective(true);
+        keyboardMarkup.setResizeKeyboard(true);
+        keyboardMarkup.setOneTimeKeyboard(true);
         keyboardMarkup.setKeyboard(keyboardRows);
         message.setReplyMarkup(keyboardMarkup);
         executeSendMessage(message);
@@ -567,32 +299,11 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private boolean handleReport(Message message) {
         var chatId = message.getChat().getId();
+        var user = userService.getByChatId(chatId);
+        var photoId = message.getPhoto().get(message.getPhoto().size() - 1).getFileUniqueId();
+        var text = message.getCaption();
 
-        var user = userRepository.findByChatId(chatId).orElseThrow();
-        var lastCommand = user.getLastCommand();
-
-        if (!lastCommand.equals("Отправить отчёт")) {
-            log.error("Неверный запуск обработчика!");
-            return false;
-        }
-
-        if (!message.hasPhoto()) {
-            sendText(chatId, "Вы не добавили фото к отчёту!");
-            return false;
-        }
-
-        if (!message.hasText()) {
-            sendText(chatId, "Вы не добавили текст к отчёту!");
-            return false;
-        }
-        var text = message.getText();
-        var photoId = message.getPhoto().get(0).getFileUniqueId();
-
-        var report = new Report();
-        report.setUser(user);
-        report.setPhotoId(photoId);
-        report.setText(text);
-        report.setDateTime(LocalDateTime.now());
+        var report = new Report(user, photoId, text, LocalDateTime.now(), false);
         reportService.add(report);
         return true;
     }
