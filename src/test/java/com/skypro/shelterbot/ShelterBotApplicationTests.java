@@ -58,7 +58,7 @@ class ShelterBotApplicationTests {
 
     @InjectMocks
     private TelegramBot telegramBot;
-//https://api.telegram.org/SashaShelterBot6257060361:AAHT2aRHg3j4nilbitojQx6dC48xLBZVEPw/sendMessage?text=YANSEX_TEST&chat_id=1880942606
+
 
     @AfterEach
     void doAny(){
@@ -67,7 +67,7 @@ class ShelterBotApplicationTests {
 
     @Test
     void succesSendMessage() {
-        RestAssured.baseURI = "https://api.telegram.org/SashaShelterBot6257060361:AAHT2aRHg3j4nilbitojQx6dC48xLBZVEPw";
+        RestAssured.baseURI = "https://api.telegram.org/Sas4r3fsdcwfsd0361:AAHT2aRHg3j4nilbitojQxgdfgdfgdfgef34f";
         given()
                 .param("text", "rest-assured_TEST")
                 .param("chat_id", "1880942606")
@@ -79,7 +79,7 @@ class ShelterBotApplicationTests {
 
     @Test
     void unSuccessMessage(){
-        RestAssured.baseURI = "https://api.telegram.org/bot5782481564:AAEIqdv8PKRi3mR88EXbImRxn9QwJbPFaQk";
+        RestAssured.baseURI = "https://api.telegram.org/bot5734fecsd1564:AAEIqdv8PKRi3mR88EXbIsdfsf43rf34";
         given()
                 .param("text", "rest-assured_TEST")
                 .param("chat_id", "362396673")
@@ -90,7 +90,6 @@ class ShelterBotApplicationTests {
                 .statusCode(400);
     }
 
-    //#https://api.telegram.org/SashaShelterBot6257060361:AAHT2aRHg3j4nilbitojQx6dC48xLBZVEPw/sendMessage?text=YANSEX_TEST&chat_id=1880942606
 //    @Test
 //    public void saveUserTest() throws Exception {
 //        final Long chatId = 1L;
