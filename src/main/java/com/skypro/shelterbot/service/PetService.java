@@ -23,8 +23,8 @@ public class PetService {
         return pet;
     }
 
-    public Optional<Pet> getById(Long id) {
-        return petRepository.findById(id);
+    public Pet getById(Long id) {
+        return petRepository.findById(id).orElseThrow();
     }
 
     public List<Pet> getAll() {
