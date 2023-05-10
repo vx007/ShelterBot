@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor
@@ -20,14 +20,14 @@ public class Report {
     private User user;
     private String photoId;
     private String text;
-    private LocalDateTime dateTime;
+    private Timestamp timestamp;
     private Boolean isApproved;
 
-    public Report(User user, String photoId, String text, LocalDateTime dateTime, Boolean isApproved) {
+    public Report(User user, String photoId, String text, Timestamp timestamp, Boolean isApproved) {
         this.user = user;
         this.photoId = photoId;
         this.text = text;
-        this.dateTime = dateTime;
+        this.timestamp = timestamp;
         this.isApproved = isApproved;
     }
 }

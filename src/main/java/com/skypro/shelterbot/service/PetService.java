@@ -1,29 +1,30 @@
 package com.skypro.shelterbot.service;
 
 import com.skypro.shelterbot.model.Pet;
+import com.skypro.shelterbot.model.PetType;
 import com.skypro.shelterbot.repository.PetRepository;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
+@RequiredArgsConstructor
 @Service
 public class PetService {
     private final PetRepository petRepository;
 
-    public PetService(PetRepository petRepository) {
-        this.petRepository = petRepository;
-    }
-
     @Transactional
-    public Pet add(@NotNull Pet pet) {
+    public void add(@NonNull Pet pet) {
+        if (!Objects.isNull(pet.getId())) {
+            pet.setId(null);
+        }
         petRepository.save(pet);
-        return pet;
     }
 
-    public Pet getById(Long id) {
+    public Pet getById(@NonNull Long id) {
         return petRepository.findById(id).orElseThrow();
     }
 
@@ -32,12 +33,37 @@ public class PetService {
     }
 
     @Transactional
-    public void remove(@NotNull Pet pet) {
-        petRepository.delete(pet);
+    public void updateType(@NonNull Long id, PetType type) {
+        var pet = getById(id);
+        pet.setType(type);
+        petRepository.save(pet);
     }
 
     @Transactional
-    public void remove(@NotNull Long id) {
-        petRepository.deleteById(id);
+    public void updateName(@NonNull Long id, String name) {
+        var pet = getById(id);
+        pet.setName(name);
+        petRepository.save(pet);
+    }
+
+    @Transactional
+    public void updateAge(@NonNull Long id, Integer age) {
+        var pet = getById(id);
+        pet.setAge(age);
+        petRepository.save(pet);
+    }
+
+    @Transactional
+    public void updateBreed(@NonNull Long id, String breed) {
+        var pet = getById(id);
+        pet.setBreed(breed);
+        petRepository.save(pet);
+    }
+
+    @Transactional
+    public void remove(@NonNull Long id) {
+        if (petRepository.existsById(id)) {
+            petRepository.deleteById(id);
+        }
     }
 }
