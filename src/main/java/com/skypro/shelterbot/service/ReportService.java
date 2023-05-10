@@ -18,11 +18,11 @@ public class ReportService {
     private final ReportRepository reportRepository;
 
     @Transactional
-    public void add(@NonNull Report report) {
+    public Report add(@NonNull Report report) {
         if (!Objects.isNull(report.getId())) {
             report.setId(null);
         }
-        reportRepository.save(report);
+        return reportRepository.save(report);
     }
 
     public Report getById(@NonNull Long id) {
@@ -42,24 +42,24 @@ public class ReportService {
     }
 
     @Transactional
-    public void updatePhotoOnLastReport(@NonNull Long chatId, String photoId) {
+    public Report updatePhotoOnLastReport(@NonNull Long chatId, String photoId) {
         var lastReport = getLastReportByChatId(chatId);
         lastReport.setPhotoId(photoId);
-        reportRepository.save(lastReport);
+        return reportRepository.save(lastReport);
     }
 
     @Transactional
-    public void updateTextOnLastReport(@NonNull Long chatId, String text) {
+    public Report updateTextOnLastReport(@NonNull Long chatId, String text) {
         var lastReport = getLastReportByChatId(chatId);
         lastReport.setText(text);
-        reportRepository.save(lastReport);
+        return reportRepository.save(lastReport);
     }
 
     @Transactional
-    public void approveLastReport(@NonNull Long chatId) {
+    public Report approveLastReport(@NonNull Long chatId) {
         var lastReport = getLastReportByChatId(chatId);
         lastReport.setIsApproved(true);
-        reportRepository.save(lastReport);
+        return reportRepository.save(lastReport);
     }
 
     @Transactional

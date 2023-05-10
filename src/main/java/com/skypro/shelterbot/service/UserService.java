@@ -15,9 +15,11 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void add(@NonNull User user) {
+    public User add(@NonNull User user) {
         if (!userRepository.existsByChatId(user.getChatId())) {
-            userRepository.save(user);
+            return userRepository.save(user);
+        } else {
+            return null;
         }
     }
 
@@ -34,24 +36,24 @@ public class UserService {
     }
 
     @Transactional
-    public void updateName(@NonNull Long chatId, String name) {
+    public User updateName(@NonNull Long chatId, String name) {
         var user = getByChatId(chatId);
         user.setName(name);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Transactional
-    public void updatePhone(@NonNull Long chatId, String phone) {
+    public User updatePhone(@NonNull Long chatId, String phone) {
         var user = getByChatId(chatId);
         user.setPhone(phone);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Transactional
-    public void updateLastCommand(@NonNull Long chatId, String command) {
+    public User updateLastCommand(@NonNull Long chatId, String command) {
         var user = getByChatId(chatId);
         user.setLastCommand(command);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Transactional

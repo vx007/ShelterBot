@@ -17,11 +17,11 @@ public class PetService {
     private final PetRepository petRepository;
 
     @Transactional
-    public void add(@NonNull Pet pet) {
+    public Pet add(@NonNull Pet pet) {
         if (!Objects.isNull(pet.getId())) {
             pet.setId(null);
         }
-        petRepository.save(pet);
+        return petRepository.save(pet);
     }
 
     public Pet getById(@NonNull Long id) {
@@ -33,31 +33,31 @@ public class PetService {
     }
 
     @Transactional
-    public void updateType(@NonNull Long id, PetType type) {
+    public Pet updateType(@NonNull Long id, PetType type) {
         var pet = getById(id);
         pet.setType(type);
-        petRepository.save(pet);
+        return petRepository.save(pet);
     }
 
     @Transactional
-    public void updateName(@NonNull Long id, String name) {
+    public Pet updateName(@NonNull Long id, String name) {
         var pet = getById(id);
         pet.setName(name);
-        petRepository.save(pet);
+        return petRepository.save(pet);
     }
 
     @Transactional
-    public void updateAge(@NonNull Long id, Integer age) {
+    public Pet updateAge(@NonNull Long id, Integer age) {
         var pet = getById(id);
         pet.setAge(age);
-        petRepository.save(pet);
+        return petRepository.save(pet);
     }
 
     @Transactional
-    public void updateBreed(@NonNull Long id, String breed) {
+    public Pet updateBreed(@NonNull Long id, String breed) {
         var pet = getById(id);
         pet.setBreed(breed);
-        petRepository.save(pet);
+        return petRepository.save(pet);
     }
 
     @Transactional
