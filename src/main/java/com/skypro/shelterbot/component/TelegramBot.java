@@ -138,15 +138,20 @@ public class TelegramBot extends TelegramLongPollingBot {
 
                     // Этап 2
                     case StringConstants.TELL_ABOUT_SHELTER_CAT:
+                        sendText(chatId, StringConstants.ABOUT_SHELTER_CAT);
                         break;
 
                     case StringConstants.SCHEDULE_ADDRESS_DIRECTION_ABOUT_SHELTER_CAT:
+                        sendText(chatId, StringConstants.ADDRESS_DIRECTION_ABOUT_SHELTER_CAT);
+
                         break;
 
                     case StringConstants.GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR:
+                        sendText(chatId, StringConstants.CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR);
                         break;
 
                     case StringConstants.ISSUE_GENERAL_SAFETY_ADVICE_AT_THE_SHELTER:
+                        sendText(chatId, StringConstants.GENERAL_SAFETY_ADVICE_AT_THE_SHELTER);
                         break;
 
                     case StringConstants.LEAVE_YOUR_CONTACT_DETAILS:
@@ -155,28 +160,36 @@ public class TelegramBot extends TelegramLongPollingBot {
 
                     // Этап 3
                     case StringConstants.GIVE_THE_RULES_OF_ACQUAINTANCE_WITH_ANIMALS:
+                        sendText(chatId, StringConstants.RULES_OF_ACQUAINTANCE_WITH_ANIMALS);
                         break;
 
                     case StringConstants.GIVE_A_LIST_OF_DOCUMENTS_TO_ADOPT_AN_ANIMAL_FROM_A_SHELTER:
+                        sendText(chatId, StringConstants.LIST_OF_DOCUMENTS_TO_ADOPT_AN_ANIMAL_FROM_A_SHELTER);
                         break;
 
                     case StringConstants.PRODUCE_A_LIST_OF_TRANSPORTATION_RECOMMENDATIONS:
+                        sendText(chatId, StringConstants.LIST_OF_TRANSPORTATION_RECOMMENDATIONS);
                         break;
 
                     case StringConstants.GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_KITTEN:
+                        sendText(chatId, StringConstants.LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_KITTEN);
                         break;
 
                     case StringConstants.GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL:
+                        sendText(chatId, StringConstants.LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL);
                         break;
 
                     case StringConstants.GIVE_A_LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY:
+                        sendText(chatId, StringConstants.LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY);
                         break;
 
                     case StringConstants.GIVE_A_LIST_OF_REASONS_WHY_THEY_CAN_REFUSE:
+                        sendText(chatId, StringConstants.LIST_OF_REASONS_WHY_THEY_CAN_REFUSE);
                         break;
 
                     // Этап 4
                     case StringConstants.GET_DAILY_REPORT_FROM:
+                        sendText(chatId, StringConstants.DAILY_REPORT_FROM);
                         break;
 
                     case StringConstants.SEND_REPORT:
@@ -291,7 +304,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         var keyboardMarkup = new ReplyKeyboardMarkup();
         keyboardMarkup.setSelective(true);
         keyboardMarkup.setResizeKeyboard(true);
-        keyboardMarkup.setOneTimeKeyboard(true);
+        keyboardMarkup.setOneTimeKeyboard(false);
         keyboardMarkup.setKeyboard(keyboardRows);
         message.setReplyMarkup(keyboardMarkup);
         executeSendMessage(message);
