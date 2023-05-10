@@ -8,7 +8,10 @@ public interface StringConstants {
     String SETTINGS_CMD = "/settings";
     String SETTINGS_CAPTION = "Настройки";
     String ERROR_TEXT = "Ошибка: ";
-    String HELP_TEXT = "Я потерял текст"; //TODO
+    String HELP_TEXT = "Этот бот создан, что бы вы смогли найти себе подходящего петомца \n\n" +
+            "Попробуйте начать с кнопки .\n\n" +
+            "Type /start чтобы увидеть приветсятвеное сообщение.\n\n" +
+            "Type /help увидеть это сообщение снова.";
     String CAT_BUTTON = "CAT_BUTTON";
     String DOG_BUTTON = "DOG_BUTTON";
     String INFO_ABOUT_SHELTER_CAT = "Узнать информацию о приюте";

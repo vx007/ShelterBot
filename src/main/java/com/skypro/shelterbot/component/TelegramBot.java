@@ -43,7 +43,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         List<BotCommand> listOfCommands = new ArrayList<>();
         listOfCommands.add(new BotCommand(StringConstants.START_CMD, StringConstants.START_CAPTION));
         listOfCommands.add(new BotCommand(StringConstants.HELP_CMD, StringConstants.HELP_CAPTION));
-        listOfCommands.add(new BotCommand(StringConstants.SETTINGS_CMD, StringConstants.SETTINGS_CAPTION));
+        listOfCommands.add(new BotCommand(StringConstants.SETTINGS_CMD, StringConstants.SETTINGS_CAPTION));//TODO что за настройки, как реализуем? предлагаю удалить.
         try {
             this.execute(new SetMyCommands(listOfCommands, new BotCommandScopeDefault(), null));
         } catch (TelegramApiException e) {
@@ -97,7 +97,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     case StringConstants.HELP_CMD:
                         sendText(chatId, StringConstants.HELP_TEXT);
                         break;
-                    case StringConstants.SETTINGS_CMD:
+                    case StringConstants.SETTINGS_CMD: //TODO что за настройки, как реализуем? предлагаю удалить.
                         sendText(chatId, "no text");
                         break;
 
@@ -138,45 +138,57 @@ public class TelegramBot extends TelegramLongPollingBot {
 
                     // Этап 2
                     case StringConstants.TELL_ABOUT_SHELTER_CAT:
+                        sendText(chatId,"кошачий приют, наш девиз,бери кису не думай");//TODO стринг заменить
                         break;
 
                     case StringConstants.SCHEDULE_ADDRESS_DIRECTION_ABOUT_SHELTER_CAT:
+                        sendText(chatId, "мы находимся у черта ну куличиках");//TODO стринг заменить
                         break;
 
                     case StringConstants.GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR:
+                        sendText(chatId, "обратитесь по номеру это наша охрана, они оформят вам пропуск 6-66-666");//TODO стринг заменить
                         break;
 
                     case StringConstants.ISSUE_GENERAL_SAFETY_ADVICE_AT_THE_SHELTER:
+                        sendText(chatId, "на терриотрии не бегать, кошек не кормить");//TODO стринг заменить
                         break;
 
                     case StringConstants.LEAVE_YOUR_CONTACT_DETAILS:
-                        sendText(chatId, firstName + ", оставьте свои данные!");
+                        sendText(chatId, firstName + ", оставьте свои данные!"); //TODO
                         break;
 
                     // Этап 3
                     case StringConstants.GIVE_THE_RULES_OF_ACQUAINTANCE_WITH_ANIMALS:
+                        sendText(chatId, "понравилась кошка, познакомься");//TODO стринг заменить
                         break;
 
                     case StringConstants.GIVE_A_LIST_OF_DOCUMENTS_TO_ADOPT_AN_ANIMAL_FROM_A_SHELTER:
+                        sendText(chatId, "чтобы взять кошку из приюта, нужен СНИЛС");//TODO стринг заменить
                         break;
 
                     case StringConstants.PRODUCE_A_LIST_OF_TRANSPORTATION_RECOMMENDATIONS:
+                        sendText(chatId, "рекомендуем животное переносить под майкой");//TODO стринг заменить
                         break;
 
                     case StringConstants.GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_KITTEN:
+                        sendText(chatId, "для начала котенку сойдет и коробка для обуви");//TODO стринг заменить
                         break;
 
                     case StringConstants.GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL:
+                        sendText(chatId, "взослой кошке, нужна своя подушка, возле вашей головы");//TODO стринг заменить
                         break;
 
                     case StringConstants.GIVE_A_LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY:
+                        sendText(chatId, "дом с ограничеными возможностями обустроить горком");//TODO стринг заменить
                         break;
 
                     case StringConstants.GIVE_A_LIST_OF_REASONS_WHY_THEY_CAN_REFUSE:
+                        sendText(chatId, "вам могут отказать если вы с похмельем");//TODO стринг заменить
                         break;
 
                     // Этап 4
                     case StringConstants.GET_DAILY_REPORT_FROM:
+                        sendText(chatId, "прикрепи фото кошки и под ним оставь свой коментарий");//TODO стринг заменить
                         break;
 
                     case StringConstants.SEND_REPORT:
@@ -204,7 +216,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     break;
                 case StringConstants.DOG_BUTTON:
                     var dogButtonText = EmojiParser.parseToUnicode("Вы выбрали приют собак!:dog:");
-                    sendText(chatId, dogButtonText); //TODO
+                    sendText(chatId, dogButtonText); //TODO сделать сервис для собак
                     break;
                 default:
                     sendText(chatId, "Извините, команда не распознана!");
@@ -272,7 +284,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     private void callVolunteer(Long chatId) {
-        sendText(chatId, StringConstants.TEXT_OF_VOLUNTEER); //TODO
+        sendText(chatId, StringConstants.TEXT_OF_VOLUNTEER); //TODO можно добавть функцию отправки номера клиента волонтеру
     }
 
     private void universalMenu(Long chatId, String text, @NotNull String... stringsForRows) {
