@@ -2,6 +2,7 @@ package com.skypro.shelterbot.service;
 
 import com.skypro.shelterbot.model.Report;
 import com.skypro.shelterbot.repository.ReportRepository;
+import lombok.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,11 +23,11 @@ public class ReportService {
         reportRepository.save(report);
     }
 
-    public Optional<Report> getById(Long id) {
-        return reportRepository.findById(id);
+    public Report getById(@NonNull Long id) {
+        return reportRepository.findById(id).orElseThrow();
     }
 
-    public List<Report> getByChatId(Long chatId) {
+    public List<Report> getByChatId(@NonNull Long chatId) {
         return reportRepository.findByUserChatId(chatId);
     }
 
@@ -34,13 +35,16 @@ public class ReportService {
         return reportRepository.findAll();
     }
 
-    @Transactional
-    public void remove(@NotNull Report report) {
-        reportRepository.delete(report);
+    public void approve(@NonNull Long chatId) {
+        var report = reportRepository.findById(chatId).orElseThrow();
+        report.setIsApproved(true);
+        reportRepository.save(report);
     }
 
     @Transactional
     public void remove(@NotNull Long id) {
-        reportRepository.deleteById(id);
+        if (reportRepository.existsById(id)) {
+            reportRepository.deleteById(id);
+        }
     }
 }

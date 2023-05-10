@@ -29,11 +29,13 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Log4j
 @RequiredArgsConstructor
 @Component
 public class TelegramBot extends TelegramLongPollingBot {
+    private static final Pattern PHONE_PATTERN = Pattern.compile("^\\d{11}$");
     private final BotConfig botConfig;
     private final ReportService reportService;
     private final UserService userService;
@@ -43,7 +45,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         List<BotCommand> listOfCommands = new ArrayList<>();
         listOfCommands.add(new BotCommand(StringConstants.START_CMD, StringConstants.START_CAPTION));
         listOfCommands.add(new BotCommand(StringConstants.HELP_CMD, StringConstants.HELP_CAPTION));
-        listOfCommands.add(new BotCommand(StringConstants.SETTINGS_CMD, StringConstants.SETTINGS_CAPTION));
         try {
             this.execute(new SetMyCommands(listOfCommands, new BotCommandScopeDefault(), null));
         } catch (TelegramApiException e) {
@@ -63,42 +64,44 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasPhoto()) {
+        if (update.hasMessage()) {
             var message = update.getMessage();
-            var chat = message.getChat();
-            var chatId = chat.getId();
-            var user = userService.getByChatId(chatId);
+            var chatId = message.getFrom().getId();
+            var firstName = message.getFrom().getFirstName();
 
-            if (user.getLastCommand().equals(StringConstants.SEND_REPORT)) {
-                if (handleReport(message)) {
-                    userService.updateLastCommand(chatId, null);
-                }
-            }
-        }
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            var message = update.getMessage();
-            var messageText = message.getText();
-            var chat = message.getChat();
-            var chatId = chat.getId();
-            var firstName = chat.getFirstName();
+            if (update.getMessage().hasPhoto()) {
+                var user = userService.getByChatId(chatId);
 
-            if (messageText.startsWith("/send") && botConfig.getOwnerId().equals(chatId)) {
-                var text = EmojiParser.parseToUnicode(messageText.substring(messageText.indexOf(" ")));
-                for (var user : userService.getAll()) {
-                    sendText(user.getChatId(), text);
+                if (user.getLastCommand().equals(StringConstants.SEND_REPORT)) {
+                    if (handleReport(message)) {
+                        userService.updateLastCommand(chatId, null);
+                    }
                 }
-            } else {
-                switch (messageText) {
+            } else if (update.getMessage().hasText()) {
+                switch (message.getText()) {
                     case StringConstants.START_CMD:
                         startCommandReceived(chatId, firstName);
                         registerUser(chatId, firstName);
-                        offerCatOrDog(chatId);
+//                        offerCatOrDog(chatId);
+                        universalMenu(chatId, "Выберите приют",
+                                "Приют кошек",
+                                "Приют собак");
                         break;
                     case StringConstants.HELP_CMD:
                         sendText(chatId, StringConstants.HELP_TEXT);
                         break;
-                    case StringConstants.SETTINGS_CMD:
-                        sendText(chatId, "no text");
+
+                    // Этап 0
+                    case "Приют кошек":
+                        universalMenu(chatId, EmojiParser.parseToUnicode("Вы выбрали приют кошек!:cat:"),
+                                StringConstants.INFO_ABOUT_SHELTER_CAT,
+                                StringConstants.HOW_TAKE_ANIMAL_FROM_SHELTER,
+                                StringConstants.SEND_REPORT_ABOUT_PET,
+                                StringConstants.CALL_VOLUNTEER);
+                        break;
+                    case "Приют собак":
+                        universalMenu(chatId, EmojiParser.parseToUnicode("Вы выбрали приют собак!:dog:"),
+                                "Не реализовано"); // TODO
                         break;
 
                     // Этап 1
@@ -151,6 +154,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
                     case StringConstants.LEAVE_YOUR_CONTACT_DETAILS:
                         sendText(chatId, firstName + ", оставьте свои данные!");
+                        userService.updateLastCommand(chatId, StringConstants.LEAVE_YOUR_CONTACT_DETAILS);
                         break;
 
                     // Этап 3
@@ -187,59 +191,36 @@ public class TelegramBot extends TelegramLongPollingBot {
                         sendText(chatId, "Извините, команда не распознана!");
                 }
             }
-
-        } else if (update.hasCallbackQuery()) {
-            var data = update.getCallbackQuery().getData();
-            var message = update.getCallbackQuery().getMessage();
-            var chatId = message.getChatId();
-
-            switch (data) {
-                case StringConstants.CAT_BUTTON:
-                    var catButtonText = EmojiParser.parseToUnicode("Вы выбрали приют кошек!:cat:");
-                    universalMenu(chatId, catButtonText,
-                            StringConstants.INFO_ABOUT_SHELTER_CAT,
-                            StringConstants.HOW_TAKE_ANIMAL_FROM_SHELTER,
-                            StringConstants.SEND_REPORT_ABOUT_PET,
-                            StringConstants.CALL_VOLUNTEER);
-                    break;
-                case StringConstants.DOG_BUTTON:
-                    var dogButtonText = EmojiParser.parseToUnicode("Вы выбрали приют собак!:dog:");
-                    sendText(chatId, dogButtonText); //TODO
-                    break;
-                default:
-                    sendText(chatId, "Извините, команда не распознана!");
-                    break;
-            }
         }
     }
 
-    private void offerCatOrDog(Long chatId) {
-        var message = new SendMessage();
-        message.setChatId(chatId);
-        message.setText("Выберите приют");
-
-        var inlineKeyboardMarkup = new InlineKeyboardMarkup();
-
-        List<List<InlineKeyboardButton>> listOfButtons = new ArrayList<>();
-        List<InlineKeyboardButton> listButtonFirst = new ArrayList<>();
-
-        var catButton = new InlineKeyboardButton();
-        catButton.setText(EmojiParser.parseToUnicode("Приют кошек:cat:"));
-        catButton.setCallbackData(StringConstants.CAT_BUTTON);
-
-        var dogButton = new InlineKeyboardButton();
-        dogButton.setText(EmojiParser.parseToUnicode("Приют собак:dog:"));
-        dogButton.setCallbackData(StringConstants.DOG_BUTTON);
-
-        listButtonFirst.add(catButton);
-        listButtonFirst.add(dogButton);
-
-        listOfButtons.add(listButtonFirst);
-        inlineKeyboardMarkup.setKeyboard(listOfButtons);
-        message.setReplyMarkup(inlineKeyboardMarkup);
-
-        executeSendMessage(message);
-    }
+//    private void offerCatOrDog(Long chatId) {
+//        var message = new SendMessage();
+//        message.setChatId(chatId);
+//        message.setText("Выберите приют");
+//
+//        var inlineKeyboardMarkup = new InlineKeyboardMarkup();
+//
+//        List<List<InlineKeyboardButton>> listOfButtons = new ArrayList<>();
+//        List<InlineKeyboardButton> listButtonFirst = new ArrayList<>();
+//
+//        var catButton = new InlineKeyboardButton();
+//        catButton.setText(EmojiParser.parseToUnicode("Приют кошек:cat:"));
+//        catButton.setCallbackData(StringConstants.CAT_BUTTON);
+//
+//        var dogButton = new InlineKeyboardButton();
+//        dogButton.setText(EmojiParser.parseToUnicode("Приют собак:dog:"));
+//        dogButton.setCallbackData(StringConstants.DOG_BUTTON);
+//
+//        listButtonFirst.add(catButton);
+//        listButtonFirst.add(dogButton);
+//
+//        listOfButtons.add(listButtonFirst);
+//        inlineKeyboardMarkup.setKeyboard(listOfButtons);
+//        message.setReplyMarkup(inlineKeyboardMarkup);
+//
+//        executeSendMessage(message);
+//    }
 
     private void startCommandReceived(Long chatId, String name) {
         String answer = EmojiParser.parseToUnicode("Hi, welcome to the Shelter Bot!" + " :blush:");
@@ -306,5 +287,15 @@ public class TelegramBot extends TelegramLongPollingBot {
         var report = new Report(user, photoId, text, LocalDateTime.now(), false);
         reportService.add(report);
         return true;
+    }
+
+    private boolean handlePhone(Long chatId, String text) {
+        var matcher = PHONE_PATTERN.matcher(text);
+        if (matcher.matches()) {
+            userService.updatePhone(chatId, text);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

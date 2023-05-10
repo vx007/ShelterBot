@@ -22,8 +22,8 @@ public class PetService {
         petRepository.save(pet);
     }
 
-    public Optional<Pet> getById(Long id) {
-        return petRepository.findById(id);
+    public Pet getById(Long id) {
+        return petRepository.findById(id).orElseThrow();
     }
 
     public List<Pet> getAll() {
