@@ -24,6 +24,6 @@ CREATE TABLE IF NOT EXISTS reports
     chat_id     BIGINT    NOT NULL REFERENCES users (chat_id),
     photo_id    VARCHAR,
     text        VARCHAR,
-    date_time   TIMESTAMP NOT NULL,
+    timestamp   TIMESTAMP NOT NULL,
     is_approved BOOLEAN
 );

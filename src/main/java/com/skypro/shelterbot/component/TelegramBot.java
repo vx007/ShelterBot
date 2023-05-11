@@ -17,9 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -297,7 +295,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         var photoId = message.getPhoto().get(message.getPhoto().size() - 1).getFileUniqueId();
         var text = message.getCaption();
 
-        var report = new Report(user, photoId, text, LocalDateTime.now(), false);
+        var report = new Report(user, photoId, text, Timestamp.valueOf(LocalDateTime.now()), false);
         reportService.add(report);
         return true;
     }

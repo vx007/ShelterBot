@@ -85,8 +85,8 @@ public class PetController {
             )
     )
     @GetMapping("{id}")
-    public ResponseEntity<Optional<Pet>> findPet(@PathVariable Long id) {
-        Optional<Pet> pet = petService.getById(id);
+    public ResponseEntity<Pet> findPet(@PathVariable Long id) {
+        Pet pet = petService.getById(id);
         return ResponseEntity.ok(pet);
     }
 

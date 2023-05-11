@@ -3,24 +3,26 @@ package com.skypro.shelterbot.service;
 import com.skypro.shelterbot.model.Report;
 import com.skypro.shelterbot.repository.ReportRepository;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
+@RequiredArgsConstructor
 @Service
 public class ReportService {
+    private static final Comparator<Report> REPORT_TIMESTAMP_COMPARATOR = Comparator.comparing(Report::getTimestamp);
     private final ReportRepository reportRepository;
 
-    public ReportService(ReportRepository reportRepository) {
-        this.reportRepository = reportRepository;
-    }
-
     @Transactional
-    public void add(@NotNull Report report) {
-        reportRepository.save(report);
+    public Report add(@NonNull Report report) {
+        if (!Objects.isNull(report.getId())) {
+            report.setId(null);
+        }
+        return reportRepository.save(report);
     }
 
     public Report getById(@NonNull Long id) {
@@ -31,18 +33,37 @@ public class ReportService {
         return reportRepository.findByUserChatId(chatId);
     }
 
+    public Report getLastReportByChatId(@NonNull Long chatId) {
+        return getByChatId(chatId).stream().max(REPORT_TIMESTAMP_COMPARATOR).orElseThrow();
+    }
+
     public List<Report> getAll() {
         return reportRepository.findAll();
     }
 
-    public void approve(@NonNull Long chatId) {
-        var report = reportRepository.findById(chatId).orElseThrow();
-        report.setIsApproved(true);
-        reportRepository.save(report);
+    @Transactional
+    public Report updatePhotoOnLastReport(@NonNull Long chatId, String photoId) {
+        var lastReport = getLastReportByChatId(chatId);
+        lastReport.setPhotoId(photoId);
+        return reportRepository.save(lastReport);
     }
 
     @Transactional
-    public void remove(@NotNull Long id) {
+    public Report updateTextOnLastReport(@NonNull Long chatId, String text) {
+        var lastReport = getLastReportByChatId(chatId);
+        lastReport.setText(text);
+        return reportRepository.save(lastReport);
+    }
+
+    @Transactional
+    public Report approveLastReport(@NonNull Long chatId) {
+        var lastReport = getLastReportByChatId(chatId);
+        lastReport.setIsApproved(true);
+        return reportRepository.save(lastReport);
+    }
+
+    @Transactional
+    public void remove(@NonNull Long id) {
         if (reportRepository.existsById(id)) {
             reportRepository.deleteById(id);
         }
