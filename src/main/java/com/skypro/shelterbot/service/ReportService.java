@@ -43,14 +43,14 @@ public class ReportService {
 
     @Transactional
     public Report updatePhotoOnLastReport(@NonNull Long chatId, String photoId) {
-        var lastReport = getLastReportByChatId(chatId);
+        var lastReport = getById(chatId);
         lastReport.setPhotoId(photoId);
         return reportRepository.save(lastReport);
     }
 
     @Transactional
     public Report updateTextOnLastReport(@NonNull Long chatId, String text) {
-        var lastReport = getLastReportByChatId(chatId);
+        var lastReport = getById(chatId);
         lastReport.setText(text);
         return reportRepository.save(lastReport);
     }
