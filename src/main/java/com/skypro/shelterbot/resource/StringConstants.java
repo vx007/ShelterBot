@@ -1,16 +1,18 @@
 package com.skypro.shelterbot.resource;
 
+import com.vdurmont.emoji.EmojiParser;
+
 public interface StringConstants {
     String START_CMD = "/start";
     String START_CAPTION = "Начало работы";
     String HELP_CMD = "/help";
     String HELP_CAPTION = "Помощь";
-    String SETTINGS_CMD = "/settings";
-    String SETTINGS_CAPTION = "Настройки";
     String ERROR_TEXT = "Ошибка: ";
-    String HELP_TEXT = "Я потерял текст"; //TODO
-    String CAT_BUTTON = "CAT_BUTTON";
-    String DOG_BUTTON = "DOG_BUTTON";
+    String HELP_TEXT = "Этот бот создан, что бы вы смогли найти себе подходящего петомца \n\n" +
+            "Попробуйте начать с кнопки .\n\n" +
+            "Type /start чтобы увидеть приветственное сообщение.\n\n" +
+            "Type /help увидеть это сообщение снова.";
+    String BACK_MENU = "Предыдущее меню";
     String INFO_ABOUT_SHELTER_CAT = "Узнать информацию о приюте";
     String HOW_TAKE_ANIMAL_FROM_SHELTER = "Как взять животное из приюта";
     String SEND_REPORT_ABOUT_PET = "Прислать отчет о питомце";
@@ -29,7 +31,10 @@ public interface StringConstants {
     String GIVE_A_LIST_OF_REASONS_WHY_THEY_CAN_REFUSE = "Выдать список причин, почему могут отказать";
     String GET_DAILY_REPORT_FROM = "Получить форму ежедневного отчета";
     String SEND_REPORT = "Отправить отчёт";
-    String TEXT_OF_VOLUNTEER = "Привет я волонтер, чем могу помочь?";
+    String TEXT_OF_VOLUNTEER = "Привет я волонтер. \n\nЕсли у вас остались вопросы, относительно информации, которой владеет бот, то я могу вам помочь, выберите подходящее из списка меню: ";
+    String SHELTER_CAT = "Приют кошек";
+    String SHELTER_DOG = "Приют собак";
+    String EMOJI_CAT = EmojiParser.parseToUnicode(":cat:");
 
     String ABOUT_SHELTER_CAT = "Приюты для кошек призваны защитить животное и подарить уход. " +
             "Конечно, ни кормежка, ни внимание в таком заведении не заменит домашнего уюта, " +
@@ -45,7 +50,8 @@ public interface StringConstants {
             "Наш адрес: Москва, улица Воздвиженка, 3/5с1\n" +
             "Схема проезда https://yandex.ru/maps/213/moscow/?ll=37.614610%2C55.749882&z=16.52";
 
-    String CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR = "";
+    String CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR = "Если вам необходимо заехать на территорию," +
+            " свяжитесь с постом охраны по телефону 6-66-666";
 
      String GENERAL_SAFETY_ADVICE_AT_THE_SHELTER =  "ИНСТРУКЦИЯ ПОСЕЩЕНИЯ ПРИЮТОВ\n" +
              "На территории Приюта для всех посетителей действуют правила и распорядок, установленные администрацией Приюта.\n" +
