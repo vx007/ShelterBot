@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static com.skypro.shelterbot.resource.StringConstants.*;
+
 @Log4j
 @RequiredArgsConstructor
 @Component
@@ -41,12 +43,12 @@ public class TelegramBot extends TelegramLongPollingBot {
     @PostConstruct
     public void init() {
         List<BotCommand> listOfCommands = new ArrayList<>();
-        listOfCommands.add(new BotCommand(StringConstants.START_CMD, StringConstants.START_CAPTION));
-        listOfCommands.add(new BotCommand(StringConstants.HELP_CMD, StringConstants.HELP_CAPTION));
+        listOfCommands.add(new BotCommand(START_CMD, START_CAPTION));
+        listOfCommands.add(new BotCommand(HELP_CMD, HELP_CAPTION));
         try {
             this.execute(new SetMyCommands(listOfCommands, new BotCommandScopeDefault(), null));
         } catch (TelegramApiException e) {
-            log.error(StringConstants.ERROR_TEXT + e.getMessage());
+            log.error(ERROR_TEXT + e.getMessage());
         }
     }
 
@@ -70,134 +72,148 @@ public class TelegramBot extends TelegramLongPollingBot {
             if (update.getMessage().hasPhoto()) {
                 var user = userService.getByChatId(chatId);
 
-                if (user.getLastCommand().equals(StringConstants.SEND_REPORT)) {
+                if (user.getLastCommand().equals(SEND_REPORT)) {
                     if (handleReport(message)) {
                         userService.updateLastCommand(chatId, null);
                     }
                 }
             } else if (update.getMessage().hasText()) {
                 switch (message.getText()) {
-                    case StringConstants.START_CMD:
+                    case START_CMD:
                         startCommandReceived(chatId, firstName);
                         registerUser(chatId, firstName);
 //                        offerCatOrDog(chatId);
                         universalMenu(chatId, "Выберите приют",
-                                "Приют кошек",
-                                "Приют собак");
+                                SHELTER_CAT,
+                                SHELTER_DOG);
                         break;
-                    case StringConstants.HELP_CMD:
-                        sendText(chatId, StringConstants.HELP_TEXT);
+                    case HELP_CMD:
+                        sendText(chatId, HELP_TEXT);
                         break;
 
                     // Этап 0
-                    case "Приют кошек":
-                        universalMenu(chatId, EmojiParser.parseToUnicode("Вы выбрали приют кошек!:cat:"),
-                                StringConstants.INFO_ABOUT_SHELTER_CAT,
-                                StringConstants.HOW_TAKE_ANIMAL_FROM_SHELTER,
-                                StringConstants.SEND_REPORT_ABOUT_PET,
-                                StringConstants.CALL_VOLUNTEER);
+                    case SHELTER_CAT:
+                        universalMenu(chatId, "Вы выбрали: " + SHELTER_CAT + EMOJI_CAT,
+                                INFO_ABOUT_SHELTER_CAT,
+                                HOW_TAKE_ANIMAL_FROM_SHELTER,
+                                SEND_REPORT_ABOUT_PET,
+                                CALL_VOLUNTEER);
                         break;
-                    case "Приют собак":
+
+                    case SHELTER_DOG:
                         universalMenu(chatId, EmojiParser.parseToUnicode("Вы выбрали приют собак!:dog:"),
                                 "Не реализовано"); // TODO
                         break;
 
                     // Этап 1
-                    case StringConstants.INFO_ABOUT_SHELTER_CAT:
-                        universalMenu(chatId, "Выбрано меню",
-                                StringConstants.TELL_ABOUT_SHELTER_CAT,
-                                StringConstants.SCHEDULE_ADDRESS_DIRECTION_ABOUT_SHELTER_CAT,
-                                StringConstants.GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR,
-                                StringConstants.ISSUE_GENERAL_SAFETY_ADVICE_AT_THE_SHELTER,
-                                StringConstants.LEAVE_YOUR_CONTACT_DETAILS,
-                                StringConstants.CALL_VOLUNTEER);
+                    case INFO_ABOUT_SHELTER_CAT:
+                        universalMenu(chatId, "Выбрано меню: " + INFO_ABOUT_SHELTER_CAT,
+                                TELL_ABOUT_SHELTER_CAT,
+                                SCHEDULE_ADDRESS_DIRECTION_ABOUT_SHELTER_CAT,
+                                GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR,
+                                ISSUE_GENERAL_SAFETY_ADVICE_AT_THE_SHELTER,
+                                LEAVE_YOUR_CONTACT_DETAILS,
+                                CALL_VOLUNTEER,
+                                BACK_MENU);
                         break;
 
-                    case StringConstants.HOW_TAKE_ANIMAL_FROM_SHELTER:
-                        universalMenu(chatId, "Выбрано меню",
-                                StringConstants.GIVE_THE_RULES_OF_ACQUAINTANCE_WITH_ANIMALS,
-                                StringConstants.GIVE_A_LIST_OF_DOCUMENTS_TO_ADOPT_AN_ANIMAL_FROM_A_SHELTER,
-                                StringConstants.PRODUCE_A_LIST_OF_TRANSPORTATION_RECOMMENDATIONS,
-                                StringConstants.GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_KITTEN,
-                                StringConstants.GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL,
-                                StringConstants.GIVE_A_LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY,
-                                StringConstants.GIVE_A_LIST_OF_REASONS_WHY_THEY_CAN_REFUSE,
-                                StringConstants.LEAVE_YOUR_CONTACT_DETAILS,
-                                StringConstants.CALL_VOLUNTEER);
+                    case HOW_TAKE_ANIMAL_FROM_SHELTER:
+                        universalMenu(chatId, "Выбрано меню: " + HOW_TAKE_ANIMAL_FROM_SHELTER,
+                                GIVE_THE_RULES_OF_ACQUAINTANCE_WITH_ANIMALS,
+                                GIVE_A_LIST_OF_DOCUMENTS_TO_ADOPT_AN_ANIMAL_FROM_A_SHELTER,
+                                PRODUCE_A_LIST_OF_TRANSPORTATION_RECOMMENDATIONS,
+                                GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_KITTEN,
+                                GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL,
+                                GIVE_A_LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY,
+                                GIVE_A_LIST_OF_REASONS_WHY_THEY_CAN_REFUSE,
+                                LEAVE_YOUR_CONTACT_DETAILS,
+                                CALL_VOLUNTEER,
+                                BACK_MENU);
                         break;
 
-                    case StringConstants.SEND_REPORT_ABOUT_PET:
-                        universalMenu(chatId, "Выбрано меню",
-                                StringConstants.GET_DAILY_REPORT_FROM,
-                                StringConstants.SEND_REPORT,
-                                StringConstants.CALL_VOLUNTEER);
+                    case SEND_REPORT_ABOUT_PET:
+                        universalMenu(chatId, "Выбрано меню: " + SEND_REPORT_ABOUT_PET,
+                                GET_DAILY_REPORT_FROM,
+                                SEND_REPORT,
+                                CALL_VOLUNTEER,
+                                BACK_MENU);
                         break;
 
-                    case StringConstants.CALL_VOLUNTEER:
+                    case BACK_MENU:
+                        universalMenu(chatId, EmojiParser.parseToUnicode("Вы выбрали предыдущее меню: " + SHELTER_CAT+ EMOJI_CAT),
+                                INFO_ABOUT_SHELTER_CAT,
+                                HOW_TAKE_ANIMAL_FROM_SHELTER,
+                                SEND_REPORT_ABOUT_PET,
+                                CALL_VOLUNTEER);
+                        break;
+
+                    case CALL_VOLUNTEER:
                         callVolunteer(chatId);
                         break;
 
                     // Этап 2
-                    case StringConstants.TELL_ABOUT_SHELTER_CAT:
-                        sendText(chatId, StringConstants.ABOUT_SHELTER_CAT);
+                    case TELL_ABOUT_SHELTER_CAT:
+                        sendText(chatId, ABOUT_SHELTER_CAT);
                         break;
 
-                    case StringConstants.SCHEDULE_ADDRESS_DIRECTION_ABOUT_SHELTER_CAT:
-                        sendText(chatId, StringConstants.ADDRESS_DIRECTION_ABOUT_SHELTER_CAT);
+                    case SCHEDULE_ADDRESS_DIRECTION_ABOUT_SHELTER_CAT:
+                        sendText(chatId, ADDRESS_DIRECTION_ABOUT_SHELTER_CAT);
 
                         break;
 
-                    case StringConstants.GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR:
-                        sendText(chatId, StringConstants.CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR);
+                    case GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR:
+                        sendText(chatId, CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR);
                         break;
 
-                    case StringConstants.ISSUE_GENERAL_SAFETY_ADVICE_AT_THE_SHELTER:
-                        sendText(chatId, StringConstants.GENERAL_SAFETY_ADVICE_AT_THE_SHELTER);
+                    case ISSUE_GENERAL_SAFETY_ADVICE_AT_THE_SHELTER:
+                        sendText(chatId, GENERAL_SAFETY_ADVICE_AT_THE_SHELTER);
                         break;
 
-                    case StringConstants.LEAVE_YOUR_CONTACT_DETAILS:
+                    case LEAVE_YOUR_CONTACT_DETAILS:
                         sendText(chatId, firstName + ", оставьте свои данные!");
-                        userService.updateLastCommand(chatId, StringConstants.LEAVE_YOUR_CONTACT_DETAILS);
+                        userService.updateLastCommand(chatId, LEAVE_YOUR_CONTACT_DETAILS);
+                        
                         break;
 
                     // Этап 3
-                    case StringConstants.GIVE_THE_RULES_OF_ACQUAINTANCE_WITH_ANIMALS:
-                        sendText(chatId, StringConstants.RULES_OF_ACQUAINTANCE_WITH_ANIMALS);
+                    case GIVE_THE_RULES_OF_ACQUAINTANCE_WITH_ANIMALS:
+                        sendText(chatId, RULES_OF_ACQUAINTANCE_WITH_ANIMALS);
                         break;
 
-                    case StringConstants.GIVE_A_LIST_OF_DOCUMENTS_TO_ADOPT_AN_ANIMAL_FROM_A_SHELTER:
-                        sendText(chatId, StringConstants.LIST_OF_DOCUMENTS_TO_ADOPT_AN_ANIMAL_FROM_A_SHELTER);
+                    case GIVE_A_LIST_OF_DOCUMENTS_TO_ADOPT_AN_ANIMAL_FROM_A_SHELTER:
+                        sendText(chatId, LIST_OF_DOCUMENTS_TO_ADOPT_AN_ANIMAL_FROM_A_SHELTER);
                         break;
 
-                    case StringConstants.PRODUCE_A_LIST_OF_TRANSPORTATION_RECOMMENDATIONS:
-                        sendText(chatId, StringConstants.LIST_OF_TRANSPORTATION_RECOMMENDATIONS);
+                    case PRODUCE_A_LIST_OF_TRANSPORTATION_RECOMMENDATIONS:
+                        sendText(chatId, LIST_OF_TRANSPORTATION_RECOMMENDATIONS);
                         break;
 
-                    case StringConstants.GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_KITTEN:
-                        sendText(chatId, StringConstants.LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_KITTEN);
+                    case GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_KITTEN:
+                        sendText(chatId, LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_KITTEN);
                         break;
 
-                    case StringConstants.GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL:
-                        sendText(chatId, StringConstants.LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL);
+                    case GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL:
+                        sendText(chatId, LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL);
                         break;
 
-                    case StringConstants.GIVE_A_LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY:
-                        sendText(chatId, StringConstants.LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY);
+                    case GIVE_A_LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY:
+                        sendText(chatId, LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY);
                         break;
 
-                    case StringConstants.GIVE_A_LIST_OF_REASONS_WHY_THEY_CAN_REFUSE:
-                        sendText(chatId, StringConstants.LIST_OF_REASONS_WHY_THEY_CAN_REFUSE);
+                    case GIVE_A_LIST_OF_REASONS_WHY_THEY_CAN_REFUSE:
+                        sendText(chatId, LIST_OF_REASONS_WHY_THEY_CAN_REFUSE);
                         break;
 
                     // Этап 4
-                    case StringConstants.GET_DAILY_REPORT_FROM:
-                        sendText(chatId, StringConstants.DAILY_REPORT_FROM);
+                    case GET_DAILY_REPORT_FROM:
+                        sendText(chatId, DAILY_REPORT_FROM);
                         break;
 
-                    case StringConstants.SEND_REPORT:
+                    case SEND_REPORT:
                         sendText(chatId, "Присылайте отчёт!");
-                        userService.updateLastCommand(chatId, StringConstants.SEND_REPORT);
+                        userService.updateLastCommand(chatId, SEND_REPORT);
                         break;
+
                     default:
                         sendText(chatId, "Извините, команда не распознана!");
                 }
@@ -205,33 +221,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-//    private void offerCatOrDog(Long chatId) {
-//        var message = new SendMessage();
-//        message.setChatId(chatId);
-//        message.setText("Выберите приют");
-//
-//        var inlineKeyboardMarkup = new InlineKeyboardMarkup();
-//
-//        List<List<InlineKeyboardButton>> listOfButtons = new ArrayList<>();
-//        List<InlineKeyboardButton> listButtonFirst = new ArrayList<>();
-//
-//        var catButton = new InlineKeyboardButton();
-//        catButton.setText(EmojiParser.parseToUnicode("Приют кошек:cat:"));
-//        catButton.setCallbackData(StringConstants.CAT_BUTTON);
-//
-//        var dogButton = new InlineKeyboardButton();
-//        dogButton.setText(EmojiParser.parseToUnicode("Приют собак:dog:"));
-//        dogButton.setCallbackData(StringConstants.DOG_BUTTON);
-//
-//        listButtonFirst.add(catButton);
-//        listButtonFirst.add(dogButton);
-//
-//        listOfButtons.add(listButtonFirst);
-//        inlineKeyboardMarkup.setKeyboard(listOfButtons);
-//        message.setReplyMarkup(inlineKeyboardMarkup);
-//
-//        executeSendMessage(message);
-//    }
 
     private void startCommandReceived(Long chatId, String name) {
         String answer = EmojiParser.parseToUnicode("Hi, welcome to the Shelter Bot!" + " :blush:");
@@ -264,7 +253,9 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     private void callVolunteer(Long chatId) {
-        sendText(chatId, StringConstants.TEXT_OF_VOLUNTEER); //TODO
+        sendText(chatId, TEXT_OF_VOLUNTEER);//TODO
+        String anyText = "Выберите из списка меню: ";
+        universalMenu(chatId, anyText,LEAVE_YOUR_CONTACT_DETAILS, "Перезвоните мне", BACK_MENU);
     }
 
     private void universalMenu(Long chatId, String text, @NotNull String... stringsForRows) {
