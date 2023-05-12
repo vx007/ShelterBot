@@ -32,12 +32,6 @@ public class PetService {
     public List<Pet> getAll() {
         return petRepository.findAll();
     }
-
-    @Transactional
-
-    public void remove(@NotNull Long id) {
-        petRepository.deleteById(id);
-    }
       
     public Pet updateType(@NonNull Long id, PetType type) {
         var pet = getById(id);

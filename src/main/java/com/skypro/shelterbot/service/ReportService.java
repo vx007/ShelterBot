@@ -21,7 +21,7 @@ public class ReportService {
 
     @Transactional
 
-    public Report add(@NotNull Report report) {
+    public Report add(Report report) {
         return reportRepository.save(report);
     }
 

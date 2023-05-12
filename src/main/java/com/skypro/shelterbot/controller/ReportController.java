@@ -171,7 +171,7 @@ public class ReportController {
     public ResponseEntity<Report> getAllReportByUserId(@PathVariable long id) {
         Report userReports;
         try {
-            userReports = Optional.ofNullable(reportService.getById(id));
+            userReports = reportService.getById(id);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
 
