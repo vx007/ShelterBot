@@ -21,7 +21,6 @@ public class UserService {
         } else {
             return null;
         }
-        return user;
     }
 
     public User getByChatId(@NonNull Long chatId) {
@@ -38,7 +37,7 @@ public class UserService {
 
     @Transactional
 
-    public void updateName(@NonNull Long chatId, String name) {
+    public User updateName(@NonNull Long chatId, String name) {
         var user = userRepository.findByChatId(chatId);
         user.setName(name);
         return userRepository.save(user);
@@ -46,7 +45,7 @@ public class UserService {
 
     @Transactional
 
-    public void updatePhone(@NonNull Long chatId, String phone) {
+    public User updatePhone(@NonNull Long chatId, String phone) {
         var user = userRepository.findByChatId(chatId);
         user.setPhone(phone);
         return userRepository.save(user);
@@ -54,7 +53,7 @@ public class UserService {
 
     @Transactional
 
-    public void updateLastCommand(@NonNull Long chatId, String command) {
+    public User updateLastCommand(@NonNull Long chatId, String command) {
         var user = userRepository.findByChatId(chatId);
         user.setLastCommand(command);
         return userRepository.save(user);
