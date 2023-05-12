@@ -21,14 +21,15 @@ public class UserService {
         } else {
             return null;
         }
+        return user;
     }
 
     public User getByChatId(@NonNull Long chatId) {
-        return userRepository.findByChatId(chatId).orElseThrow();
+        return userRepository.findByChatId(chatId);
     }
 
     public User getByPetId(@NonNull Long petId) {
-        return userRepository.findByPetId(petId).orElseThrow();
+        return userRepository.findByPetId(petId);
     }
 
     public List<User> getAll() {
@@ -36,22 +37,25 @@ public class UserService {
     }
 
     @Transactional
-    public User updateName(@NonNull Long chatId, String name) {
-        var user = getByChatId(chatId);
+
+    public void updateName(@NonNull Long chatId, String name) {
+        var user = userRepository.findByChatId(chatId);
         user.setName(name);
         return userRepository.save(user);
     }
 
     @Transactional
-    public User updatePhone(@NonNull Long chatId, String phone) {
-        var user = getByChatId(chatId);
+
+    public void updatePhone(@NonNull Long chatId, String phone) {
+        var user = userRepository.findByChatId(chatId);
         user.setPhone(phone);
         return userRepository.save(user);
     }
 
     @Transactional
-    public User updateLastCommand(@NonNull Long chatId, String command) {
-        var user = getByChatId(chatId);
+
+    public void updateLastCommand(@NonNull Long chatId, String command) {
+        var user = userRepository.findByChatId(chatId);
         user.setLastCommand(command);
         return userRepository.save(user);
     }

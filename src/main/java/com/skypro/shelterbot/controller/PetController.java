@@ -112,4 +112,29 @@ public class PetController {
     public ResponseEntity<Collection<Pet>> getAllPet() {
         return ResponseEntity.ok(petService.getAll());
     }
+
+    @Operation(
+            summary = "Удалить питомца по id",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "питомец удален",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(implementation = Pet.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Если питомца с таким id нет"
+                    )
+            }
+    )
+    @DeleteMapping("{id}")
+    public ResponseEntity.BodyBuilder removePetById(@PathVariable Long id) {
+        petService.remove(id);
+        return ResponseEntity.ok();
+    }
 }

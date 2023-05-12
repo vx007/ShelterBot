@@ -24,7 +24,8 @@ public class PetService {
         return petRepository.save(pet);
     }
 
-    public Pet getById(@NonNull Long id) {
+    public Pet getById(Long id) {
+   
         return petRepository.findById(id).orElseThrow();
     }
 
@@ -33,6 +34,11 @@ public class PetService {
     }
 
     @Transactional
+
+    public void remove(@NotNull Long id) {
+        petRepository.deleteById(id);
+    }
+      
     public Pet updateType(@NonNull Long id, PetType type) {
         var pet = getById(id);
         pet.setType(type);
@@ -65,5 +71,6 @@ public class PetService {
         if (petRepository.existsById(id)) {
             petRepository.deleteById(id);
         }
+
     }
 }

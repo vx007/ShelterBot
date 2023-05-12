@@ -87,6 +87,34 @@ public class PetControllerTest {
                 .andExpect(status().isOk());
     }
 
+
+    public void findPetTest() throws Exception{
+        final String name = "newName";
+        final int age = 2;
+        final long id = 1;
+
+        JSONObject petObject = new JSONObject();
+        petObject.put("id", id);
+        petObject.put("name", name);
+        petObject.put("age", age);
+
+        Pet pet = new Pet();
+        pet.setId(id);
+        pet.setAge(age);
+        pet.setName(name);
+
+        when(petService.getById(id)).thenReturn(pet);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/pets/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.name").value(name))
+                .andExpect(jsonPath("$.age").value(age));
+    }
+
 //    @Test
 //    public void findPetTest() throws Exception{
 //        final String name = "newName";
@@ -114,4 +142,5 @@ public class PetControllerTest {
 //                .andExpect(jsonPath("$.name").value(name))
 //                .andExpect(jsonPath("$.age").value(age));
 //    }
+
 }

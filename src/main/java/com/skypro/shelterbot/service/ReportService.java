@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+
 import java.util.Objects;
+
 
 @RequiredArgsConstructor
 @Service
@@ -18,14 +20,14 @@ public class ReportService {
     private final ReportRepository reportRepository;
 
     @Transactional
-    public Report add(@NonNull Report report) {
-        if (!Objects.isNull(report.getId())) {
-            report.setId(null);
-        }
+
+    public Report add(@NotNull Report report) {
         return reportRepository.save(report);
     }
 
+   
     public Report getById(@NonNull Long id) {
+
         return reportRepository.findById(id).orElseThrow();
     }
 
