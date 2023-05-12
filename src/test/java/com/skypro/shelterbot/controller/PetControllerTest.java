@@ -103,7 +103,7 @@ public class PetControllerTest {
         pet.setAge(age);
         pet.setName(name);
 
-        when(petService.getById(id)).thenReturn(Optional.of(pet));
+        when(petService.getById(id)).thenReturn(pet);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/pets/{id}", id)

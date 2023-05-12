@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("pets")
@@ -85,8 +84,8 @@ public class PetController {
             )
     )
     @GetMapping("{id}")
-    public ResponseEntity<Optional<Pet>> findPet(@PathVariable Long id) {
-        Optional<Pet> pet = petService.getById(id);
+    public ResponseEntity<Pet> findPet(@PathVariable Long id) {
+        Pet pet = petService.getById(id);
         return ResponseEntity.ok(pet);
     }
 
@@ -112,5 +111,30 @@ public class PetController {
     @GetMapping("all_pet")
     public ResponseEntity<Collection<Pet>> getAllPet() {
         return ResponseEntity.ok(petService.getAll());
+    }
+
+    @Operation(
+            summary = "Удалить питомца по id",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "питомец удален",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(implementation = Pet.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Если питомца с таким id нет"
+                    )
+            }
+    )
+    @DeleteMapping("{id}")
+    public ResponseEntity.BodyBuilder removePetById(@PathVariable Long id) {
+        petService.remove(id);
+        return ResponseEntity.ok();
     }
 }

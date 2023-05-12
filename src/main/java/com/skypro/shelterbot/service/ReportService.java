@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ReportService {
@@ -18,12 +17,12 @@ public class ReportService {
     }
 
     @Transactional
-    public void add(@NotNull Report report) {
-        reportRepository.save(report);
+    public Report add(@NotNull Report report) {
+        return reportRepository.save(report);
     }
 
-    public Optional<Report> getById(Long id) {
-        return reportRepository.findById(id);
+    public Report getById(Long id) {
+        return reportRepository.findById(id).orElseThrow();
     }
 
     public List<Report> getByChatId(Long chatId) {
