@@ -12,20 +12,29 @@ public interface StringConstants {
             "Попробуйте начать с кнопки .\n\n" +
             "Type /start чтобы увидеть приветственное сообщение.\n\n" +
             "Type /help увидеть это сообщение снова.";
-    String BACK_MENU = "Предыдущее меню";
-    String INFO_ABOUT_SHELTER_CAT = "Узнать информацию о приюте";
-    String HOW_TAKE_ANIMAL_FROM_SHELTER = "Как взять животное из приюта";
-    String SEND_REPORT_ABOUT_PET = "Прислать отчет о питомце";
+    String BACK_MENU_CAT = "Предыдущее меню приюта кошек";
+    String BACK_MENU_DOG = "Предыдущее меню приюта собак";
+    String INFO_ABOUT_SHELTER_CAT = "Узнать информацию о приюте кошек";
+    String INFO_ABOUT_SHELTER_DOG = "Узнать информацию о приюте собак";
+    String HOW_TAKE_ANIMAL_FROM_SHELTER_CAT = "Как взять животное из приюта кошек";
+    String HOW_TAKE_ANIMAL_FROM_SHELTER_DOG = "Как взять животное из приюта собак";
+    String SEND_REPORT_ABOUT_PET_CAT = "Прислать отчет о кошке";
+    String SEND_REPORT_ABOUT_PET_DOG = "Прислать отчет о собаке";
     String CALL_VOLUNTEER = "Позвать волонтера";
     String TELL_ABOUT_SHELTER_CAT = "Рассказать о приюте кошек";
-    String SCHEDULE_ADDRESS_DIRECTION_ABOUT_SHELTER_CAT = "Выдать расписание работы приюта и адрес, схему проезда";
-    String GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR = "Выдать контактные данные охраны для оформления пропуска на машину";
+    String TELL_ABOUT_SHELTER_DOG = "Рассказать о приюте собак";
+    String SCHEDULE_ADDRESS_DIRECTION_ABOUT_SHELTER_CAT = "Выдать расписание работы, адрес, схему проезда приюта кошек";
+    String SCHEDULE_ADDRESS_DIRECTION_ABOUT_SHELTER_DOG = "Выдать расписание работы, адрес, схему проезда приюта собак";
+    String GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR_SHELTER_CAT = "Выдать контактные данные охраны для оформления пропуска на машину, приюта кошек";
+    String GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR_SHELTER_DOG = "Выдать контактные данные охраны для оформления пропуска на машину, приюта собак";
     String ISSUE_GENERAL_SAFETY_ADVICE_AT_THE_SHELTER = "Выдать общие рекомендации о технике безопасности на территории приюта";
     String LEAVE_YOUR_CONTACT_DETAILS = "Оставить свои данные для связи";
     String GIVE_THE_RULES_OF_ACQUAINTANCE_WITH_ANIMALS = "Выдать правила знакомства с животными";
     String GIVE_A_LIST_OF_DOCUMENTS_TO_ADOPT_AN_ANIMAL_FROM_A_SHELTER = "Выдать список документов, чтобы взять животное из приюта";
-    String PRODUCE_A_LIST_OF_TRANSPORTATION_RECOMMENDATIONS = "Выдать список рекомендаций по транспортировке";
+    String PRODUCE_A_LIST_OF_TRANSPORTATION_RECOMMENDATIONS_CAT = "Выдать список рекомендаций по транспортировке кошек";
+    String PRODUCE_A_LIST_OF_TRANSPORTATION_RECOMMENDATIONS_DOG = "Выдать список рекомендаций по транспортировке собак";
     String GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_KITTEN = "Выдать список рекомендаций по обустройству дома для котёнка";
+    String GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_PUPPY = "Выдать список рекомендаций по обустройству дома для щенка";
     String GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL = "Выдать список рекомендаций по обустройству дома для взрослого животного";
     String GIVE_A_LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY = "Выдать список рекомендаций по обустройству дома для животного с ограниченными возможностями";
     String GIVE_A_LIST_OF_REASONS_WHY_THEY_CAN_REFUSE = "Выдать список причин, почему могут отказать";
@@ -35,8 +44,18 @@ public interface StringConstants {
     String SHELTER_CAT = "Приют кошек";
     String SHELTER_DOG = "Приют собак";
     String EMOJI_CAT = EmojiParser.parseToUnicode(":cat:");
+    String EMOJI_DOG = EmojiParser.parseToUnicode(":dog:");
 
     String ABOUT_SHELTER_CAT = "Приюты для кошек призваны защитить животное и подарить уход. " +
+            "Конечно, ни кормежка, ни внимание в таком заведении не заменит домашнего уюта, " +
+            "но все же деятельность учреждения нацелена на выполнение 3 главных функций:\n" +
+            "\n" +
+            "Забота о животном и оперативная помощь, в которую входит: " +
+            "1. Длительная забота о животном, которое не нашло себе сразу хозяина.\n" +
+            "2. Усилия, ориентированные на воссоединение потерянного питомца с его прежним хозяином.\n" +
+            "3. Поиск нового места обитания или нового хозяина для выброшенного на улицу животного.";
+
+    String ABOUT_SHELTER_DOG = "Приюты для собак призваны защитить животное и подарить уход. " +
             "Конечно, ни кормежка, ни внимание в таком заведении не заменит домашнего уюта, " +
             "но все же деятельность учреждения нацелена на выполнение 3 главных функций:\n" +
             "\n" +
@@ -50,10 +69,18 @@ public interface StringConstants {
             "Наш адрес: Москва, улица Воздвиженка, 3/5с1\n" +
             "Схема проезда https://yandex.ru/maps/213/moscow/?ll=37.614610%2C55.749882&z=16.52";
 
-    String CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR = "Если вам необходимо заехать на территорию," +
+    String ADDRESS_DIRECTION_ABOUT_SHELTER_DOG = "Благодарим Вас за решение посетить наш приют и подарить дом одному из наших питомцев!\n" +
+            "Мы работаем ежедневно без выходных и праздников с 8 до 20 часов.\n" +
+            "Наш адрес: Москва, Поклонная улица, 10к2с1\n" +
+            "Схема проезда https://yandex.ru/maps/213/moscow/house/poklonnaya_ulitsa_10k2s1/Z04YcwVoQEwPQFtvfXtyd3libA==/?ll=37.529916%2C55.736364&rtext=~55.718597%2C37.554395&rtt=auto&ruri=~&z=17.72";
+
+    String CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR_SHELTER_CAT = "Если вам необходимо заехать на территорию," +
             " свяжитесь с постом охраны по телефону 6-66-666";
 
-     String GENERAL_SAFETY_ADVICE_AT_THE_SHELTER =  "ИНСТРУКЦИЯ ПОСЕЩЕНИЯ ПРИЮТОВ\n" +
+    String CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR_SHELTER_DOG = "Если вам необходимо заехать на территорию," +
+            " свяжитесь с постом охраны по телефону 7-909-123-13-66";
+
+    String GENERAL_SAFETY_ADVICE_AT_THE_SHELTER =  "ИНСТРУКЦИЯ ПОСЕЩЕНИЯ ПРИЮТОВ\n" +
              "На территории Приюта для всех посетителей действуют правила и распорядок, установленные администрацией Приюта.\n" +
              "При посещении Приюта необходимо иметь документ удостоверяющий личность или постоянный пропуск, " +
              "для детей - документ подтверждающий возраст. Дети до 16 лет без сопровождения взрослых " +
@@ -70,7 +97,7 @@ public interface StringConstants {
              "Вам необходимо написать заявление о выдаче животного из приюта для животных, а так же оформить договор о " +
              "передаче животного на содержание";
 
-     String LIST_OF_TRANSPORTATION_RECOMMENDATIONS = "Правильная переноска\n" +
+     String LIST_OF_TRANSPORTATION_RECOMMENDATIONS_CAT = "Правильная переноска\n" +
              "Ездить с кошкой в автомобиле, держа ее на руках, нельзя. " +
              "Во-первых, вас могут остановить дорожные контролеры. Во-вторых, кошка, не помещенная в переноску, может неадекватно себя повести и травмировать вас, " +
              "а также спровоцировать аварию. В-третьих, если окно открыто, зверь запросто выпрыгнет. В-четвертых, в случае аварии в переноске " +
@@ -78,11 +105,23 @@ public interface StringConstants {
              "\n" +
              "Единственным правильным вариантом является переноска из прочного пластика, закрытая со всех сторон так, чтобы кошка не вырвалась";
 
-     String LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_KITTEN = "1. Уберите мелкие предметы\n" +
+    String LIST_OF_TRANSPORTATION_RECOMMENDATIONS_DOG = "Правильная переноска\n" +
+            "Собака в машине может ехать и без клетки.  " +
+            "Некрупные животные прекрасно себя чувствуют, сидя на коленях хозяина. " +
+            "Если у собаки сильное слюнотечение, положите на свою одежду непромокаемую подстилку или пеленку.  " +
+            "Можно разрешить собаке ехать на заднем сидении или уложить ее на пол между сиденьями.";
+
+    String LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_KITTEN = "1. Уберите мелкие предметы\n" +
              "2. Подготовьте котенку место для сна\n"+
              "3. Подготовьте лоток и место для приема пищи\n"+
              "4. Приготовьте игрушки для котенка\n"+
              "5. Будьте готовы к уходу за когтями\n";
+
+    String LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_PUPPY = "1. Уберите мелкие предметы\n" +
+            "2. Подготовьте щенку место для сна\n"+
+            "3. Подготовьте лоток и место для приема пищи\n"+
+            "4. Приготовьте игрушки для щенка\n"+
+            "5. Приучайте щенка к улице\n";
 
      String LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL = "Животных надо размещать отдельно друг от друга.\n" +
              "Размещение:\n" +
