@@ -38,6 +38,8 @@ public interface StringConstants {
     String GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL = "Выдать список рекомендаций по обустройству дома для взрослого животного";
     String GIVE_A_LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY = "Выдать список рекомендаций по обустройству дома для животного с ограниченными возможностями";
     String GIVE_A_LIST_OF_REASONS_WHY_THEY_CAN_REFUSE = "Выдать список причин, почему могут отказать";
+    String GIVE_A_ADVICE_CYNOLOGIST_A_DOG = "выдать советы кинолога по первичному общению с собакой";
+    String ISSUE_RECOMMENDADTIONS_ON_PROVEN_CYNOLOGISTS = "выдать рекомендации по проверенным кинологам для дальнейшего обращения к ним";
     String GET_DAILY_REPORT_FROM = "Получить форму ежедневного отчета";
     String SEND_REPORT = "Отправить отчёт";
     String TEXT_OF_VOLUNTEER = "Привет я волонтер. \n\nЕсли у вас остались вопросы, относительно информации, которой владеет бот, то я могу вам помочь, выберите подходящее из списка меню: ";
@@ -147,5 +149,14 @@ public interface StringConstants {
              "- Фото животного.  \n" +
              "- Общее самочувствие и привыкание к новому месту\n" +
              "- Изменение в поведении: отказ от старых привычек, приобретение новых.";
+
+     String LIST_WHAT_NEEDED_KNOWS_ABOUT_DOG = "Если вы завели себе собаку и хотите, чтобы ваша совместная жизнь была комфортной, радостной и безопасной," +
+             " важно уделить внимание дрессировке и воспитанию. Становление полноценной собаки включает в себя целый комплекс мероприятий: кормление и уход," +
+             " физическое развитие, воспитание, обучение и тренировка собаки, ветеринарное обслуживание.";
+
+     String LIST_RECOMMENDED_CENTRE_CYNOLOGISTS = "1. Кинологический центр MirDog: Мы находимся по адресу:\n" +
+             "1-й км. Киевского ш., д.Саларьево, владение 5, https://mirdog.ru/map.html\n\n" +
+             "2. Кинологический центр \"Сокольники\" : Мы находимся по адресу:  3-й Лучевой просек, 12с1, Москва, 107014," +
+             " https://www.google.com/maps/place/3-й+Лучевой+просек,+12,+Москва,+107014/data=!4m2!3m1!1s0x46b535c1a34fad05:0x3e08d0e4107e738a?sa=X&ved=2ahUKEwjg8MrjvvT-AhUBmYsKHa7rBNwQ8gF6BAgIEAI";
 
 }

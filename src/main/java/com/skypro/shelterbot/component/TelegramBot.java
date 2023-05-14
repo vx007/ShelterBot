@@ -124,6 +124,8 @@ public class TelegramBot extends TelegramLongPollingBot {
                                 SCHEDULE_ADDRESS_DIRECTION_ABOUT_SHELTER_DOG,
                                 GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR_SHELTER_DOG,
                                 ISSUE_GENERAL_SAFETY_ADVICE_AT_THE_SHELTER,
+                                GIVE_A_ADVICE_CYNOLOGIST_A_DOG,
+                                ISSUE_RECOMMENDADTIONS_ON_PROVEN_CYNOLOGISTS,
                                 LEAVE_YOUR_CONTACT_DETAILS,
                                 CALL_VOLUNTEER,
                                 BACK_MENU_DOG);
@@ -150,6 +152,8 @@ public class TelegramBot extends TelegramLongPollingBot {
                                 GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_PUPPY,
                                 GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL,
                                 GIVE_A_LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY,
+                                GIVE_A_ADVICE_CYNOLOGIST_A_DOG,
+                                ISSUE_RECOMMENDADTIONS_ON_PROVEN_CYNOLOGISTS,
                                 GIVE_A_LIST_OF_REASONS_WHY_THEY_CAN_REFUSE,
                                 LEAVE_YOUR_CONTACT_DETAILS,
                                 CALL_VOLUNTEER,
@@ -258,6 +262,14 @@ public class TelegramBot extends TelegramLongPollingBot {
 
                     case GIVE_A_LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY:
                         sendText(chatId, LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY);
+                        break;
+
+                    case GIVE_A_ADVICE_CYNOLOGIST_A_DOG:
+                        sendText(chatId, LIST_WHAT_NEEDED_KNOWS_ABOUT_DOG);
+                        break;
+
+                    case ISSUE_RECOMMENDADTIONS_ON_PROVEN_CYNOLOGISTS:
+                        sendText(chatId, LIST_RECOMMENDED_CENTRE_CYNOLOGISTS);
                         break;
 
                     case GIVE_A_LIST_OF_REASONS_WHY_THEY_CAN_REFUSE:
