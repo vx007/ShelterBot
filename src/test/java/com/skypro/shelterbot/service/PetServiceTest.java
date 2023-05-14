@@ -27,7 +27,7 @@ class PetServiceTest {
     private Pet pet2;
     private Pet pet3;
 
-    private List<Pet> petList = new ArrayList<>();
+    private final List<Pet> petList = new ArrayList<>();
 
 
     @BeforeEach
@@ -49,7 +49,9 @@ class PetServiceTest {
 
     @Test
     void add() {
-
+        petService.add(pet1);
+        Pet addedPet = petService.add(pet1);
+        assertNull(addedPet);
     }
 
     @Test
@@ -117,5 +119,11 @@ class PetServiceTest {
 
     @Test
     void remove() {
+        pet1.setId(123456789L);
+        petRepository.save(pet1);
+
+        petService.remove(123456789L);
+
+        assertFalse(petRepository.existsById(123456789L));
     }
 }

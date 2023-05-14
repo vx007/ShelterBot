@@ -23,6 +23,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public User getByChatId(@NonNull Long chatId) {
         return userRepository.findByChatId(chatId);
     }
@@ -52,7 +53,6 @@ public class UserService {
     }
 
     @Transactional
-
     public User updateLastCommand(@NonNull Long chatId, String command) {
         var user = userRepository.findByChatId(chatId);
         user.setLastCommand(command);
