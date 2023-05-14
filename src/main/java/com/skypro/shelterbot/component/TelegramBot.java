@@ -82,7 +82,6 @@ public class TelegramBot extends TelegramLongPollingBot {
                     case START_CMD:
                         startCommandReceived(chatId, firstName);
                         registerUser(chatId, firstName);
-//                        offerCatOrDog(chatId);
                         universalMenu(chatId, "Выберите приют",
                                 SHELTER_CAT,
                                 SHELTER_DOG);
@@ -95,14 +94,17 @@ public class TelegramBot extends TelegramLongPollingBot {
                     case SHELTER_CAT:
                         universalMenu(chatId, "Вы выбрали: " + SHELTER_CAT + EMOJI_CAT,
                                 INFO_ABOUT_SHELTER_CAT,
-                                HOW_TAKE_ANIMAL_FROM_SHELTER,
-                                SEND_REPORT_ABOUT_PET,
+                                HOW_TAKE_ANIMAL_FROM_SHELTER_CAT,
+                                SEND_REPORT_ABOUT_PET_CAT,
                                 CALL_VOLUNTEER);
                         break;
 
                     case SHELTER_DOG:
-                        universalMenu(chatId, EmojiParser.parseToUnicode("Вы выбрали приют собак!:dog:"),
-                                "Не реализовано"); // TODO
+                        universalMenu(chatId, "Вы выбрали: " + SHELTER_DOG + EMOJI_DOG,
+                                INFO_ABOUT_SHELTER_DOG,
+                                HOW_TAKE_ANIMAL_FROM_SHELTER_DOG,
+                                SEND_REPORT_ABOUT_PET_DOG,
+                                CALL_VOLUNTEER);
                         break;
 
                     // Этап 1
@@ -110,40 +112,83 @@ public class TelegramBot extends TelegramLongPollingBot {
                         universalMenu(chatId, "Выбрано меню: " + INFO_ABOUT_SHELTER_CAT,
                                 TELL_ABOUT_SHELTER_CAT,
                                 SCHEDULE_ADDRESS_DIRECTION_ABOUT_SHELTER_CAT,
-                                GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR,
+                                GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR_SHELTER_CAT,
                                 ISSUE_GENERAL_SAFETY_ADVICE_AT_THE_SHELTER,
                                 LEAVE_YOUR_CONTACT_DETAILS,
                                 CALL_VOLUNTEER,
-                                BACK_MENU);
+                                BACK_MENU_CAT);
+                        break;
+                    case INFO_ABOUT_SHELTER_DOG:
+                        universalMenu(chatId, "Выбрано меню: " + INFO_ABOUT_SHELTER_DOG,
+                                TELL_ABOUT_SHELTER_DOG,
+                                SCHEDULE_ADDRESS_DIRECTION_ABOUT_SHELTER_DOG,
+                                GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR_SHELTER_DOG,
+                                ISSUE_GENERAL_SAFETY_ADVICE_AT_THE_SHELTER,
+                                GIVE_A_ADVICE_CYNOLOGIST_A_DOG,
+                                ISSUE_RECOMMENDADTIONS_ON_PROVEN_CYNOLOGISTS,
+                                LEAVE_YOUR_CONTACT_DETAILS,
+                                CALL_VOLUNTEER,
+                                BACK_MENU_DOG);
                         break;
 
-                    case HOW_TAKE_ANIMAL_FROM_SHELTER:
-                        universalMenu(chatId, "Выбрано меню: " + HOW_TAKE_ANIMAL_FROM_SHELTER,
+                    case HOW_TAKE_ANIMAL_FROM_SHELTER_CAT:
+                        universalMenu(chatId, "Выбрано меню: " + HOW_TAKE_ANIMAL_FROM_SHELTER_CAT,
                                 GIVE_THE_RULES_OF_ACQUAINTANCE_WITH_ANIMALS,
                                 GIVE_A_LIST_OF_DOCUMENTS_TO_ADOPT_AN_ANIMAL_FROM_A_SHELTER,
-                                PRODUCE_A_LIST_OF_TRANSPORTATION_RECOMMENDATIONS,
+                                PRODUCE_A_LIST_OF_TRANSPORTATION_RECOMMENDATIONS_CAT,
                                 GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_KITTEN,
                                 GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL,
                                 GIVE_A_LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY,
                                 GIVE_A_LIST_OF_REASONS_WHY_THEY_CAN_REFUSE,
                                 LEAVE_YOUR_CONTACT_DETAILS,
                                 CALL_VOLUNTEER,
-                                BACK_MENU);
+                                BACK_MENU_CAT);
+                        break;
+                    case HOW_TAKE_ANIMAL_FROM_SHELTER_DOG:
+                        universalMenu(chatId, "Выбрано меню: " + HOW_TAKE_ANIMAL_FROM_SHELTER_CAT,
+                                GIVE_THE_RULES_OF_ACQUAINTANCE_WITH_ANIMALS,
+                                GIVE_A_LIST_OF_DOCUMENTS_TO_ADOPT_AN_ANIMAL_FROM_A_SHELTER,
+                                PRODUCE_A_LIST_OF_TRANSPORTATION_RECOMMENDATIONS_DOG,
+                                GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_PUPPY,
+                                GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL,
+                                GIVE_A_LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY,
+                                GIVE_A_ADVICE_CYNOLOGIST_A_DOG,
+                                ISSUE_RECOMMENDADTIONS_ON_PROVEN_CYNOLOGISTS,
+                                GIVE_A_LIST_OF_REASONS_WHY_THEY_CAN_REFUSE,
+                                LEAVE_YOUR_CONTACT_DETAILS,
+                                CALL_VOLUNTEER,
+                                BACK_MENU_DOG);
                         break;
 
-                    case SEND_REPORT_ABOUT_PET:
-                        universalMenu(chatId, "Выбрано меню: " + SEND_REPORT_ABOUT_PET,
+                    case SEND_REPORT_ABOUT_PET_CAT:
+                        universalMenu(chatId, "Выбрано меню: " + SEND_REPORT_ABOUT_PET_CAT,
                                 GET_DAILY_REPORT_FROM,
                                 SEND_REPORT,
                                 CALL_VOLUNTEER,
-                                BACK_MENU);
+                                BACK_MENU_CAT);
                         break;
 
-                    case BACK_MENU:
-                        universalMenu(chatId, EmojiParser.parseToUnicode("Вы выбрали предыдущее меню: " + SHELTER_CAT+ EMOJI_CAT),
+                    case SEND_REPORT_ABOUT_PET_DOG:
+                        universalMenu(chatId, "Выбрано меню: " + SEND_REPORT_ABOUT_PET_DOG,
+                                GET_DAILY_REPORT_FROM,
+                                SEND_REPORT,
+                                CALL_VOLUNTEER,
+                                BACK_MENU_DOG);
+                        break;
+
+                    case BACK_MENU_CAT:
+                        universalMenu(chatId, EmojiParser.parseToUnicode("Вы выбрали предыдущее меню: " + SHELTER_CAT + EMOJI_CAT),
                                 INFO_ABOUT_SHELTER_CAT,
-                                HOW_TAKE_ANIMAL_FROM_SHELTER,
-                                SEND_REPORT_ABOUT_PET,
+                                HOW_TAKE_ANIMAL_FROM_SHELTER_CAT,
+                                SEND_REPORT_ABOUT_PET_CAT,
+                                CALL_VOLUNTEER);
+                        break;
+
+                    case BACK_MENU_DOG:
+                        universalMenu(chatId, EmojiParser.parseToUnicode("Вы выбрали предыдущее меню: " + SHELTER_DOG + EMOJI_DOG),
+                                INFO_ABOUT_SHELTER_DOG,
+                                HOW_TAKE_ANIMAL_FROM_SHELTER_DOG,
+                                SEND_REPORT_ABOUT_PET_DOG,
                                 CALL_VOLUNTEER);
                         break;
 
@@ -156,13 +201,24 @@ public class TelegramBot extends TelegramLongPollingBot {
                         sendText(chatId, ABOUT_SHELTER_CAT);
                         break;
 
-                    case SCHEDULE_ADDRESS_DIRECTION_ABOUT_SHELTER_CAT:
-                        sendText(chatId, ADDRESS_DIRECTION_ABOUT_SHELTER_CAT);
-
+                    case TELL_ABOUT_SHELTER_DOG:
+                        sendText(chatId, ABOUT_SHELTER_DOG);
                         break;
 
-                    case GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR:
-                        sendText(chatId, CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR);
+                    case SCHEDULE_ADDRESS_DIRECTION_ABOUT_SHELTER_CAT:
+                        sendText(chatId, ADDRESS_DIRECTION_ABOUT_SHELTER_CAT);
+                        break;
+
+                    case SCHEDULE_ADDRESS_DIRECTION_ABOUT_SHELTER_DOG:
+                        sendText(chatId, ADDRESS_DIRECTION_ABOUT_SHELTER_DOG);
+                        break;
+
+                    case GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR_SHELTER_CAT:
+                        sendText(chatId, CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR_SHELTER_CAT);
+                        break;
+
+                    case GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR_SHELTER_DOG:
+                        sendText(chatId, CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR_SHELTER_DOG);
                         break;
 
                     case ISSUE_GENERAL_SAFETY_ADVICE_AT_THE_SHELTER:
@@ -172,7 +228,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     case LEAVE_YOUR_CONTACT_DETAILS:
                         sendText(chatId, firstName + ", оставьте свои данные!");
                         userService.updateLastCommand(chatId, LEAVE_YOUR_CONTACT_DETAILS);
-                        
+
                         break;
 
                     // Этап 3
@@ -184,12 +240,20 @@ public class TelegramBot extends TelegramLongPollingBot {
                         sendText(chatId, LIST_OF_DOCUMENTS_TO_ADOPT_AN_ANIMAL_FROM_A_SHELTER);
                         break;
 
-                    case PRODUCE_A_LIST_OF_TRANSPORTATION_RECOMMENDATIONS:
-                        sendText(chatId, LIST_OF_TRANSPORTATION_RECOMMENDATIONS);
+                    case PRODUCE_A_LIST_OF_TRANSPORTATION_RECOMMENDATIONS_CAT:
+                        sendText(chatId, LIST_OF_TRANSPORTATION_RECOMMENDATIONS_CAT);
+                        break;
+
+                    case PRODUCE_A_LIST_OF_TRANSPORTATION_RECOMMENDATIONS_DOG:
+                        sendText(chatId, LIST_OF_TRANSPORTATION_RECOMMENDATIONS_DOG);
                         break;
 
                     case GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_KITTEN:
                         sendText(chatId, LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_KITTEN);
+                        break;
+
+                    case GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_PUPPY:
+                        sendText(chatId, LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_A_PUPPY);
                         break;
 
                     case GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL:
@@ -198,6 +262,14 @@ public class TelegramBot extends TelegramLongPollingBot {
 
                     case GIVE_A_LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY:
                         sendText(chatId, LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY);
+                        break;
+
+                    case GIVE_A_ADVICE_CYNOLOGIST_A_DOG:
+                        sendText(chatId, LIST_WHAT_NEEDED_KNOWS_ABOUT_DOG);
+                        break;
+
+                    case ISSUE_RECOMMENDADTIONS_ON_PROVEN_CYNOLOGISTS:
+                        sendText(chatId, LIST_RECOMMENDED_CENTRE_CYNOLOGISTS);
                         break;
 
                     case GIVE_A_LIST_OF_REASONS_WHY_THEY_CAN_REFUSE:
@@ -255,7 +327,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private void callVolunteer(Long chatId) {
         sendText(chatId, TEXT_OF_VOLUNTEER);//TODO
         String anyText = "Выберите из списка меню: ";
-        universalMenu(chatId, anyText,LEAVE_YOUR_CONTACT_DETAILS, "Перезвоните мне", BACK_MENU);
+        universalMenu(chatId, anyText, LEAVE_YOUR_CONTACT_DETAILS, "Перезвоните мне", START_CMD, HELP_CMD);
     }
 
     private void universalMenu(Long chatId, String text, @NotNull String... stringsForRows) {
