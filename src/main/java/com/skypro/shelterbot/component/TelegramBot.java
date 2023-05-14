@@ -26,7 +26,6 @@ import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.skypro.shelterbot.resource.StringConstants.*;
@@ -42,7 +41,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @PostConstruct
     public void init() {
-        List<BotCommand> listOfCommands = new ArrayList<>();
+        ArrayList<BotCommand> listOfCommands = new ArrayList<>();
         listOfCommands.add(new BotCommand(START_CMD, START_CAPTION));
         listOfCommands.add(new BotCommand(HELP_CMD, HELP_CAPTION));
         try {
@@ -69,16 +68,32 @@ public class TelegramBot extends TelegramLongPollingBot {
             var chatId = message.getFrom().getId();
             var firstName = message.getFrom().getFirstName();
 
-            if (update.getMessage().hasPhoto()) {
+            if (userService.getByChatId(chatId).getLastCommand() != null) {
                 var user = userService.getByChatId(chatId);
 
-                if (user.getLastCommand().equals(SEND_REPORT)) {
-                    if (handleReport(message)) {
-                        userService.updateLastCommand(chatId, null);
-                    }
+                switch (user.getLastCommand()) {
+                    case SEND_REPORT:
+                        if (handleReport(message)) {
+                            userService.updateLastCommand(chatId, null);
+                        }
+                        break;
+
+                    case LEAVE_YOUR_CONTACT_DETAILS:
+                        if (handlePhone(message)) {
+                            userService.updateLastCommand(chatId, null);
+                            sendText(chatId, "Успешно!");
+                        } else {
+                            sendText(chatId, "Вы ввели неверный номер телефона!");
+                        }
+                        break;
+
+                    default:
+                        sendText(chatId, "Oops!"); //TODO
                 }
             } else if (update.getMessage().hasText()) {
-                switch (message.getText()) {
+                var text = message.getText();
+
+                switch (text) {
                     case START_CMD:
                         startCommandReceived(chatId, firstName);
                         registerUser(chatId, firstName);
@@ -86,6 +101,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                                 SHELTER_CAT,
                                 SHELTER_DOG);
                         break;
+
                     case HELP_CMD:
                         sendText(chatId, HELP_TEXT);
                         break;
@@ -118,6 +134,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                                 CALL_VOLUNTEER,
                                 BACK_MENU_CAT);
                         break;
+
                     case INFO_ABOUT_SHELTER_DOG:
                         universalMenu(chatId, "Выбрано меню: " + INFO_ABOUT_SHELTER_DOG,
                                 TELL_ABOUT_SHELTER_DOG,
@@ -144,6 +161,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                                 CALL_VOLUNTEER,
                                 BACK_MENU_CAT);
                         break;
+
                     case HOW_TAKE_ANIMAL_FROM_SHELTER_DOG:
                         universalMenu(chatId, "Выбрано меню: " + HOW_TAKE_ANIMAL_FROM_SHELTER_CAT,
                                 GIVE_THE_RULES_OF_ACQUAINTANCE_WITH_ANIMALS,
@@ -226,9 +244,8 @@ public class TelegramBot extends TelegramLongPollingBot {
                         break;
 
                     case LEAVE_YOUR_CONTACT_DETAILS:
-                        sendText(chatId, firstName + ", оставьте свои данные!");
+                        sendText(chatId, firstName + ", оставьте свой номер телефона в формате 8XXXXXXXXXX!");
                         userService.updateLastCommand(chatId, LEAVE_YOUR_CONTACT_DETAILS);
-
                         break;
 
                     // Этап 3
@@ -336,7 +353,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         message.setText(text);
         message.enableMarkdown(true);
 
-        List<KeyboardRow> keyboardRows = new ArrayList<>();
+        ArrayList<KeyboardRow> keyboardRows = new ArrayList<>();
         for (var string : stringsForRows) {
             var row = new KeyboardRow();
             row.add(string);
@@ -363,11 +380,17 @@ public class TelegramBot extends TelegramLongPollingBot {
         return true;
     }
 
-    private boolean handlePhone(Long chatId, String text) {
-        var matcher = PHONE_PATTERN.matcher(text);
-        if (matcher.matches()) {
-            userService.updatePhone(chatId, text);
-            return true;
+    private boolean handlePhone(Message message) {
+        var chatId = message.getFrom().getId();
+        if (message.hasText()) {
+            var text = message.getText();
+            var matcher = PHONE_PATTERN.matcher(text);
+            if (matcher.matches()) {
+                userService.updatePhone(chatId, text);
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
