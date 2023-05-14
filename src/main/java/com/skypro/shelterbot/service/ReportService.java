@@ -20,8 +20,8 @@ public class ReportService {
     private final ReportRepository reportRepository;
 
     @Transactional
-
     public Report add(Report report) {
+
         return reportRepository.save(report);
     }
 
