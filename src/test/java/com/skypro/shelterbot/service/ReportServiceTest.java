@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,7 +30,7 @@ class ReportServiceTest {
     private Report report2;
     private Report report3;
 
-    private User user = new User(
+    private final User user = new User(
             1L,
             "TestName",
             "TestPhone",
@@ -41,9 +42,8 @@ class ReportServiceTest {
                     "TestBread"),
             new ArrayList<>());
 
-     Pet pet = new Pet(PetType.CAT, "TestName", 1, "TestBread");
 
-    private List<Report> reportList = new ArrayList<>();
+    private final List<Report> reportList = new ArrayList<>();
 
 
 
@@ -64,8 +64,12 @@ class ReportServiceTest {
     @InjectMocks
     private ReportService reportService;
 
+
     @Test
     void add() {
+        reportService.add(report1);
+        Report addedReport = reportService.add(report1);
+        assertNull(addedReport);
     }
 
     @Test
@@ -79,20 +83,6 @@ class ReportServiceTest {
         Assertions.assertThat(actual.getPhotoId()).isEqualTo(report1.getPhotoId());
         Assertions.assertThat(actual.getIsApproved()).isEqualTo(report1.getIsApproved());
 
-    }
-
-//    @Test
-//    void getByChatId() {
-//        Mockito.when(reportRepository.getReferenceById(any(Long.class))).thenReturn(report3);
-//
-//        Collection<Report> actual = reportService.getByChatId(1L);
-//
-//        Assertions.assertThat(actual.size()).isEqualTo(reportList.size());
-//        Assertions.assertThat(actual).isEqualTo(reportList);
-//    }
-
-    @Test
-    void getLastReportByChatId() {
     }
 
     @Test
@@ -125,11 +115,14 @@ class ReportServiceTest {
         Assertions.assertThat(actual.getText()).isEqualTo(report3.getText());
     }
 
-    @Test
-    public void approveLastReport() {
-    }
 
     @Test
     public void remove() {
+        report1.setId(123456789L);
+        reportRepository.save(report1);
+
+        reportService.remove(123456789L);
+
+        assertFalse(reportRepository.existsById(123456789L));
     }
 }

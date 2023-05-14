@@ -12,4 +12,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByPetId(Long petId);
     boolean existsByChatId(Long chatId);
     void deleteByChatId(Long chatId);
+
 }

@@ -12,12 +12,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.OngoingStubbing;
 
 import java.sql.Timestamp;
 import java.util.*;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -26,7 +25,7 @@ class UserServiceTest {
     private User user2;
     private User user3;
 
-    private List<User> userList = new ArrayList<>();
+    private final List<User> userList = new ArrayList<>();
 
     @BeforeEach
     public void setUp(){
@@ -77,16 +76,10 @@ class UserServiceTest {
     private UserService userService;
 
     @Test
-    void add() {
-    }
-
-    @Test
-    public void getByChatId() {
-
-    }
-
-    @Test
-     public void getByPetId() {
+    public void add() {
+        userService.add(user1);
+        User addedUser = userService.add(user2);
+        assertNull(addedUser);
     }
 
     @Test
@@ -100,23 +93,47 @@ class UserServiceTest {
     }
 
 
-//       @Test
-//    public void updateName() {
-//        User actual = userService.updateName(1L, "TestName");
-//
-//        Assertions.assertThat(actual.getName()).isEqualTo(((User) userList).getName());
-//
-//    }
+       @Test
+    public void updateName() {
 
-    @Test
-    void updatePhone() {
+           User expected = user1;
+           User actual = user1;
+
+           Assertions.assertThat(actual)
+                   .usingRecursiveComparison()
+                   .comparingOnlyFields("TestName1")
+                   .isEqualTo(expected);
     }
 
     @Test
-    void updateLastCommand() {
+   public void updatePhone() {
+        User expected = user2;
+        User actual = user2;
+
+        Assertions.assertThat(actual)
+                .usingRecursiveComparison()
+                .comparingOnlyFields("TestPhone2")
+                .isEqualTo(expected);
     }
 
     @Test
-    void remove() {
+   public void updateLastCommand() {
+        User expected = user3;
+        User actual = user3;
+
+        Assertions.assertThat(actual)
+                .usingRecursiveComparison()
+                .comparingOnlyFields("TestLastCommand3")
+                .isEqualTo(expected);
+    }
+
+    @Test
+    public void remove() {
+        user1.setChatId(123456789L);
+        userRepository.save(user1);
+
+        userService.remove(123456789L);
+
+        assertFalse(userRepository.existsByChatId(123456789L));
     }
 }
