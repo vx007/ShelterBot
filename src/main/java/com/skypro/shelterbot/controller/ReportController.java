@@ -16,7 +16,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("reports")
+@RequestMapping("/reports")
 public class ReportController {
     private final ReportService reportService;
 
@@ -43,7 +43,7 @@ public class ReportController {
                     }
             )
     )
-    @PostMapping("create")
+    @PostMapping("/create")
     public ResponseEntity<Report> create(@RequestBody Report report) {
         var newReport = reportService.add(report);
         return ResponseEntity.ok(newReport);
@@ -68,7 +68,7 @@ public class ReportController {
                     )
             }
     )
-    @GetMapping("by_id/{id}")
+    @GetMapping("/by_id/{id}")
     public ResponseEntity<Report> readById(@PathVariable Long id) {
         try {
             var report = reportService.getById(id);
@@ -97,7 +97,7 @@ public class ReportController {
                     )
             }
     )
-    @GetMapping("by_chat-id/{chatId}")
+    @GetMapping("/by_chat-id/{chatId}")
     public ResponseEntity<List<Report>> readByChatId(@PathVariable Long chatId) {
         try {
             var reports = reportService.getByChatId(chatId);
@@ -126,7 +126,7 @@ public class ReportController {
                     )
             }
     )
-    @GetMapping("last_by_chat-id/{chatId}")
+    @GetMapping("/last_by_chat-id/{chatId}")
     public ResponseEntity<Report> readLastByChatId(@PathVariable Long chatId) {
         try {
             var report = reportService.getLastReportByChatId(chatId);
@@ -155,7 +155,7 @@ public class ReportController {
                     )
             }
     )
-    @GetMapping("all")
+    @GetMapping("/all")
     public ResponseEntity<List<Report>> readAll() {
         try {
             var reports = reportService.getAll();
@@ -184,7 +184,7 @@ public class ReportController {
                     )
             }
     )
-    @PutMapping("update_photo/{chatId}")
+    @PutMapping("/update_photo/{chatId}")
     public ResponseEntity<Report> updatePhotoOnLastReport(@PathVariable Long chatId, @RequestBody String photo) {
         try {
             var lastReport = reportService.updatePhotoOnLastReport(chatId, photo);
@@ -213,7 +213,7 @@ public class ReportController {
                     )
             }
     )
-    @PutMapping("update_text/{chatId}")
+    @PutMapping("/update_text/{chatId}")
     public ResponseEntity<Report> updateTextOnLastReport(@PathVariable Long chatId, @RequestBody String text) {
         try {
             var lastReport = reportService.updateTextOnLastReport(chatId, text);
@@ -242,7 +242,7 @@ public class ReportController {
                     )
             }
     )
-    @PutMapping("update_approvement/{chatId}")
+    @PutMapping("/update_approvement/{chatId}")
     public ResponseEntity<Report> updateApprovementOnLastReport(@PathVariable Long chatId) {
         try {
             var lastReport = reportService.approveLastReport(chatId);
@@ -271,7 +271,7 @@ public class ReportController {
                     )
             }
     )
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Report> delete(@PathVariable Long id) {
         try {
             reportService.remove(id);

@@ -18,7 +18,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("users")
+@RequestMapping("/users")
 public class UserController {
     private final UserService userService;
 
@@ -49,7 +49,7 @@ public class UserController {
                     }
             )
     )
-    @PostMapping("create")
+    @PostMapping("/create")
     public ResponseEntity<User> create(@RequestBody User user) {
         try {
             var newUser = userService.add(user);
@@ -78,7 +78,7 @@ public class UserController {
                     )
             }
     )
-    @GetMapping("by_chat-id/{chatId}")
+    @GetMapping("/by_chat-id/{chatId}")
     public ResponseEntity<User> readByChatId(@PathVariable Long chatId) {
         try {
             var user = userService.getByChatId(chatId);
@@ -107,7 +107,7 @@ public class UserController {
                     )
             }
     )
-    @GetMapping("by_pet-id/{petId}")
+    @GetMapping("/by_pet-id/{petId}")
     public ResponseEntity<User> readByPetId(@PathVariable Long petId) {
         try {
             var user = userService.getByPetId(petId);
@@ -136,7 +136,7 @@ public class UserController {
                     )
             }
     )
-    @GetMapping("all")
+    @GetMapping("/all")
     public ResponseEntity<List<User>> readAll() {
         try {
             var users = userService.getAll();
@@ -165,7 +165,7 @@ public class UserController {
                     )
             }
     )
-    @PutMapping("update_name/{chatId}")
+    @PutMapping("/update_name/{chatId}")
     public ResponseEntity<User> updateName(@PathVariable Long chatId, @RequestBody String name) {
         try {
             var user = userService.updateName(chatId, name);
@@ -194,7 +194,7 @@ public class UserController {
                     )
             }
     )
-    @PutMapping("update_phone/{chatId}")
+    @PutMapping("/update_phone/{chatId}")
     public ResponseEntity<User> updatePhone(@PathVariable Long chatId, @RequestBody String phone) {
         try {
             var user = userService.updatePhone(chatId, phone);
@@ -223,7 +223,7 @@ public class UserController {
                     )
             }
     )
-    @PutMapping("update_last_command/{chatId}")
+    @PutMapping("/update_last_command/{chatId}")
     public ResponseEntity<User> updateLastCommand(@PathVariable Long chatId, @RequestBody String command) {
         try {
             var user = userService.updateLastCommand(chatId, command);
@@ -252,7 +252,7 @@ public class UserController {
                     )
             }
     )
-    @DeleteMapping("delete/{chatId}")
+    @DeleteMapping("/delete/{chatId}")
     public ResponseEntity<User> delete(@PathVariable Long chatId) {
         try {
             userService.remove(chatId);

@@ -45,7 +45,7 @@ public class PetController {
                     }
             )
     )
-    @PostMapping("create")
+    @PostMapping("/create")
     public ResponseEntity<Pet> create(@Parameter(name = "питомец") @RequestBody Pet pet) {
         var newPet = petService.add(pet);
         return ResponseEntity.ok(newPet);
@@ -70,7 +70,7 @@ public class PetController {
                     )
             }
     )
-    @GetMapping("by_id/{id}")
+    @GetMapping("/by_id/{id}")
     public ResponseEntity<Pet> readById(@PathVariable Long id) {
         try {
             var pet = petService.getById(id);
@@ -99,7 +99,7 @@ public class PetController {
                     )
             }
     )
-    @GetMapping("all")
+    @GetMapping("/all")
     public ResponseEntity<List<Pet>> readAll() {
         try {
             var pets = petService.getAll();
@@ -128,7 +128,7 @@ public class PetController {
                     )
             }
     )
-    @PutMapping("update_type/{id}")
+    @PutMapping("/update_type/{id}")
     public ResponseEntity<Pet> updateType(@PathVariable Long id, @RequestBody PetType type) {
         try {
             var pet = petService.updateType(id, type);
@@ -157,7 +157,7 @@ public class PetController {
                     )
             }
     )
-    @PutMapping("update_name/{id}")
+    @PutMapping("/update_name/{id}")
     public ResponseEntity<Pet> updateName(@PathVariable Long id, @RequestBody String name) {
         try {
             var pet = petService.updateName(id, name);
@@ -186,7 +186,7 @@ public class PetController {
                     )
             }
     )
-    @PutMapping("update_age/{id}")
+    @PutMapping("/update_age/{id}")
     public ResponseEntity<Pet> updateAge(@PathVariable Long id, @RequestBody Integer age) {
         try {
             var pet = petService.updateAge(id, age);
@@ -215,7 +215,7 @@ public class PetController {
                     )
             }
     )
-    @PutMapping("update_breed/{id}")
+    @PutMapping("/update_breed/{id}")
     public ResponseEntity<Pet> updateBreed(@PathVariable Long id, @RequestBody String breed) {
         try {
             var pet = petService.updateBreed(id, breed);
@@ -244,7 +244,7 @@ public class PetController {
                     )
             }
     )
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Pet> removePetById(@PathVariable Long id) {
         try {
             petService.remove(id);
