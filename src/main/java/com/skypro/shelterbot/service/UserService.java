@@ -3,6 +3,7 @@ package com.skypro.shelterbot.service;
 import com.skypro.shelterbot.exception.EntryAlreadyExists;
 import com.skypro.shelterbot.exception.EntryNotFoundException;
 import com.skypro.shelterbot.model.User;
+import com.skypro.shelterbot.repository.PetRepository;
 import com.skypro.shelterbot.repository.UserRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.List;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final PetRepository petRepository;
 
     @Transactional
     public User add(@NonNull User user) throws EntryAlreadyExists {
@@ -34,7 +36,7 @@ public class UserService {
     }
 
     public List<User> getAll() throws EntryNotFoundException {
-        if (!userRepository.findAll().isEmpty()){
+        if (!userRepository.findAll().isEmpty()) {
             return userRepository.findAll();
         } else {
             throw new EntryNotFoundException("Users not found");
@@ -59,6 +61,14 @@ public class UserService {
     public User updateLastCommand(@NonNull Long chatId, String command) throws EntryNotFoundException {
         var user = getByChatId(chatId);
         user.setLastCommand(command);
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    public User updatePet(@NonNull Long chatId, Long petId) throws EntryNotFoundException {
+        var user = getByChatId(chatId);
+        var pet = petRepository.findById(petId).orElseThrow(() -> new EntryNotFoundException("Pet not found by ID"));
+        user.setPet(pet);
         return userRepository.save(user);
     }
 

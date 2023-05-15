@@ -142,7 +142,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                                 GIVE_CONTACT_DETAILS_OF_THE_GUARDS_FOR_ISSUING_A_PASS_FOR_THE_CAR_SHELTER_DOG,
                                 ISSUE_GENERAL_SAFETY_ADVICE_AT_THE_SHELTER,
                                 GIVE_A_ADVICE_CYNOLOGIST_A_DOG,
-                                ISSUE_RECOMMENDADTIONS_ON_PROVEN_CYNOLOGISTS,
+                                ISSUE_RECOMMENDATIONS_ON_PROVEN_CYNOLOGISTS,
                                 LEAVE_YOUR_CONTACT_DETAILS,
                                 CALL_VOLUNTEER,
                                 BACK_MENU_DOG);
@@ -171,7 +171,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                                 GIVE_A_LIST_OF_RECOMMENDATIONS_FOR_HOME_IMPROVEMENT_FOR_AN_ADULT_ANIMAL,
                                 GIVE_A_LIST_OF_HOME_IMPROVEMENT_RECOMMENDATIONS_FOR_AN_ANIMAL_WITH_A_DISABILITY,
                                 GIVE_A_ADVICE_CYNOLOGIST_A_DOG,
-                                ISSUE_RECOMMENDADTIONS_ON_PROVEN_CYNOLOGISTS,
+                                ISSUE_RECOMMENDATIONS_ON_PROVEN_CYNOLOGISTS,
                                 GIVE_A_LIST_OF_REASONS_WHY_THEY_CAN_REFUSE,
                                 LEAVE_YOUR_CONTACT_DETAILS,
                                 CALL_VOLUNTEER,
@@ -285,7 +285,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                         sendText(chatId, LIST_WHAT_NEEDED_KNOWS_ABOUT_DOG);
                         break;
 
-                    case ISSUE_RECOMMENDADTIONS_ON_PROVEN_CYNOLOGISTS:
+                    case ISSUE_RECOMMENDATIONS_ON_PROVEN_CYNOLOGISTS:
                         sendText(chatId, LIST_RECOMMENDED_CENTRE_CYNOLOGISTS);
                         break;
 

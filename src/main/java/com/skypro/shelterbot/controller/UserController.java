@@ -234,6 +234,35 @@ public class UserController {
     }
 
     @Operation(
+            summary = "Изменить животное у пользователя",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Животное пользователя изменено",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(implementation = User.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Пользователь или животное не найдено"
+                    )
+            }
+    )
+    @PutMapping("/update_pet/{chatId}")
+    public ResponseEntity<User> updatePet(@PathVariable Long chatId, @RequestBody Long petId) {
+        try {
+            var user = userService.updatePet(chatId, petId);
+            return ResponseEntity.ok(user);
+        } catch (EntryNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Operation(
             summary = "Удалить пользователя по id",
             responses = {
                     @ApiResponse(
