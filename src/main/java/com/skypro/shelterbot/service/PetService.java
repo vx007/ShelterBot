@@ -1,5 +1,6 @@
 package com.skypro.shelterbot.service;
 
+import com.skypro.shelterbot.exception.EntryNotFoundException;
 import com.skypro.shelterbot.model.Pet;
 import com.skypro.shelterbot.model.PetType;
 import com.skypro.shelterbot.repository.PetRepository;
@@ -24,47 +25,52 @@ public class PetService {
         return petRepository.save(pet);
     }
 
-    public Pet getById(Long id) {
-   
-        return petRepository.findById(id).orElseThrow();
+    public Pet getById(@NonNull Long id) throws EntryNotFoundException {
+        return petRepository.findById(id).orElseThrow(() -> new EntryNotFoundException("Pet not found by ID"));
     }
 
-    public List<Pet> getAll() {
-        return petRepository.findAll();
+    public List<Pet> getAll() throws EntryNotFoundException {
+        if (!petRepository.findAll().isEmpty()) {
+            return petRepository.findAll();
+        } else {
+            throw new EntryNotFoundException("Pets not found");
+        }
     }
-      
-    public Pet updateType(@NonNull Long id, PetType type) {
+
+    @Transactional
+    public Pet updateType(@NonNull Long id, PetType type) throws EntryNotFoundException {
         var pet = getById(id);
         pet.setType(type);
         return petRepository.save(pet);
     }
 
     @Transactional
-    public Pet updateName(@NonNull Long id, String name) {
+    public Pet updateName(@NonNull Long id, String name) throws EntryNotFoundException {
         var pet = getById(id);
         pet.setName(name);
         return petRepository.save(pet);
     }
 
     @Transactional
-    public Pet updateAge(@NonNull Long id, Integer age) {
+    public Pet updateAge(@NonNull Long id, Integer age) throws EntryNotFoundException {
         var pet = getById(id);
         pet.setAge(age);
         return petRepository.save(pet);
     }
 
     @Transactional
-    public Pet updateBreed(@NonNull Long id, String breed) {
+    public Pet updateBreed(@NonNull Long id, String breed) throws EntryNotFoundException {
         var pet = getById(id);
         pet.setBreed(breed);
         return petRepository.save(pet);
     }
 
     @Transactional
-    public void remove(@NonNull Long id) {
+    public void remove(@NonNull Long id) throws EntryNotFoundException {
         if (petRepository.existsById(id)) {
             petRepository.deleteById(id);
+        } else {
+            throw new EntryNotFoundException("Pets not found by ID");
         }
-
     }
 }

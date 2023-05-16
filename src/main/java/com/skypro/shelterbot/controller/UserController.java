@@ -1,28 +1,26 @@
 package com.skypro.shelterbot.controller;
 
-import com.skypro.shelterbot.model.Pet;
+import com.skypro.shelterbot.exception.EntryAlreadyExists;
+import com.skypro.shelterbot.exception.EntryNotFoundException;
 import com.skypro.shelterbot.model.User;
 import com.skypro.shelterbot.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
+import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
-@RequestMapping("users")
+@RequestMapping("/users")
 public class UserController {
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @Operation(
             summary = "Добавление пользователя",
@@ -38,7 +36,7 @@ public class UserController {
                             }
                     ),
                     @ApiResponse(
-                            responseCode = "400",
+                            responseCode = "406",
                             description = "Если пользователь уже добавлен"
                     )
             },
@@ -51,35 +49,14 @@ public class UserController {
                     }
             )
     )
-    @PostMapping()
-    public ResponseEntity<User> addUser(@RequestBody User user) {
-        User addUser = userService.add(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(addUser);
-    }
-
-    @Operation(
-            summary = "Вывести список пользователей, прикрепленных к животному по id",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "список пользователей выведен",
-                            content = {
-                                    @Content(
-                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                            schema = @Schema(implementation = User.class)
-                                    )
-                            }
-                    ),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "Если пользователей нет"
-                    )
-            }
-    )
-    @GetMapping("by_petId/{petId}")
-    public ResponseEntity<User> findUserByPetId(@RequestParam Long petId){
-        User user = userService.getByPetId(petId);
-        return ResponseEntity.ok(user);
+    @PostMapping("/create")
+    public ResponseEntity<User> create(@RequestBody User user) {
+        try {
+            var newUser = userService.add(user);
+            return ResponseEntity.ok(newUser);
+        } catch (EntryAlreadyExists e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+        }
     }
 
     @Operation(
@@ -96,15 +73,48 @@ public class UserController {
                             }
                     ),
                     @ApiResponse(
-                            responseCode = "400",
+                            responseCode = "404",
                             description = "Если пользователей нет"
                     )
             }
     )
-    @GetMapping("by_chatId/{chatId}")
-    public ResponseEntity<User> findUserByChatId(@PathVariable Long chatId){
-        User user = userService.getByChatId(chatId);
-        return ResponseEntity.ok(user);
+    @GetMapping("/by_chat-id/{chatId}")
+    public ResponseEntity<User> readByChatId(@PathVariable Long chatId) {
+        try {
+            var user = userService.getByChatId(chatId);
+            return ResponseEntity.ok(user);
+        } catch (EntryNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Operation(
+            summary = "Вывести список пользователей, прикрепленных к животному по id",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "список пользователей выведен",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(implementation = User.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Если пользователей нет"
+                    )
+            }
+    )
+    @GetMapping("/by_pet-id/{petId}")
+    public ResponseEntity<User> readByPetId(@PathVariable Long petId) {
+        try {
+            var user = userService.getByPetId(petId);
+            return ResponseEntity.ok(user);
+        } catch (EntryNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Operation(
@@ -121,18 +131,19 @@ public class UserController {
                             }
                     ),
                     @ApiResponse(
-                            responseCode = "400",
+                            responseCode = "404",
                             description = "Если пользователей нет"
                     )
             }
     )
-    @GetMapping("all_users")
-    public ResponseEntity<Collection<User>> getALlUsers() {
-        Collection<User> users = userService.getAll();
-        if (users.isEmpty()) {
+    @GetMapping("/all")
+    public ResponseEntity<List<User>> readAll() {
+        try {
+            var users = userService.getAll();
+            return ResponseEntity.ok(users);
+        } catch (EntryNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(userService.getAll());
     }
 
     @Operation(
@@ -149,15 +160,19 @@ public class UserController {
                             }
                     ),
                     @ApiResponse(
-                            responseCode = "400",
+                            responseCode = "404",
                             description = "Если пользователей нет"
                     )
             }
     )
-    @PutMapping("update_name/{chatId}")
-    public ResponseEntity<User> updateName(@PathVariable("chatId") Long chatId, @RequestBody String name) {
-        userService.updateName(chatId, name);
-        return ResponseEntity.ok().build();
+    @PutMapping("/update_name/{chatId}")
+    public ResponseEntity<User> updateName(@PathVariable Long chatId, @RequestBody String name) {
+        try {
+            var user = userService.updateName(chatId, name);
+            return ResponseEntity.ok(user);
+        } catch (EntryNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Operation(
@@ -174,15 +189,19 @@ public class UserController {
                             }
                     ),
                     @ApiResponse(
-                            responseCode = "400",
+                            responseCode = "404",
                             description = "Если пользователей нет"
                     )
             }
     )
-    @PutMapping("update_phone/{chatId}")
-    public ResponseEntity<User> updatePhone(@PathVariable("chatId") Long chatId, @RequestBody String phone) {
-        userService.updatePhone(chatId, phone);
-        return ResponseEntity.ok().build();
+    @PutMapping("/update_phone/{chatId}")
+    public ResponseEntity<User> updatePhone(@PathVariable Long chatId, @RequestBody String phone) {
+        try {
+            var user = userService.updatePhone(chatId, phone);
+            return ResponseEntity.ok(user);
+        } catch (EntryNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Operation(
@@ -199,23 +218,27 @@ public class UserController {
                             }
                     ),
                     @ApiResponse(
-                            responseCode = "400",
+                            responseCode = "404",
                             description = "Если пользователей нет"
                     )
             }
     )
-    @PutMapping("update_last_command/{chatId}")
-    public ResponseEntity<User> updateLastCommand(@PathVariable("chatId") Long chatId, @RequestBody String command) {
-        userService.updateLastCommand(chatId, command);
-        return ResponseEntity.ok().build();
+    @PutMapping("/update_last_command/{chatId}")
+    public ResponseEntity<User> updateLastCommand(@PathVariable Long chatId, @RequestBody String command) {
+        try {
+            var user = userService.updateLastCommand(chatId, command);
+            return ResponseEntity.ok(user);
+        } catch (EntryNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Operation(
-            summary = "Удалить пользователя по id",
+            summary = "Изменить животное у пользователя",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "пользователь удален",
+                            description = "Животное пользователя изменено",
                             content = {
                                     @Content(
                                             mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -224,13 +247,47 @@ public class UserController {
                             }
                     ),
                     @ApiResponse(
-                            responseCode = "400",
+                            responseCode = "404",
+                            description = "Пользователь или животное не найдено"
+                    )
+            }
+    )
+    @PutMapping("/update_pet/{chatId}")
+    public ResponseEntity<User> updatePet(@PathVariable Long chatId, @RequestBody Long petId) {
+        try {
+            var user = userService.updatePet(chatId, petId);
+            return ResponseEntity.ok(user);
+        } catch (EntryNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Operation(
+            summary = "Удалить пользователя по id",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Пользователь удален",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(implementation = User.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
                             description = "Если пользователя с таким id нет"
                     )
             }
     )
-    @DeleteMapping("{chatId}")
-    public void removeUserById(@PathVariable Long chatId) {
-        userService.remove(chatId);
+    @DeleteMapping("/delete/{chatId}")
+    public ResponseEntity<User> delete(@PathVariable Long chatId) {
+        try {
+            userService.remove(chatId);
+            return ResponseEntity.ok().build();
+        } catch (EntryNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

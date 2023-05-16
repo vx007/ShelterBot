@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -25,7 +24,4 @@ public class User {
 
     @OneToOne
     private Pet pet;
-
-    @OneToMany(mappedBy = "user")
-    private List<Report> reports;
 }

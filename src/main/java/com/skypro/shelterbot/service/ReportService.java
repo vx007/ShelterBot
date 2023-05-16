@@ -1,5 +1,6 @@
 package com.skypro.shelterbot.service;
 
+import com.skypro.shelterbot.exception.EntryNotFoundException;
 import com.skypro.shelterbot.model.Report;
 import com.skypro.shelterbot.repository.ReportRepository;
 import lombok.NonNull;
@@ -20,54 +21,64 @@ public class ReportService {
     private final ReportRepository reportRepository;
 
     @Transactional
-    public Report add(Report report) {
-
+    public Report add(@NonNull Report report) {
+        if (!Objects.isNull(report.getId())) {
+            report.setId(null);
+        }
         return reportRepository.save(report);
     }
 
-   
-    public Report getById(@NonNull Long id) {
-
-        return reportRepository.findById(id).orElseThrow();
+    public Report getById(@NonNull Long id) throws EntryNotFoundException {
+        return reportRepository.findById(id).orElseThrow(() -> new EntryNotFoundException("Report not found by ID"));
     }
 
-    public List<Report> getByChatId(@NonNull Long chatId) {
-        return reportRepository.findByUserChatId(chatId);
+    public List<Report> getByChatId(@NonNull Long chatId) throws EntryNotFoundException {
+        if (!reportRepository.findByUserChatId(chatId).isEmpty()){
+            return reportRepository.findByUserChatId(chatId);
+        } else {
+            throw new EntryNotFoundException("Reports not found by chatID");
+        }
     }
 
-    public Report getLastReportByChatId(@NonNull Long chatId) {
-        return getByChatId(chatId).stream().max(REPORT_TIMESTAMP_COMPARATOR).orElseThrow();
+    public Report getLastReportByChatId(@NonNull Long chatId) throws EntryNotFoundException {
+        return getByChatId(chatId).stream().max(REPORT_TIMESTAMP_COMPARATOR).orElseThrow(()->new EntryNotFoundException("Last report not found by chatID"));
     }
 
-    public List<Report> getAll() {
-        return reportRepository.findAll();
+    public List<Report> getAll() throws EntryNotFoundException {
+        if (!reportRepository.findAll().isEmpty()){
+            return reportRepository.findAll();
+        } else {
+            throw new EntryNotFoundException("Reports not found");
+        }
     }
 
     @Transactional
-    public Report updatePhotoOnLastReport(@NonNull Long chatId, String photoId) {
-        var lastReport = getById(chatId);
+    public Report updatePhotoOnLastReport(@NonNull Long chatId, String photoId) throws EntryNotFoundException {
+        var lastReport = getLastReportByChatId(chatId);
         lastReport.setPhotoId(photoId);
         return reportRepository.save(lastReport);
     }
 
     @Transactional
-    public Report updateTextOnLastReport(@NonNull Long chatId, String text) {
-        var lastReport = getById(chatId);
+    public Report updateTextOnLastReport(@NonNull Long chatId, String text) throws EntryNotFoundException {
+        var lastReport = getLastReportByChatId(chatId);
         lastReport.setText(text);
         return reportRepository.save(lastReport);
     }
 
     @Transactional
-    public Report approveLastReport(@NonNull Long chatId) {
+    public Report approveLastReport(@NonNull Long chatId) throws EntryNotFoundException {
         var lastReport = getLastReportByChatId(chatId);
         lastReport.setIsApproved(true);
         return reportRepository.save(lastReport);
     }
 
     @Transactional
-    public void remove(@NonNull Long id) {
+    public void remove(@NonNull Long id) throws EntryNotFoundException {
         if (reportRepository.existsById(id)) {
             reportRepository.deleteById(id);
+        } else {
+            throw new EntryNotFoundException("Report not found by ID");
         }
     }
 }

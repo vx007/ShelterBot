@@ -8,9 +8,8 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findByChatId(Long chatId);
-    User findByPetId(Long petId);
+    Optional<User> findByChatId(Long chatId);
+    Optional<User> findByPetId(Long petId);
     boolean existsByChatId(Long chatId);
     void deleteByChatId(Long chatId);
-
 }

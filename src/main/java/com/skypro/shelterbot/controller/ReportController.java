@@ -1,30 +1,24 @@
 package com.skypro.shelterbot.controller;
 
-import com.skypro.shelterbot.model.Pet;
+import com.skypro.shelterbot.exception.EntryNotFoundException;
 import com.skypro.shelterbot.model.Report;
-import com.skypro.shelterbot.model.User;
 import com.skypro.shelterbot.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
-@RequestMapping("report")
+@RequestMapping("/reports")
 public class ReportController {
     private final ReportService reportService;
-
-    public ReportController(ReportService reportService) {
-        this.reportService = reportService;
-    }
 
     @Operation(
             summary = "Добавление отчета",
@@ -38,10 +32,6 @@ public class ReportController {
                                             schema = @Schema(implementation = Report.class)
                                     )
                             }
-                    ),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "Если отчет уже есть"
                     )
             },
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -53,10 +43,10 @@ public class ReportController {
                     }
             )
     )
-    @PostMapping()
-    public ResponseEntity<Report> addReport(@RequestBody Report report) {
-        Report addReport = reportService.add(report);
-        return ResponseEntity.status(HttpStatus.CREATED).body(addReport);
+    @PostMapping("/create")
+    public ResponseEntity<Report> create(@RequestBody Report report) {
+        var newReport = reportService.add(report);
+        return ResponseEntity.ok(newReport);
     }
 
     @Operation(
@@ -73,23 +63,19 @@ public class ReportController {
                             }
                     ),
                     @ApiResponse(
-                            responseCode = "400",
+                            responseCode = "404",
                             description = "Если отчета нет"
                     )
-            },
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "имеющийся отчет",
-                    content = {
-                            @Content(
-                                    schema = @Schema(implementation = Report.class)
-                            )
-                    }
-            )
+            }
     )
-    @GetMapping("{id}")
-    public ResponseEntity<Report> findReport(@PathVariable Long id) {
-        Report report = reportService.getById(id);
-        return ResponseEntity.ok(report);
+    @GetMapping("/by_id/{id}")
+    public ResponseEntity<Report> readById(@PathVariable Long id) {
+        try {
+            var report = reportService.getById(id);
+            return ResponseEntity.ok(report);
+        } catch (EntryNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Operation(
@@ -108,16 +94,46 @@ public class ReportController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "Если отчетов по chat_id нет"
-                    ),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "Некорректный параметр"
                     )
             }
     )
-    @GetMapping("reports_by_chatId/{chatId}")
-    public ResponseEntity<Collection<Report>> getAllReports(@PathVariable Long chatId) {
-        return ResponseEntity.ok(reportService.getByChatId(chatId));
+    @GetMapping("/by_chat-id/{chatId}")
+    public ResponseEntity<List<Report>> readByChatId(@PathVariable Long chatId) {
+        try {
+            var reports = reportService.getByChatId(chatId);
+            return ResponseEntity.ok(reports);
+        } catch (EntryNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Operation(
+            summary = "Вывести последний отчёт по chat_id",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Последний отчёт по chat_id выведен",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(implementation = Report.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Если отчетов по chat_id нет"
+                    )
+            }
+    )
+    @GetMapping("/last_by_chat-id/{chatId}")
+    public ResponseEntity<Report> readLastByChatId(@PathVariable Long chatId) {
+        try {
+            var report = reportService.getLastReportByChatId(chatId);
+            return ResponseEntity.ok(report);
+        } catch (EntryNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Operation(
@@ -136,24 +152,25 @@ public class ReportController {
                     @ApiResponse(
                             responseCode = "404",
                             description = "Если отчетов нет"
-                    ),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "Некорректный параметр"
                     )
             }
     )
-    @GetMapping("all_reports")
-    public ResponseEntity<Collection<Report>> getAllReports() {
-        return ResponseEntity.ok(reportService.getAll());
+    @GetMapping("/all")
+    public ResponseEntity<List<Report>> readAll() {
+        try {
+            var reports = reportService.getAll();
+            return ResponseEntity.ok(reports);
+        } catch (EntryNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Operation(
-            summary = "Вывести список отчетов по айди владельца питомца",
+            summary = "Изменить фото последнего отчёта пользователя",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "список отчетов выведен",
+                            description = "Фото изменено",
                             content = {
                                     @Content(
                                             mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -162,21 +179,77 @@ public class ReportController {
                             }
                     ),
                     @ApiResponse(
-                            responseCode = "400",
-                            description = "Неверный аргумент"
+                            responseCode = "404",
+                            description = "Последний отчёт не найден"
                     )
             }
     )
-    @GetMapping("/user/{id}")
-    public ResponseEntity<Report> getAllReportByUserId(@PathVariable long id) {
-        Report userReports;
+    @PutMapping("/update_photo/{chatId}")
+    public ResponseEntity<Report> updatePhotoOnLastReport(@PathVariable Long chatId, @RequestBody String photo) {
         try {
-            userReports = reportService.getById(id);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-
+            var lastReport = reportService.updatePhotoOnLastReport(chatId, photo);
+            return ResponseEntity.ok(lastReport);
+        } catch (EntryNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(userReports);
+    }
+
+    @Operation(
+            summary = "Изменить текст последнего отчёта пользователя",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Текст изменён",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(implementation = Report.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Последний отчёт не найден"
+                    )
+            }
+    )
+    @PutMapping("/update_text/{chatId}")
+    public ResponseEntity<Report> updateTextOnLastReport(@PathVariable Long chatId, @RequestBody String text) {
+        try {
+            var lastReport = reportService.updateTextOnLastReport(chatId, text);
+            return ResponseEntity.ok(lastReport);
+        } catch (EntryNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Operation(
+            summary = "Изменить последнюю команду пользователя",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "последняя команда пользователя изменена",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(implementation = Report.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Если пользователей нет"
+                    )
+            }
+    )
+    @PutMapping("/update_approvement/{chatId}")
+    public ResponseEntity<Report> updateApprovementOnLastReport(@PathVariable Long chatId) {
+        try {
+            var lastReport = reportService.approveLastReport(chatId);
+            return ResponseEntity.ok(lastReport);
+        } catch (EntryNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @Operation(
@@ -193,13 +266,18 @@ public class ReportController {
                             }
                     ),
                     @ApiResponse(
-                            responseCode = "400",
+                            responseCode = "404",
                             description = "Если отчета с таким id нет"
                     )
             }
     )
-    @DeleteMapping("{id}")
-    public void removeReportById(@PathVariable Long id) {
-        reportService.remove(id);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Report> delete(@PathVariable Long id) {
+        try {
+            reportService.remove(id);
+            return ResponseEntity.ok().build();
+        } catch (EntryNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
