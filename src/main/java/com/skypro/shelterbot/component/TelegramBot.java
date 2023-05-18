@@ -61,6 +61,13 @@ public class TelegramBot extends TelegramLongPollingBot {
         return botConfig.getBotToken();
     }
 
+    /**
+     * основной метод telegramBot, Update получает сообщение от пользователя боту,
+     * также хвранит всю информацию о нем.
+     * <br>
+     * включает <b>switch</b> с кнопками (содержат методы)
+     * @param update can't be <b>null</b>, Update received
+     */
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage()) {
@@ -310,13 +317,22 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-
+    /**
+     * приветствуем пользователя
+     * @param chatId чат ид пользователя
+     * @param name имя пользователя
+     */
     private void startCommandReceived(Long chatId, String name) {
         var text = EmojiParser.parseToUnicode("Добро пожаловать!:blush:");
         sendText(chatId, text);
         log.info("Заходил пользователь\\ ЧАТИД: {}, ИМЯ: {}", chatId, name);
     }
 
+    /**
+     * регистрируем пользователя, добавляем в таблицу ид и имя
+     * @param chatId
+     * @param name
+     */
     private void registerUser(Long chatId, String name) {
         var user = new User();
         user.setChatId(chatId);
@@ -325,6 +341,11 @@ public class TelegramBot extends TelegramLongPollingBot {
         createUser(user);
     }
 
+    /**
+     * отправляем сообщение пользователю
+     * @param chatId
+     * @param text
+     */
     private void sendText(Long chatId, String text) {
         var message = new SendMessage();
         message.setChatId(chatId);
@@ -332,6 +353,10 @@ public class TelegramBot extends TelegramLongPollingBot {
         executeSendMessage(message);
     }
 
+    /**
+     * через <b>execute</b> - встроенный метод telegramBot, отправляем текс пользователю, отлавиваем ошибку
+     * @param message can't be <b>null</b> содержит данные о текущем пользователе
+     */
     private void executeSendMessage(SendMessage message) {
         try {
             log.info("Отправка сообщения\\ ЧАТИД: {}, ТЕКСТ: {}", message.getChatId(), message.getText());
@@ -341,6 +366,10 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    /**
+     * вызов волантера, включает в себя кнопки выбора
+     * @param chatId
+     */
     private void callVolunteer(Long chatId) {
         sendText(chatId, TEXT_OF_VOLUNTEER);//TODO
         var text = "Выберите из списка меню: ";
@@ -351,6 +380,15 @@ public class TelegramBot extends TelegramLongPollingBot {
                 HELP_CMD);
     }
 
+    /**
+     * метод присваивания кнопок в telegramBot
+     * @param chatId получает ид пользователя
+     * @param text содержит входящий текст
+     * @param stringsForRows в параметр варарга, через запятую,
+     * может содержать не ограниченое колличество строк(они же будут названием кнопки).
+     * KeyboardRow - создает кнопку
+     * ArrayList включает в себя все принятые кнопки
+     */
     private void universalMenu(Long chatId, String text, String... stringsForRows) {
         var message = new SendMessage();
         message.setChatId(chatId);
@@ -373,6 +411,12 @@ public class TelegramBot extends TelegramLongPollingBot {
         executeSendMessage(message);
     }
 
+    /**
+     * если содержит в запросе от пользователя текст из switch, совпадающий с параметром, выполнит метод принятия отчета от пользователя,
+     * добавит данные в таблицу reports
+     * @param message can't be <b>null</b>
+     * @return
+     */
     private boolean handleReport(Message message) {
         var chatId = message.getChat().getId();
         var user = readUserByChatId(chatId);
@@ -384,6 +428,12 @@ public class TelegramBot extends TelegramLongPollingBot {
         return true;
     }
 
+    /**
+     * если содержит в запросе от пользователя текст из switch, совпадающий с параметром, выполнит метод записи телефона пользователя,
+     * добавит данные в таблицу users
+     * @param message can't be <b>null</b>
+     * @return
+     */
     private boolean handlePhone(Message message) {
         var chatId = message.getFrom().getId();
         if (message.hasText()) {
