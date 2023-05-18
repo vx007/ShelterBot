@@ -318,10 +318,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     private void registerUser(Long chatId, String name) {
-        var user = new User();
-        user.setChatId(chatId);
-        user.setName(name);
-        user.setRegisteredAt(Timestamp.valueOf(LocalDateTime.now()));
+        var user = new User(chatId, name, Timestamp.valueOf(LocalDateTime.now()));
         createUser(user);
     }
 

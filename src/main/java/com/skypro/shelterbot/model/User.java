@@ -22,6 +22,14 @@ public class User {
     private String lastCommand;
     private Timestamp registeredAt;
 
+    @Enumerated(value = EnumType.STRING)
+    private TrialPeriod period;
+    private Boolean needVolunteer;
+
     @OneToOne
     private Pet pet;
+
+    public User(Long chatId, String name, Timestamp registeredAt) {
+        this(chatId, name, null, null, registeredAt, null, false, null);
+    }
 }

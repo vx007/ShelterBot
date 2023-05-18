@@ -11,12 +11,14 @@ CREATE TABLE IF NOT EXISTS pets
 );
 CREATE TABLE IF NOT EXISTS users
 (
-    chat_id       BIGINT    NOT NULL PRIMARY KEY,
-    name          VARCHAR,
-    phone         VARCHAR,
-    last_cmd      VARCHAR,
-    registered_at TIMESTAMP NOT NULL,
-    pet_id        BIGINT REFERENCES pets (id)
+    chat_id        BIGINT    NOT NULL PRIMARY KEY,
+    name           VARCHAR,
+    phone          VARCHAR,
+    last_cmd       VARCHAR,
+    registered_at  TIMESTAMP NOT NULL,
+    period         VARCHAR,
+    need_volunteer BOOLEAN,
+    pet_id         BIGINT REFERENCES pets (id)
 );
 CREATE TABLE IF NOT EXISTS reports
 (

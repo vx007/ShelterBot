@@ -2,6 +2,7 @@ package com.skypro.shelterbot.service;
 
 import com.skypro.shelterbot.exception.EntryAlreadyExists;
 import com.skypro.shelterbot.exception.EntryNotFoundException;
+import com.skypro.shelterbot.model.TrialPeriod;
 import com.skypro.shelterbot.model.User;
 import com.skypro.shelterbot.repository.PetRepository;
 import com.skypro.shelterbot.repository.UserRepository;
@@ -64,6 +65,20 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
+    public User updatePeriod(@NonNull Long chatId, TrialPeriod period) throws EntryNotFoundException {
+        var user = getByChatId(chatId);
+        user.setPeriod(period);
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    public User updateVolunteerStatus(@NonNull Long chatId) throws EntryNotFoundException {
+        var user = getByChatId(chatId);
+        var status = user.getNeedVolunteer();
+        user.setNeedVolunteer(!status);
+        return userRepository.save(user);
+    }
     @Transactional
     public User updatePet(@NonNull Long chatId, Long petId) throws EntryNotFoundException {
         var user = getByChatId(chatId);

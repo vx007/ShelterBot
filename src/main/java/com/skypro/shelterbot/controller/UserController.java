@@ -2,6 +2,7 @@ package com.skypro.shelterbot.controller;
 
 import com.skypro.shelterbot.exception.EntryAlreadyExists;
 import com.skypro.shelterbot.exception.EntryNotFoundException;
+import com.skypro.shelterbot.model.TrialPeriod;
 import com.skypro.shelterbot.model.User;
 import com.skypro.shelterbot.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -227,6 +228,64 @@ public class UserController {
     public ResponseEntity<User> updateLastCommand(@PathVariable Long chatId, @RequestBody String command) {
         try {
             var user = userService.updateLastCommand(chatId, command);
+            return ResponseEntity.ok(user);
+        } catch (EntryNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Operation(
+            summary = "Изменить испытательный срок пользователя",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Испытательный срок пользователя изменен",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(implementation = User.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Если пользователей нет"
+                    )
+            }
+    )
+    @PutMapping("/update_period/{chatId}")
+    public ResponseEntity<User> updatePeriod(@PathVariable Long chatId, @RequestBody TrialPeriod period) {
+        try {
+            var user = userService.updatePeriod(chatId, period);
+            return ResponseEntity.ok(user);
+        } catch (EntryNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Operation(
+            summary = "Изменить статус \"Нужна помощь волонтера\"",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Статус пользователя изменен",
+                            content = {
+                                    @Content(
+                                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(implementation = User.class)
+                                    )
+                            }
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Если пользователей нет"
+                    )
+            }
+    )
+    @PutMapping("/update_volunteer_status/{chatId}")
+    public ResponseEntity<User> updateVolunteerStatus(@PathVariable Long chatId) {
+        try {
+            var user = userService.updateVolunteerStatus(chatId);
             return ResponseEntity.ok(user);
         } catch (EntryNotFoundException e) {
             return ResponseEntity.notFound().build();
