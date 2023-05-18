@@ -1,5 +1,6 @@
 package com.skypro.shelterbot.controller;
 
+import com.skypro.shelterbot.exception.EntryNotFoundException;
 import com.skypro.shelterbot.model.Pet;
 import com.skypro.shelterbot.model.PetType;
 import com.skypro.shelterbot.service.PetService;
@@ -9,14 +10,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,112 +41,208 @@ public class PetControllerTest {
     }
 
     @Test
-    public void addPetTest() throws Exception {
-        final String name = "newName";
-        final int age = 2;
+    void create_ShouldReturnCreatedPet() {
+        PetService petService = mock(PetService.class);
+        PetController petController = new PetController(petService);
 
-        JSONObject petObject = new JSONObject();
-        petObject.put("name", name);
-        petObject.put("age", age);
+        Pet inputPet = new Pet();
+        Pet expectedPet = new Pet();
+        when(petService.add(inputPet)).thenReturn(expectedPet);
 
-        Pet pet = new Pet();
-        pet.setAge(age);
-        pet.setName(name);
+        ResponseEntity<Pet> response = petController.create(inputPet);
 
-        when(petService.add(any(Pet.class))).thenReturn(pet);
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/pets")
-                        .content(petObject.toString())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value(name))
-                .andExpect(jsonPath("$.age").value(age));
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedPet, response.getBody());
     }
 
     @Test
-    public void getAllPetsTest() throws Exception {
-        final String name = "newName";
-        final int age = 2;
-        final String breed = "taksa";
+    void readById_ExistingId_ShouldReturnPet() throws EntryNotFoundException {
+        PetService petService = mock(PetService.class);
+        PetController petController = new PetController(petService);
 
+        long existingId = 123;
+        Pet expectedPet = new Pet();
+        when(petService.getById(existingId)).thenReturn(expectedPet);
 
-        final String name1 = "name1";
-        final int age1 = 3;
-        final String breed1 = "ovcharka";
+        ResponseEntity<Pet> response = petController.readById(existingId);
 
-        Pet pet = new Pet(PetType.DOG, "newName", 2, "taksa");
-        Pet pet1 = new Pet(PetType.DOG, "name1", 3, "ovcharka");
-
-        JSONObject petObject = new JSONObject();
-        petObject.put("name", name);
-        petObject.put("age", age);
-
-        when(petService.getAll()).thenReturn(List.of(pet, pet1));
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/pets/all_pet")
-                        .content(petObject.toString())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedPet, response.getBody());
     }
 
+    @Test
+    void readById_NonExistingId_ShouldReturnNotFound() throws EntryNotFoundException {
+        PetService petService = mock(PetService.class);
+        PetController petController = new PetController(petService);
 
-    public void findPetTest() throws Exception{
-        final String name = "newName";
-        final int age = 2;
-        final long id = 1;
+        long nonExistingId = 456;
+        when(petService.getById(nonExistingId)).thenThrow(EntryNotFoundException.class);
 
-        JSONObject petObject = new JSONObject();
-        petObject.put("id", id);
-        petObject.put("name", name);
-        petObject.put("age", age);
+        ResponseEntity<Pet> response = petController.readById(nonExistingId);
 
-        Pet pet = new Pet();
-        pet.setId(id);
-        pet.setAge(age);
-        pet.setName(name);
-
-        when(petService.getById(id)).thenReturn(pet);
-
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/pets/{id}", id)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.name").value(name))
-                .andExpect(jsonPath("$.age").value(age));
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
     }
 
-//    @Test
-//    public void findPetTest() throws Exception{
-//        final String name = "newName";
-//        final int age = 2;
-//        final long id = 1;
-//
-//        JSONObject petObject = new JSONObject();
-//        petObject.put("id", id);
-//        petObject.put("name", name);
-//        petObject.put("age", age);
-//
-//        Pet pet = new Pet();
-//        pet.setId(id);
-//        pet.setAge(age);
-//        pet.setName(name);
-//
-//        when(petService.getById(id)).thenReturn(Optional.of(pet));
-//
-//        mockMvc.perform(MockMvcRequestBuilders
-//                        .get("/pets/{id}", id)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id").value(id))
-//                .andExpect(jsonPath("$.name").value(name))
-//                .andExpect(jsonPath("$.age").value(age));
-//    }
+    @Test
+    void readAll_PetsExist_ShouldReturnListOfPets() throws EntryNotFoundException {
+        PetService petService = mock(PetService.class);
+        PetController petController = new PetController(petService);
+
+        List<Pet> expectedPets = new ArrayList<>();
+        expectedPets.add(new Pet());
+        expectedPets.add(new Pet());
+        when(petService.getAll()).thenReturn(expectedPets);
+
+        ResponseEntity<List<Pet>> response = petController.readAll();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedPets, response.getBody());
+    }
+
+    @Test
+    void readAll_NoPetsExist_ShouldReturnNotFound() throws EntryNotFoundException {
+        PetService petService = mock(PetService.class);
+        PetController petController = new PetController(petService);
+
+        when(petService.getAll()).thenThrow(EntryNotFoundException.class);
+
+        ResponseEntity<List<Pet>> response = petController.readAll();
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
+    }
+
+    @Test
+    void updateType_ExistingId_ShouldReturnUpdatedPet() throws EntryNotFoundException {
+        PetService petService = mock(PetService.class);
+        PetController petController = new PetController(petService);
+
+        long existingId = 123;
+        PetType newType = PetType.CAT;
+
+        Pet expectedPet = new Pet();
+        when(petService.updateType(existingId, newType)).thenReturn(expectedPet);
+
+        ResponseEntity<Pet> response = petController.updateType(existingId, newType);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedPet, response.getBody());
+    }
+
+    @Test
+    void updateType_NonExistingId_ShouldReturnNotFound() throws EntryNotFoundException {
+        PetService petService = mock(PetService.class);
+        PetController petController = new PetController(petService);
+
+        long nonExistingId = 456;
+        PetType newType = PetType.CAT;
+
+        when(petService.updateType(nonExistingId, newType)).thenThrow(EntryNotFoundException.class);
+
+        ResponseEntity<Pet> response = petController.updateType(nonExistingId, newType);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
+    }
+
+    @Test
+    void updateName_ExistingId_ShouldReturnUpdatedPet() throws EntryNotFoundException {
+        PetService petService = mock(PetService.class);
+        PetController petController = new PetController(petService);
+
+        long existingId = 123;
+        String newName = "Fluffy";
+
+        Pet expectedPet = new Pet();
+        when(petService.updateName(existingId, newName)).thenReturn(expectedPet);
+
+        ResponseEntity<Pet> response = petController.updateName(existingId, newName);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedPet, response.getBody());
+    }
+
+    @Test
+    void updateName_NonExistingId_ShouldReturnNotFound() throws EntryNotFoundException {
+        PetService petService = mock(PetService.class);
+        PetController petController = new PetController(petService);
+
+        long nonExistingId = 456;
+        String newName = "Fluffy";
+
+        when(petService.updateName(nonExistingId, newName)).thenThrow(EntryNotFoundException.class);
+
+        ResponseEntity<Pet> response = petController.updateName(nonExistingId, newName);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
+    }
+
+    @Test
+    void updateAge_ExistingId_ShouldReturnUpdatedPet() throws EntryNotFoundException {
+        PetService petService = mock(PetService.class);
+        PetController petController = new PetController(petService);
+
+        long existingId = 123;
+        int newAge = 3;
+
+        Pet expectedPet = new Pet();
+        when(petService.updateAge(existingId, newAge)).thenReturn(expectedPet);
+
+        ResponseEntity<Pet> response = petController.updateAge(existingId, newAge);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedPet, response.getBody());
+    }
+
+    @Test
+    void updateAge_NonExistingId_ShouldReturnNotFound() throws EntryNotFoundException {
+        PetService petService = mock(PetService.class);
+        PetController petController = new PetController(petService);
+
+        long nonExistingId = 456;
+        int newAge = 3;
+
+        when(petService.updateAge(nonExistingId, newAge)).thenThrow(EntryNotFoundException.class);
+
+        ResponseEntity<Pet> response = petController.updateAge(nonExistingId, newAge);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
+    }
+
+    @Test
+    void updateBreed_ExistingId_ShouldReturnUpdatedPet() throws EntryNotFoundException {
+        PetService petService = mock(PetService.class);
+        PetController petController = new PetController(petService);
+
+        long existingId = 123;
+        String newBreed = "Labrador Retriever";
+
+        Pet expectedPet = new Pet();
+        when(petService.updateBreed(existingId, newBreed)).thenReturn(expectedPet);
+
+        ResponseEntity<Pet> response = petController.updateBreed(existingId, newBreed);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expectedPet, response.getBody());
+    }
+
+    @Test
+    void updateBreed_NonExistingId_ShouldReturnNotFound() throws EntryNotFoundException {
+        PetService petService = mock(PetService.class);
+        PetController petController = new PetController(petService);
+
+        long nonExistingId = 456;
+        String newBreed = "Labrador Retriever";
+
+        when(petService.updateBreed(nonExistingId, newBreed)).thenThrow(EntryNotFoundException.class);
+
+        ResponseEntity<Pet> response = petController.updateBreed(nonExistingId, newBreed);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
+    }
 
 }
