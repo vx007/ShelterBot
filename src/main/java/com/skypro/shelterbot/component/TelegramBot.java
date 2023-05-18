@@ -339,7 +339,8 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     private void callVolunteer(Long chatId) {
-        sendText(chatId, TEXT_OF_VOLUNTEER);//TODO
+        sendText(chatId, TEXT_OF_VOLUNTEER);
+        updateUserStatusOfVolunteer(chatId);
         var text = "Выберите из списка меню: ";
         universalMenu(chatId, text,
                 LEAVE_YOUR_CONTACT_DETAILS,
@@ -429,6 +430,15 @@ public class TelegramBot extends TelegramLongPollingBot {
         try {
             log.info("Попытка обновить пользователя\\ ЧАТИД: {}, ТЕЛЕФОН: {}", chatId, phone);
             userService.updatePhone(chatId, phone);
+        } catch (EntryNotFoundException e) {
+            log.error(ERROR_TEXT + e.getMessage());
+        }
+    }
+
+    private void updateUserStatusOfVolunteer(Long chatId) {
+        try {
+            log.info("Попытка обновить статус \"Нужен волантёр\" у пользователя\\ ЧАТИД: {}", chatId);
+            userService.updateVolunteerStatus(chatId);
         } catch (EntryNotFoundException e) {
             log.error(ERROR_TEXT + e.getMessage());
         }
