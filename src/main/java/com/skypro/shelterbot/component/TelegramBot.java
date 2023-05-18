@@ -63,10 +63,10 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     /**
      * основной метод telegramBot, Update получает сообщение от пользователя боту,
-     * также хвранит всю информацию о нем.
+     * также хранит всю информацию о нем.
      * <br>
      * включает <b>switch</b> с кнопками (содержат методы)
-     * @param update can't be <b>null</b>, Update received
+     * @param update не может быть <b>null</b>, Update received
      */
     @Override
     public void onUpdateReceived(Update update) {
@@ -330,8 +330,8 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     /**
      * регистрируем пользователя, добавляем в таблицу ид и имя
-     * @param chatId
-     * @param name
+     * @param chatId чат ид пользователя
+     * @param name имя пользователя
      */
     private void registerUser(Long chatId, String name) {
         var user = new User();
@@ -343,8 +343,8 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     /**
      * отправляем сообщение пользователю
-     * @param chatId
-     * @param text
+     * @param chatId чат ид пользователя
+     * @param text текст пользователю
      */
     private void sendText(Long chatId, String text) {
         var message = new SendMessage();
@@ -355,7 +355,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     /**
      * через <b>execute</b> - встроенный метод telegramBot, отправляем текс пользователю, отлавиваем ошибку
-     * @param message can't be <b>null</b> содержит данные о текущем пользователе
+     * @param message не может быть <b>null</b> содержит данные о текущем пользователе
      */
     private void executeSendMessage(SendMessage message) {
         try {
@@ -368,7 +368,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     /**
      * вызов волантера, включает в себя кнопки выбора
-     * @param chatId
+     * @param chatId чат ид пользователя
      */
     private void callVolunteer(Long chatId) {
         sendText(chatId, TEXT_OF_VOLUNTEER);//TODO
@@ -414,8 +414,8 @@ public class TelegramBot extends TelegramLongPollingBot {
     /**
      * если содержит в запросе от пользователя текст из switch, совпадающий с параметром, выполнит метод принятия отчета от пользователя,
      * добавит данные в таблицу reports
-     * @param message can't be <b>null</b>
-     * @return
+     * @param message не может быть <b>null</b>
+     * @return true если выполнилось верно и false если не верно
      */
     private boolean handleReport(Message message) {
         var chatId = message.getChat().getId();
@@ -431,8 +431,8 @@ public class TelegramBot extends TelegramLongPollingBot {
     /**
      * если содержит в запросе от пользователя текст из switch, совпадающий с параметром, выполнит метод записи телефона пользователя,
      * добавит данные в таблицу users
-     * @param message can't be <b>null</b>
-     * @return
+     * @param message не может быть <b>null</b>
+     * @return true если выполнилось верно и false если не верно
      */
     private boolean handlePhone(Message message) {
         var chatId = message.getFrom().getId();
