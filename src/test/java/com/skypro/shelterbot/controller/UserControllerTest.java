@@ -2,6 +2,7 @@ package com.skypro.shelterbot.controller;
 
 import com.skypro.shelterbot.exception.EntryAlreadyExists;
 import com.skypro.shelterbot.exception.EntryNotFoundException;
+import com.skypro.shelterbot.model.TrialPeriod;
 import com.skypro.shelterbot.model.User;
 
 import com.skypro.shelterbot.service.UserService;
@@ -244,6 +245,72 @@ public class UserControllerTest {
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertNull(response.getBody());
+    }
+
+    @Test
+    public void testUpdatePeriod() throws EntryNotFoundException {
+        UserService userService = mock(UserService.class);
+        UserController userController = new UserController(userService);
+
+        User user = new User();
+        user.setChatId(1L);
+        user.setName("John Doe");
+
+        when(userService.updatePeriod(1L, TrialPeriod.EXTENDED_14_DAYS)).thenReturn(user);
+
+        ResponseEntity<User> response = userController.updatePeriod(1L, TrialPeriod.EXTENDED_14_DAYS);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(user, response.getBody());
+
+        verify(userService, times(1)).updatePeriod(1L, TrialPeriod.EXTENDED_14_DAYS);
+    }
+
+    @Test
+    public void testUpdatePeriod_EntryNotFoundException() throws EntryNotFoundException {
+        UserService userService = mock(UserService.class);
+        UserController userController = new UserController(userService);
+
+        when(userService.updatePeriod(1L, TrialPeriod.EXTENDED_14_DAYS)).thenThrow(new EntryNotFoundException());
+
+        ResponseEntity<User> response = userController.updatePeriod(1L, TrialPeriod.EXTENDED_14_DAYS);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
+        verify(userService, times(1)).updatePeriod(1L, TrialPeriod.EXTENDED_14_DAYS);
+    }
+
+    @Test
+    public void testUpdateVolunteerStatus() throws EntryNotFoundException {
+        UserService userService = mock(UserService.class);
+        UserController userController = new UserController(userService);
+
+        User user = new User();
+        user.setChatId(1L);
+        user.setName("John Doe");
+
+        when(userService.updateVolunteerStatus(1L)).thenReturn(user);
+
+        ResponseEntity<User> response = userController.updateVolunteerStatus(1L);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(user, response.getBody());
+
+        verify(userService, times(1)).updateVolunteerStatus(1L);
+    }
+
+    @Test
+    public void testUpdateVolunteerStatus_EntryNotFoundException() throws EntryNotFoundException {
+        UserService userService = mock(UserService.class);
+        UserController userController = new UserController(userService);
+
+        when(userService.updateVolunteerStatus(1L)).thenThrow(new EntryNotFoundException());
+
+        ResponseEntity<User> response = userController.updateVolunteerStatus(1L);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
+        verify(userService, times(1)).updateVolunteerStatus(1L);
     }
 
     @Test
